@@ -9,20 +9,20 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: "Security"
+workgroup: "Remote ATtestation ProcedureS"
 keyword:
  - EAT
  - attestation result
  - attestation verifier
  - AR4SI
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Remote ATtestation ProcedureS"
+  type: "Working Group"
+  mail: "rats@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/rats/"
+  github: "thomas-fossati/draft-ear"
+  latest: "https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html"
 
 author:
  -
