@@ -55,8 +55,36 @@ TODO Introduction
 # EAT Attestation Result
 
 ~~~cddl
-{::include cddl/ear-json-autogen.cddl}
+{::include cddl/attestation-result.cddl}
 ~~~
+
+## JSON Serialisation
+
+~~~cddl
+{::include cddl/json-labels.cddl}
+~~~
+
+### Examples
+
+~~~cbor-diag
+{::include cddl/examples/ear-json-1.diag}
+~~~
+
+## CBOR Serialisation
+
+~~~cddl
+{::include cddl/cbor-labels.cddl}
+~~~
+
+### Examples
+
+~~~cbor-diag
+{::include cddl/examples/ear-cbor-1.diag}
+~~~
+
+## Extensions
+
+TODO
 
 # Security Considerations
 

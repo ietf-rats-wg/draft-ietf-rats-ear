@@ -1,13 +1,3 @@
-start = EAR
-
-$ar4si-trust-tier /= ar4si.trust-tier-none
-$ar4si-trust-tier /= ar4si.trust-tier-affirming
-$ar4si-trust-tier /= ar4si.trust-tier-warning
-$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-
-$ar4si-trustworthiness-claim = -128..127
-
-; EAT Attestation Result
 EAR = {
   ear.status => $ar4si-trust-tier
   eat_profile => "tag:github.com,2022:veraison/ear"
@@ -28,5 +18,12 @@ ar4si-trustworthiness-vector = non-empty<{
   ? storage-opaque => $ar4si-trustworthiness-claim
   ? sourced-data => $ar4si-trustworthiness-claim
 }>
+
+$ar4si-trustworthiness-claim = -128..127
+
+$ar4si-trust-tier /= ar4si.trust-tier-none
+$ar4si-trust-tier /= ar4si.trust-tier-affirming
+$ar4si-trust-tier /= ar4si.trust-tier-warning
+$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
 
 ; vim: set tw=70 ts=2 et:
