@@ -52,6 +52,12 @@ TODO Introduction
 
 {::boilerplate bcp14-tagged}
 
+# EAT Attestation Result
+
+~~~cddl
+{::include cddl/ear-json-autogen.cddl}
+~~~
+
 # Security Considerations
 
 TODO Security

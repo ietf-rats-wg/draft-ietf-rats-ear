@@ -9,3 +9,18 @@ else
 	git clone -q --depth 10 $(CLONE_ARGS) \
 	    -b main https://github.com/martinthomson/i-d-template $(LIBDIR)
 endif
+
+include cddl/ear-json-frags.mk
+
+define cddl_targets
+
+$(drafts_xml):: cddl/$(1)-autogen.cddl
+
+cddl/$(1)-autogen.cddl: $(addprefix cddl/,$(2))
+	$(MAKE) -C cddl check-$(1)
+
+endef # cddl_targets
+
+$(eval $(call cddl_targets,ear-json,$(EAR_JSON_FRAGS)))
+
+clean:: ; $(MAKE) -C cddl clean

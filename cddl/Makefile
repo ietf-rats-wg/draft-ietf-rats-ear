@@ -6,11 +6,11 @@ SHELL := /bin/bash
 
 include tools.mk
 
-check:: check-json check-json-examples
-check:: check-cbor check-cbor-examples
-check:: check-veraison-cbor check-veraison-cbor-examples
-check:: check-veraison-json check-veraison-json-examples
-check:: check-teep-json check-teep-json-examples
+check:: check-ear-json check-ear-json-examples
+#check:: check-ear-cbor check-ear-cbor-examples
+#check:: check-ext-veraison-cbor check-ext-veraison-cbor-examples
+#check:: check-ext-veraison-json check-ext-veraison-json-examples
+#check:: check-ext-teep-json check-ext-teep-json-examples
 
 # $1: label
 # $2: cddl fragments
@@ -39,13 +39,9 @@ CLEANFILES += $(3:.diag=.cbor)
 
 endef # cddl_check_template
 
-JSON_FRAGS := attestation-result.cddl
-JSON_FRAGS += json-labels.cddl
-JSON_FRAGS += generic-non-empty.cddl
+include ear-json-frags.mk
 
-JSON_EXAMPLES := $(wildcard examples/json-*.diag)
-
-$(eval $(call cddl_check_template,json,$(JSON_FRAGS),$(JSON_EXAMPLES)))
+$(eval $(call cddl_check_template,ear-json,$(EAR_JSON_FRAGS),$(EAR_JSON_EXAMPLES)))
 
 CBOR_FRAGS := attestation-result.cddl
 CBOR_FRAGS += cbor-labels.cddl
@@ -86,4 +82,4 @@ TEEP_JSON_EXAMPLES := $(wildcard examples/teep-json-*.diag)
 
 $(eval $(call cddl_check_template,teep-json,$(TEEP_JSON_FRAGS),$(TEEP_JSON_EXAMPLES)))
 
-clean: ; $(RM) $(CLEANFILES)
+clean: ; rm -f $(CLEANFILES)
