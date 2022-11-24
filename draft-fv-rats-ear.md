@@ -25,30 +25,75 @@ venue:
   latest: "https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html"
 
 author:
- -
-    fullname: Thomas Fossati
-    organization: ARM Limited
-    email: thomas.fossati@arm.com
- -
-    fullname: Eric Voit
-    organization: Cisco
-    email: evoit@cisco.com
+- name: Thomas Fossati
+  org: ARM Limited
+  email: thomas.fossati@arm.com
+- name: Eric Voit
+  org: Cisco
+  email: evoit@cisco.com
 
 normative:
+  RFC7519: jwt
+  RFC8392: cwt
+  RFC8610: cddl
+  STD94:
+    -: cbor
+    =: RFC8949
+  STD96:
+    -: cose
+    =: RFC9052
+  I-D.ietf-rats-ar4si: ar4si
+  I-D.ietf-rats-architecture: rats-arch
+  I-D.ietf-rats-eat: eat
 
 informative:
+  RFC7942:
+
+entity:
+  SELF: "RFCthis"
 
 --- abstract
 
-TODO Abstract
+This document defines the EAT Attestation Result (EAR) message format.
+
+EAR is used by a verifier to encode the result of the appraisal over an
+attester's evidence.
+It embeds an AR4SI's "trustworthiness vector" to present a normalized view of
+the evaluation results, thus easing the task of defining and computing
+authorization policies by relying parties.
+Alongside the trustworthiness vector, EAR provides contextual information bound
+to the appraisal process.
+This allows a relying party (or an auditor) to reconstruct the frame of
+reference in which the trustworthiness vector was originally computed.
+EAR can also accommodate per-application and per-deployment extensions.
+It can be serialized and protected using either CWT or JWT.
 
 --- middle
 
 # Introduction
 
-TODO Introduction
+This document defines the EAT {{-eat}} Attestation Result (EAR) message format.
+
+EAR is used by a verifier to encode the result of the appraisal over an
+attester's evidence.
+It embeds an AR4SI's "trustworthiness vector" {{-ar4si}} to present a
+normalized view of the evaluation results, thus easing the task of defining and
+computing authorization policies by relying parties.
+Alongside the trustworthiness vector, EAR provides contextual information bound
+to the appraisal process.
+This allows a relying party (or an auditor) to reconstruct the frame of
+reference in which the trustworthiness vector was originally computed.
+EAR can also accommodate per-application and per-deployment extensions.
+It can be serialized and protected using either CWT {{-cwt}} or JWT {{-jwt}}.
 
 # Conventions and Definitions
+
+This document uses terms and concepts defined by the RATS architecture.
+For a complete glossary see {{Section 4 of -rats-arch}}.
+
+The terminology from CBOR {{-cbor}}, CDDL {{-cddl}} and COSE {{-cose}} applies;
+in particular, CBOR diagnostic notation is defined in {{Section 8 of -cbor}}
+and {{Section G of -cddl}}.
 
 {::boilerplate bcp14-tagged}
 
@@ -85,6 +130,40 @@ TODO Introduction
 ## Extensions
 
 TODO
+
+# Implementation Status
+
+This section records the status of known implementations of the protocol
+defined by this specification at the time of posting of this Internet-Draft,
+and is based on a proposal described in {{RFC7942}}.  The description of
+implementations in this section is intended to assist the IETF in its decision
+processes in progressing drafts to RFCs.  Please note that the listing of any
+individual implementation here does not imply endorsement by the IETF.
+Furthermore, no effort has been spent to verify the information presented here
+that was supplied by IETF contributors.  This is not intended as, and must not
+be construed to be, a catalog of available implementations or their features.
+Readers are advised to note that other implementations may exist.
+
+According to {{RFC7942}}, "this will allow reviewers and working groups to assign
+due consideration to documents that have the benefit of running code, which may
+serve as evidence of valuable experimentation and feedback that have made the
+implemented protocols more mature.  It is up to the individual working groups
+to use this information as they see fit".
+
+## `github.com/veraison/ear`
+
+The organization responsible for this implementation is Veraison, a
+Confidential Computing Consortium (Linux Foundation) project.
+The software, hosted at [](https://github.com/veraison/ear), provides a Golang
+package that allows encoding, decoding, signing and verification of EAR
+payloads together with a CLI (`arc`) to create, verify and visualize EARs on
+the command line.
+The maturity level is currently alpha, and only the JWT serialization is
+implemented.
+The license is Apache 2.0.
+The developers can be contacted on the Zulip channel:
+[](https://veraison.zulipchat.com/#narrow/stream/357929-EAR/).
+The package is used by the Veraison verifier to produce attestation results.
 
 # Security Considerations
 
