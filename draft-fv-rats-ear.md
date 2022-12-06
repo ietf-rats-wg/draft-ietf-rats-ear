@@ -23,6 +23,7 @@ venue:
   arch: "https://mailarchive.ietf.org/arch/browse/rats/"
   github: "thomas-fossati/draft-ear"
   latest: "https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html"
+pi: [toc, sortrefs, symrefs]
 
 author:
 - name: Thomas Fossati
@@ -102,41 +103,62 @@ and {{Section G of -cddl}}.
 
 # EAT Attestation Result
 
+EAR is an EAT token which can be serialized as JWT {{-jwt}} or CWT {{-cwt}}.
+
+The EAR claims-set is as follows:
+
 ~~~cddl
 {::include cddl/attestation-result.cddl}
 ~~~
 
-The EAR claims-set is as follows:
+Where:
 
 {:vspace}
 `ear.status` (mandatory)
-: Overall appraisal status represented as the one of four trustworthiness tiers.  It MUST be the "worst" ...
+: The overall appraisal status represented as one of the four trustworthiness tiers ({{sec-trusttiers}}).
+If the `ear.trustworthiness-vector` claim is also present, the value of this claim MUST be set to the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.
 
 `eat_profile` (mandatory)
-: The EAT profile associated with the EAR claims-set.  It MUST be `tag:github.com,2022:veraison/ear`.
+: The EAT profile associated with the EAR claims-set.
+It MUST be `tag:github.com,2022:veraison/ear`.
 
 `ear.trustworthiness-vector` (optional)
-: The AR4SI trustworthiness vector ({{Section 2.3.5 of -ar4si}}.  See {{sec-tvector}} for the details.
+: The AR4SI trustworthiness vector providing the breakdown of the appraisal.
+See {{sec-tvector}} for the details.
 
 `ear.raw-evidence` (optional)
 : The unabridged evidence submitted for appraisal.
 
 `iat` (mandatory)
-: The time at which the EAR is issued.  See {{Section 4.1.6 of -jwt}}
+: The time at which the EAR is issued.
+See {{Section 4.1.6 of -jwt}}.
 
 `ear.appraisal-policy-id` (optional)
-: An identifier for the appraisal policy used to compute the attestation result.
+: An unique identifier of the appraisal policy used to compute the attestation result.
 
 `$$ear-extension` (optional)
-: Any application- or deployment-specific extension.  It MUST be a map.  See {{sec-extensions}} for the details.
+: Any application- or deployment-specific extension.
+An EAR extension MUST be a map.
+See {{sec-extensions}} for further details.
 
 ## Trustworthiness Vector {#sec-tvector}
+
+The `ar4si-trustworthiness-vector` claim is an embodiment of the AR4SI trustworthiness vector, see {{Section 2.3.5 of -ar4si}}.
+It contains an entry for each of the 8 AR4SI appraisal categories.
+The value of each entry is chosen in the -128..127 range according to the rules described in {{Sections 2.3.3 and 2.3.4 of -ar4si}}.
+All categories are optional.
+A missing entry means that the verifier makes no claim about this specific appraisal facet because the category is not applicable to the submitted evidence.
 
 ~~~cddl
 {::include cddl/trustworthiness-vector.cddl}
 ~~~
 
+NOTE: remove non-empty and allow {}?
+
 ## Trust Tiers {#sec-trusttiers}
+
+The trust tier type represents one of the equivalency classes in which the `$ar4si-trustworthiness-claim` space is partitioned.
+See {{Section 2.3.2 of -ar4si}} for the details.
 
 ~~~cddl
 {::include cddl/trust-tiers.cddl}
