@@ -26,11 +26,14 @@ venue:
 
 author:
 - name: Thomas Fossati
-  org: ARM Limited
+  org: Arm Limited
   email: thomas.fossati@arm.com
 - name: Eric Voit
   org: Cisco
   email: evoit@cisco.com
+- name: Sergei Trofimov
+  org: Arm Limited
+  email: sergei.trofimov@arm.com
 
 normative:
   RFC7519: jwt
@@ -103,6 +106,42 @@ and {{Section G of -cddl}}.
 {::include cddl/attestation-result.cddl}
 ~~~
 
+The EAR claims-set is as follows:
+
+{:vspace}
+`ear.status` (mandatory)
+: Overall appraisal status represented as the one of four trustworthiness tiers.  It MUST be the "worst" ...
+
+`eat_profile` (mandatory)
+: The EAT profile associated with the EAR claims-set.  It MUST be `tag:github.com,2022:veraison/ear`.
+
+`ear.trustworthiness-vector` (optional)
+: The AR4SI trustworthiness vector ({{Section 2.3.5 of -ar4si}}.  See {{sec-tvector}} for the details.
+
+`ear.raw-evidence` (optional)
+: The unabridged evidence submitted for appraisal.
+
+`iat` (mandatory)
+: The time at which the EAR is issued.  See {{Section 4.1.6 of -jwt}}
+
+`ear.appraisal-policy-id` (optional)
+: An identifier for the appraisal policy used to compute the attestation result.
+
+`$$ear-extension` (optional)
+: Any application- or deployment-specific extension.  It MUST be a map.  See {{sec-extensions}} for the details.
+
+## Trustworthiness Vector {#sec-tvector}
+
+~~~cddl
+{::include cddl/trustworthiness-vector.cddl}
+~~~
+
+## Trust Tiers {#sec-trusttiers}
+
+~~~cddl
+{::include cddl/trust-tiers.cddl}
+~~~
+
 ## JSON Serialisation
 
 ~~~cddl
@@ -127,7 +166,7 @@ and {{Section G of -cddl}}.
 {::include cddl/examples/ear-cbor-1.diag}
 ~~~
 
-## Extensions
+## Extensions {#sec-extensions}
 
 TODO
 
@@ -152,8 +191,8 @@ to use this information as they see fit".
 
 ## `github.com/veraison/ear`
 
-The organization responsible for this implementation is Veraison, a
-Confidential Computing Consortium (Linux Foundation) project.
+The organization responsible for this implementation is Veraison, a Linux
+Foundation project hosted at the Confidential Computing Consortium.
 The software, hosted at [](https://github.com/veraison/ear), provides a Golang
 package that allows encoding, decoding, signing and verification of EAR
 payloads together with a CLI (`arc`) to create, verify and visualize EARs on

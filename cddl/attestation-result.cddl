@@ -7,23 +7,3 @@ EAR = {
   ? ear.appraisal-policy-id => text
   * $$ear-extension
 }
-
-ar4si-trustworthiness-vector = non-empty<{
-  ? instance-identity => $ar4si-trustworthiness-claim
-  ? configuration => $ar4si-trustworthiness-claim
-  ? executables => $ar4si-trustworthiness-claim
-  ? file-system => $ar4si-trustworthiness-claim
-  ? hardware => $ar4si-trustworthiness-claim
-  ? runtime-opaque => $ar4si-trustworthiness-claim
-  ? storage-opaque => $ar4si-trustworthiness-claim
-  ? sourced-data => $ar4si-trustworthiness-claim
-}>
-
-$ar4si-trustworthiness-claim = -128..127
-
-$ar4si-trust-tier /= ar4si.trust-tier-none
-$ar4si-trust-tier /= ar4si.trust-tier-affirming
-$ar4si-trust-tier /= ar4si.trust-tier-warning
-$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-
-; vim: set tw=70 ts=2 et:

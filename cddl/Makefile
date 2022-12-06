@@ -44,6 +44,8 @@ include ear-json-frags.mk
 $(eval $(call cddl_check_template,ear-json,$(EAR_JSON_FRAGS),$(EAR_JSON_EXAMPLES)))
 
 CBOR_FRAGS := attestation-result.cddl
+CBOR_FRAGS += trustworthiness-vector.cddl
+CBOR_FRAGS += trust-tiers.cddl
 CBOR_FRAGS += cbor-labels.cddl
 CBOR_FRAGS += generic-non-empty.cddl
 
@@ -52,6 +54,8 @@ CBOR_EXAMPLES := $(wildcard examples/cbor-*.diag)
 $(eval $(call cddl_check_template,cbor,$(CBOR_FRAGS),$(CBOR_EXAMPLES)))
 
 VERAISON_CBOR_FRAGS := attestation-result.cddl
+VERAISON_CBOR_FRAGS += trustworthiness-vector.cddl
+VERAISON_CBOR_FRAGS += trust-tiers.cddl
 VERAISON_CBOR_FRAGS += cbor-labels.cddl
 VERAISON_CBOR_FRAGS += generic-non-empty.cddl
 VERAISON_CBOR_FRAGS += veraison.cddl
@@ -62,6 +66,8 @@ VERAISON_CBOR_EXAMPLES := $(wildcard examples/veraison-cbor-*.diag)
 $(eval $(call cddl_check_template,veraison-cbor,$(VERAISON_CBOR_FRAGS),$(VERAISON_CBOR_EXAMPLES)))
 
 VERAISON_JSON_FRAGS := attestation-result.cddl
+VERAISON_JSON_FRAGS += trustworthiness-vector.cddl
+VERAISON_JSON_FRAGS += trust-tiers.cddl
 VERAISON_JSON_FRAGS += json-labels.cddl
 VERAISON_JSON_FRAGS += generic-non-empty.cddl
 VERAISON_JSON_FRAGS += veraison.cddl
@@ -72,6 +78,8 @@ VERAISON_JSON_EXAMPLES := $(wildcard examples/veraison-json-*.diag)
 $(eval $(call cddl_check_template,veraison-json,$(VERAISON_JSON_FRAGS),$(VERAISON_JSON_EXAMPLES)))
 
 TEEP_JSON_FRAGS := attestation-result.cddl
+TEEP_JSON_FRAGS += trustworthiness-vector.cddl
+TEEP_JSON_FRAGS += trust-tiers.cddl
 TEEP_JSON_FRAGS += json-labels.cddl
 TEEP_JSON_FRAGS += generic-non-empty.cddl
 TEEP_JSON_FRAGS += teep.cddl
