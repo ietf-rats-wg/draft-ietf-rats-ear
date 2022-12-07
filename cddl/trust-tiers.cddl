@@ -1,4 +1,4 @@
-$ar4si-trust-tier /= ar4si.trust-tier-none
-$ar4si-trust-tier /= ar4si.trust-tier-affirming
-$ar4si-trust-tier /= ar4si.trust-tier-warning
-$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
+$ar4si.trust-tier /= ar4si.trust-tier-none
+$ar4si.trust-tier /= ar4si.trust-tier-affirming
+$ar4si.trust-tier /= ar4si.trust-tier-warning
+$ar4si.trust-tier /= ar4si.trust-tier-contraindicated

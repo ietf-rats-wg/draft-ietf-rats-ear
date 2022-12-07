@@ -16,11 +16,11 @@ define cddl_targets
 
 $(drafts_xml):: cddl/$(1)-autogen.cddl
 
-cddl/$(1)-autogen.cddl: $(addprefix cddl/,$(2))
-	$(MAKE) -C cddl check-$(1)
+cddl/$(1)-autogen.cddl: $(addprefix cddl/,$(2)) $(addprefix cddl/examples/,$(3))
+	$(MAKE) -C cddl check-$(1) check-$(1)-examples
 
 endef # cddl_targets
 
-$(eval $(call cddl_targets,ear-json,$(EAR_JSON_FRAGS)))
+$(eval $(call cddl_targets,ear-json,$(EAR_JSON_FRAGS),$(EAR_JSON_EXAMPLES)))
 
 clean:: ; $(MAKE) -C cddl clean

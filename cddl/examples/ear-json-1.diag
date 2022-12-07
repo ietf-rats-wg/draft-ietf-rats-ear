@@ -2,7 +2,7 @@
   "eat_profile": "tag:github.com,2022:veraison/ear",
   "ear.status": "contraindicated",
   "ear.trustworthiness-vector": {
-    "instance-identity": 32,
+    "instance-identity": 2,
     "configuration": 32,
     "executables": 96,
     "file-system": 0,

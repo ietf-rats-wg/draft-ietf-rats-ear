@@ -1,10 +1,10 @@
-; $ar4si-trust-tier
+; $ar4si.trust-tier choice
 ar4si.trust-tier-none = "none"
 ar4si.trust-tier-affirming = "affirming"
 ar4si.trust-tier-warning = "warning"
 ar4si.trust-tier-contraindicated = "contraindicated"
 
-; EAR (EAT Attestation Result)
+; EAR JWT claims
 ear.status = "ear.status"
 ear.trustworthiness-vector = "ear.trustworthiness-vector"
 ear.raw-evidence = "ear.raw-evidence"
@@ -12,7 +12,7 @@ ear.appraisal-policy-id = "ear.appraisal-policy-id"
 eat_profile = "eat_profile"
 iat = "iat"
 
-; ar4si-trustworthiness-vector 
+; ar4si.trustworthiness-vector 
 instance-identity = "instance-identity"
 configuration = "configuration"
 executables = "executables"
@@ -22,9 +22,6 @@ runtime-opaque = "runtime-opaque"
 storage-opaque = "storage-opaque"
 sourced-data = "sourced-data"
 
-; types
-numeric-date = ~time
+; JSON types mapping
 ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
 ear-label = text
-
-; vim: set tw=70 ts=2 et:
