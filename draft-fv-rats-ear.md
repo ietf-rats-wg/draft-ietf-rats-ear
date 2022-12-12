@@ -49,6 +49,7 @@ normative:
   I-D.ietf-rats-ar4si: ar4si
   I-D.ietf-rats-architecture: rats-arch
   I-D.ietf-rats-eat: eat
+  I-D.ietf-teep-protocol: teep
 
 informative:
   RFC7942: impl-status
@@ -117,26 +118,35 @@ Where:
 
 {:vspace}
 `ear.status` (mandatory)
-: The overall appraisal status represented as one of the four trustworthiness tiers ({{sec-trusttiers}}).
-If the `ear.trustworthiness-vector` claim is also present, the value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.
+: The overall appraisal status represented as one of the four trustworthiness
+tiers ({{sec-trusttiers}}).
+If the `ear.trustworthiness-vector` claim is also present, the value of this
+claim MUST be set to a tier of no higher trust than the tier corresponding to
+the worst trustworthiness claim across the entire trustworthiness vector.
 
 `eat_profile` (mandatory)
-: The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set and encodings defined by this document.
-It MUST be the following tag URI ({{-tag-uri}}) `tag:github.com,2022:veraison/ear`.
+: The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
+and encodings defined by this document.
+It MUST be the following tag URI ({{-tag-uri}})
+`tag:github.com,2022:veraison/ear`.
 
 `ear.trustworthiness-vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal.
 See {{sec-tvector}} for the details.
 
 `ear.raw-evidence` (optional)
-: The unabridged evidence submitted for appraisal, including any signed container/envelope.
+: The unabridged evidence submitted for appraisal, including any signed
+container/envelope.
 
 `iat` (mandatory)
 : "Issued At" claim -- the time at which the EAR is issued.
-See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).
+See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the
+EAT-specific encoding restrictions (i.e., disallowing the floating point
+representation).
 
 `ear.appraisal-policy-id` (optional)
-: An unique identifier of the appraisal policy used to evaluate the attestation result.
+: An unique identifier of the appraisal policy used to evaluate the attestation
+result.
 
 `$$ear-extension` (optional)
 : Any application- or deployment-specific extension.
@@ -145,22 +155,30 @@ See {{sec-extensions}} for further details.
 
 ## Trustworthiness Vector {#sec-tvector}
 
-The `ar4si-trustworthiness-vector` claim is an embodiment of the AR4SI trustworthiness vector ({{Section 2.3.5 of -ar4si}}) and it is defined as follows:
+The `ar4si-trustworthiness-vector` claim is an embodiment of the AR4SI
+trustworthiness vector ({{Section 2.3.5 of -ar4si}}) and it is defined as
+follows:
 
 ~~~cddl
 {::include cddl/trustworthiness-vector.cddl}
 ~~~
 {: #fig-cddl-tvec title="Trustworthiness Vector (CDDL Definition)" }
 
-It contains an entry for each one of the eight AR4SI appraisals that have been conducted on the submitted evidence ({{Section 2.3.4 of -ar4si}}).
-The value of each entry is chosen in the -128..127 range according to the rules described in {{Sections 2.3.3 and 2.3.4 of -ar4si}}.
+It contains an entry for each one of the eight AR4SI appraisals that have been
+conducted on the submitted evidence ({{Section 2.3.4 of -ar4si}}).
+The value of each entry is chosen in the -128..127 range according to the rules
+described in {{Sections 2.3.3 and 2.3.4 of -ar4si}}.
 All categories are optional.
-A missing entry means that the verifier makes no claim about this specific appraisal facet because the category is not applicable to the submitted evidence.
-As required by the `non-empty` macro, at least one entry MUST be present in the vector.
+A missing entry means that the verifier makes no claim about this specific
+appraisal facet because the category is not applicable to the submitted
+evidence.
+As required by the `non-empty` macro, at least one entry MUST be present in the
+vector.
 
 ## Trust Tiers {#sec-trusttiers}
 
-The trust tier type represents one of the equivalency classes in which the `$ar4si-trustworthiness-claim` space is partitioned.
+The trust tier type represents one of the equivalency classes in which the
+`$ar4si-trustworthiness-claim` space is partitioned.
 See {{Section 2.3.2 of -ar4si}} for the details.
 The allowed values for the type are as follows:
 
@@ -171,7 +189,9 @@ The allowed values for the type are as follows:
 
 ## JSON Serialisation
 
-To serialize the EAR claims-set in JSON format, the following substitutions are applied to the encoding-agnostic CDDL definitions in {{sec-ear}}, {{sec-tvector}} and {{sec-trusttiers}}:
+To serialize the EAR claims-set in JSON format, the following substitutions are
+applied to the encoding-agnostic CDDL definitions in {{sec-ear}},
+{{sec-tvector}} and {{sec-trusttiers}}:
 
 ~~~cddl
 {::include cddl/json-labels.cddl}
@@ -179,8 +199,12 @@ To serialize the EAR claims-set in JSON format, the following substitutions are 
 
 ### Examples
 
-The example in {{fig-ex-json-1}} shows an EAR claims-set corresponding to a "contraindicated" appraisal, meaning the verifier has found some problems with the attester's state reported in the submitted evidence.
-Specifically, the identified issue is related to unauthorized code or configuration loaded in runtime memory (i.e., value 96 in the executables category).
+The example in {{fig-ex-json-1}} shows an EAR claims-set corresponding to a
+"contraindicated" appraisal, meaning the verifier has found some problems with
+the attester's state reported in the submitted evidence.
+Specifically, the identified issue is related to unauthorized code or
+configuration loaded in runtime memory (i.e., value 96 in the executables
+category).
 
 ~~~cbor-diag
 {::include cddl/examples/ear-json-1.diag}
@@ -198,7 +222,8 @@ The breakdown of the trustworthiness vector is as follows:
 * Storage Opaque (none): no claim being made
 * Sourced Data (none): no claim being made
 
-The example in {{fig-ex-json-2}} is a minimalist (successful) attestation result that doesn't carry a trustworthiness vector.
+The example in {{fig-ex-json-2}} is a minimalist (successful) attestation
+result that doesn't carry a trustworthiness vector.
 
 ~~~cbor-diag
 {::include cddl/examples/ear-json-2.diag}
@@ -219,20 +244,41 @@ The example in {{fig-ex-json-2}} is a minimalist (successful) attestation result
 
 ## Extensions {#sec-extensions}
 
-The EAR claims-set can be extended by plugging new claims into the `$$ear-extension` CDDL socket.
-This specification anticipates two kinds of extensions: standard and custom.
-Standard extensions broaden
-EAR can also accommodate per-application and per-deployment extensions.
+EAR provides core semantics for describing the result of appraising attestation
+evidence.
+However, a given deployment may offer extra functionality to its relying
+parties, or tailor the attestation result to the needs of an application (e.g.,
+TEEP {{-teep}}).
+To accommodate such cases, the EAR claims-set can be extended by plugging new
+claims into the `$$ear-extension` CDDL socket.
 
-Standard extensions can be simple or complex (e.g., sub-maps) claims.
-Standard extensions are registered using the procedure defined in {{sec-iana-ear-ext}}.
+The rules that govern extensibility of EAR are those defined in {{-cwt}} and
+{{-jwt}} for CWTs and JWTs respectively.
+An up-to-date view of the registered claims can be obtained via the
+{{?IANA.cwt}} and {{?IANA.jwt}} registries.
 
-Keys for private extensions MUST be chosen as follows:
+A deployment-specific extension will normally mint its claim from the "private
+space" - using integer values less than -65536 for CWT, and Public or
+Private Claim Names as defined in {{Sections 4.2 and 4.3 of -jwt}} when
+serializing to JWT.
+It is RECOMMENDED that JWT EARs use Collision-Resistant Public Claim Names
+({{Section 2 of -jwt}}) rather than Private Claim Names.
 
-* negative integers for CBOR serialization
+If there is even the slightest chance that an application-specific extension
+will be used across multiple environments, the associated extension claim
+SHOULD be registered in one, or both, the CWT and JWT claim registries.
+Since there is in general no guarantee that an application will be confined
+within an environment, it is RECOMMENDED that application-specific extension
+claims are always registered.
 
+In general, if the registration policy requires an accompanying specification
+document (as it is the case for "specification required" and "standards
+action"), such document SHOULD explicitly say that the extension is expected to
+be used in EAR claims-sets identified by this profile.
 
-In general, a receiver MUST ignore any unknown claim, standard or private.
+An extension MUST NOT change the semantics of the base EAR claims-set.
+
+A receiver MUST ignore any unknown claim.
 
 # Implementation Status
 
@@ -277,7 +323,7 @@ TODO Security
 
 # IANA Considerations
 
-## Standard EAR Key Registry {#sec-iana-ear-ext}
+## New EAT Claims {#sec-iana-ear-claims}
 
 TODO
 
