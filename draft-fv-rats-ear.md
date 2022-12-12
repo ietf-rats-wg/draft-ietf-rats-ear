@@ -242,7 +242,7 @@ result that doesn't carry a trustworthiness vector.
 {::include cddl/examples/ear-cbor-1.diag}
 ~~~
 
-## Extensions {#sec-extensions}
+# EAR Extensions {#sec-extensions}
 
 EAR provides core semantics for describing the result of appraising attestation
 evidence.
@@ -279,6 +279,47 @@ be used in EAR claims-sets identified by this profile.
 An extension MUST NOT change the semantics of the base EAR claims-set.
 
 A receiver MUST ignore any unknown claim.
+
+## Veraison Deployment Extensions
+
+The Veraison verifier defines two private, deployment-specific extensions:
+
+* Processed Evidence:
+: The appraised evidence claims-set converted into a JSON object.
+
+* Verifier Added Claims:
+: A JSON map containing any claims about the attester that are inferred by the
+verifier during the appraisal process.  For example: the certification status
+associated with the device, or any other endorsed attribute.
+
+~~~cddl
+{::include cddl/veraison.cddl}
+~~~
+{: #fig-cddl-veraison title="Veraison Deployment Extensions (CDDL Definition)" }
+
+### JSON Serialization
+
+~~~cddl
+{::include cddl/veraison-json-labels.cddl}
+~~~
+
+Example:
+
+~~~cbor-diag
+{::include cddl/examples/ext-veraison-json-1.diag}
+~~~
+
+### CBOR Serialization
+
+~~~cddl
+{::include cddl/veraison-cbor-labels.cddl}
+~~~
+
+Example:
+
+~~~cbor-diag
+{::include cddl/examples/ext-veraison-cbor-1.diag}
+~~~
 
 # Implementation Status
 
