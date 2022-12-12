@@ -118,7 +118,7 @@ Where:
 {:vspace}
 `ear.status` (mandatory)
 : The overall appraisal status represented as one of the four trustworthiness tiers ({{sec-trusttiers}}).
-If the `ear.trustworthiness-vector` claim is also present, the value of this claim MUST be set to the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.
+If the `ear.trustworthiness-vector` claim is also present, the value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.
 
 `eat_profile` (mandatory)
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set and encodings defined by this document.
@@ -129,14 +129,14 @@ It MUST be the following tag URI ({{-tag-uri}}) `tag:github.com,2022:veraison/ea
 See {{sec-tvector}} for the details.
 
 `ear.raw-evidence` (optional)
-: The unabridged evidence submitted for appraisal.
+: The unabridged evidence submitted for appraisal, including any signed container/envelope.
 
 `iat` (mandatory)
-: The time at which the EAR is issued.
+: "Issued At" claim -- the time at which the EAR is issued.
 See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).
 
 `ear.appraisal-policy-id` (optional)
-: An unique identifier of the appraisal policy used to compute the attestation result.
+: An unique identifier of the appraisal policy used to evaluate the attestation result.
 
 `$$ear-extension` (optional)
 : Any application- or deployment-specific extension.
