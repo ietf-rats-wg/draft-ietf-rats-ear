@@ -219,7 +219,20 @@ The example in {{fig-ex-json-2}} is a minimalist (successful) attestation result
 
 ## Extensions {#sec-extensions}
 
-TODO
+The EAR claims-set can be extended by plugging new claims into the `$$ear-extension` CDDL socket.
+This specification anticipates two kinds of extensions: standard and custom.
+Standard extensions broaden
+EAR can also accommodate per-application and per-deployment extensions.
+
+Standard extensions can be simple or complex (e.g., sub-maps) claims.
+Standard extensions are registered using the procedure defined in {{sec-iana-ear-ext}}.
+
+Keys for private extensions MUST be chosen as follows:
+
+* negative integers for CBOR serialization
+
+
+In general, a receiver MUST ignore any unknown claim, standard or private.
 
 # Implementation Status
 
@@ -264,7 +277,9 @@ TODO Security
 
 # IANA Considerations
 
-This document has no IANA actions.
+## Standard EAR Key Registry {#sec-iana-ear-ext}
+
+TODO
 
 --- back
 
