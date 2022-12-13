@@ -1,5 +1,5 @@
 $$ear-extension //= (
-  ear.teep.claims => ear-teep-claims
+  ear.teep-claims => ear-teep-claims
 )
 
 ear-teep-claims = non-empty<{
@@ -10,5 +10,3 @@ ear-teep-claims = non-empty<{
   ? eat.hardware-version => eat.hardware-version-type
   ? eat.manifests => eat.manifests-type
 }>
-
-; vim: set tw=70 ts=2 et:

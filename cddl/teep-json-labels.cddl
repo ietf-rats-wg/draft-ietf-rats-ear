@@ -34,5 +34,3 @@ oemid-ieee = base64-url-text ; cddl(1)-unsupported: .size 4
 oemid-random = base64-url-text ; cddl(1)-unsupported: .size 24
 
 base64-url-text = tstr .regexp "[A-Za-z0-9_=-]+"
-
-; vim: set tw=70 ts=2 et:

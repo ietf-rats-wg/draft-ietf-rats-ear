@@ -50,10 +50,13 @@ normative:
   I-D.ietf-rats-architecture: rats-arch
   I-D.ietf-rats-eat: eat
   I-D.ietf-teep-protocol: teep
+  I-D.ietf-rats-eat-media-type: eat-media-type
 
 informative:
   RFC7942: impl-status
   RFC4151: tag-uri
+  IANA.cwt:
+  IANA.jwt:
 
 entity:
   SELF: "RFCthis"
@@ -255,7 +258,7 @@ claims into the `$$ear-extension` CDDL socket.
 The rules that govern extensibility of EAR are those defined in {{-cwt}} and
 {{-jwt}} for CWTs and JWTs respectively.
 An up-to-date view of the registered claims can be obtained via the
-{{?IANA.cwt}} and {{?IANA.jwt}} registries.
+{{IANA.cwt}} and {{IANA.jwt}} registries.
 
 A deployment-specific extension will normally mint its claim from the "private
 space" - using integer values less than -65536 for CWT, and Public or
@@ -279,6 +282,40 @@ be used in EAR claims-sets identified by this profile.
 An extension MUST NOT change the semantics of the base EAR claims-set.
 
 A receiver MUST ignore any unknown claim.
+
+## TEEP Application Extensions {#sec-extensions-teep}
+
+The TEEP protocol {{-teep}} specifies the required claims that an attestation
+result must carry for a TAM (Trusted Application Manager) to make decisions on
+how to remediate a TEE (Trusted Execution Environment) that is out of
+compliance, or update a TEE that is requesting an authorized change.
+
+The list is provided in {{Section 4.3.1 of -teep}}.
+
+EAR defines a TEEP application extension for the purpose of conveying such claims.
+
+~~~cddl
+{::include cddl/teep.cddl}
+~~~
+{: #fig-cddl-teep title="TEEP Application Extension (CDDL Definition)" }
+
+### JSON Serialization
+
+~~~cddl
+{::include cddl/teep-json-labels.cddl}
+~~~
+
+Example:
+
+~~~cddl
+{::include cddl/examples/ext-teep-json-1.diag}
+~~~
+
+### CBOR Serialization
+
+~~~cddl
+{::include cddl/teep-cbor-labels.cddl}
+~~~
 
 ## Veraison Deployment Extensions
 
@@ -319,6 +356,23 @@ Example:
 
 ~~~cbor-diag
 {::include cddl/examples/ext-veraison-cbor-1.diag}
+~~~
+
+# Media Types
+
+Media types for EAR are automatically derived from the base EAT media type
+{{-eat-media-type}} using the profile string defined in {{sec-ear}}.
+
+For example, a JWT serialization would use:
+
+~~~
+application/eat-jwt; eat_profile="tag:github.com,2022:veraison/ear"
+~~~
+
+A CWT serialization would instead use:
+
+~~~
+application/eat-cwt; eat_profile="tag:github.com,2022:veraison/ear"
 ~~~
 
 # Implementation Status
@@ -366,7 +420,66 @@ TODO Security
 
 ## New EAT Claims {#sec-iana-ear-claims}
 
-TODO
+This specification adds the following values to the "JSON Web Token Claims"
+registry {{IANA.jwt}} and the "CBOR Web Token Claims" registry {{IANA.cwt}}.
+
+Each entry below is an addition to both registries.
+
+The "Claim Description", "Change Controller" and "Specification Documents" are
+common and equivalent for the JWT and CWT registries.
+The "Claim Key" and "Claim Value Types(s)" are for the CWT registry only.
+The "Claim Name" is as defined for the CWT registry, not the JWT registry.
+The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
+
+### EAR Status
+
+* Claim Name: ear.status
+* Claim Description: EAR Status
+* JWT Claim Name: ear.status
+* Claim Key: 1000
+* Claim Value Type(s): unsigned integer (0, 2, 32, 96)
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
+
+### EAR Trustworthiness Vector
+
+* Claim Name: ear.trustworthiness-vector
+* Claim Description: EAR Trustworthiness Vector
+* JWT Claim Name: ear.trustworthiness-vector
+* Claim Key: 1001
+* Claim Value Type(s): array
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
+
+### EAR Raw Evidence
+
+* Claim Name: ear.raw-evidence
+* Claim Description: EAR Raw Evidence
+* JWT Claim Name: ear.raw-evidence
+* Claim Key: 1002
+* Claim Value Type(s): bytes
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
+
+### EAR Appraisal Policy Identifier
+
+* Claim Name: ear.appraisal-policy-id
+* Claim Description: EAR Appraisal Policy Identifier
+* JWT Claim Name: ear.appraisal-policy-id
+* Claim Key: 1003
+* Claim Value Type(s): text
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
+
+### EAR TEEP Application Claims
+
+* Claim Name: ear.teep-claims
+* Claim Description: EAR TEEP Application Claims
+* JWT Claim Name: ear.teep-claims
+* Claim Key: 1004
+* Claim Value Type(s): array
+* Change Controller: IESG
+* Specification Document(s): {{sec-extensions-teep}} of {{&SELF}}
 
 --- back
 
