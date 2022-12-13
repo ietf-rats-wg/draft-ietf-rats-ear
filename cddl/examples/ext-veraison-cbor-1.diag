@@ -10,7 +10,7 @@
   1002: h'6C696665626F61746D616E',
   1003: "https://veraison.example/policy/1/60a0068d",
   6: 1666529184,
-  64000: {
+  -70000: {
     "eat-profile": "http://arm.com/psa/2.0.0",
     "psa-client-id": 1,
     "psa-security-lifecycle": 12288,
@@ -29,7 +29,7 @@
     "psa-instance-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
     "psa-certification-reference": "1234567890123-12345"
   },
-  64001: {
+  -70001: {
     "psa-certified": {
       "certificate-number": "1234567890123-12345",
       "date-of-issue": "23/06/2022",
