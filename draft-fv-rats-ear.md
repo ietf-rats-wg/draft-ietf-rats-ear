@@ -74,7 +74,7 @@ Alongside the trustworthiness vector, EAR provides contextual information bound
 to the appraisal process.
 This allows a relying party (or an auditor) to reconstruct the frame of
 reference in which the trustworthiness vector was originally computed.
-EAR can also accommodate per-application and per-deployment extensions.
+EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT or JWT.
 
 --- middle
@@ -92,7 +92,7 @@ Alongside the trustworthiness vector, EAR provides contextual information bound
 to the appraisal process.
 This allows a relying party (or an auditor) to reconstruct the frame of
 reference in which the trustworthiness vector was originally computed.
-EAR can also accommodate per-application and per-deployment extensions.
+EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT {{-cwt}} or JWT {{-jwt}}.
 
 # Conventions and Definitions
@@ -152,7 +152,7 @@ representation).
 result.
 
 `$$ear-extension` (optional)
-: Any application- or deployment-specific extension.
+: Any registered or unregistered extension.
 An EAR extension MUST be a map.
 See {{sec-extensions}} for further details.
 
@@ -249,41 +249,62 @@ result that doesn't carry a trustworthiness vector.
 
 EAR provides core semantics for describing the result of appraising attestation
 evidence.
-However, a given deployment may offer extra functionality to its relying
-parties, or tailor the attestation result to the needs of an application (e.g.,
+However, a given application may offer extra functionality to its relying
+parties, or tailor the attestation result to the needs of the application (e.g.,
 TEEP {{-teep}}).
 To accommodate such cases, the EAR claims-set can be extended by plugging new
 claims into the `$$ear-extension` CDDL socket.
 
 The rules that govern extensibility of EAR are those defined in {{-cwt}} and
 {{-jwt}} for CWTs and JWTs respectively.
-An up-to-date view of the registered claims can be obtained via the
-{{IANA.cwt}} and {{IANA.jwt}} registries.
 
-A deployment-specific extension will normally mint its claim from the "private
+An extension MUST NOT change the semantics of the base EAR claims-set.
+
+A receiver MUST ignore any unknown claim.
+
+## Unregistered claims
+
+An application-specific extension will normally mint its claim from the "private
 space" - using integer values less than -65536 for CWT, and Public or
 Private Claim Names as defined in {{Sections 4.2 and 4.3 of -jwt}} when
 serializing to JWT.
+
 It is RECOMMENDED that JWT EARs use Collision-Resistant Public Claim Names
 ({{Section 2 of -jwt}}) rather than Private Claim Names.
 
-If there is even the slightest chance that an application-specific extension
-will be used across multiple environments, the associated extension claim
+## Registered claims {#sec-registered-claims}
+
+If an extension will be used across multiple applications, or is intended to be
+used across multiple environments, the associated extension claims
 SHOULD be registered in one, or both, the CWT and JWT claim registries.
-Since there is in general no guarantee that an application will be confined
-within an environment, it is RECOMMENDED that application-specific extension
-claims are always registered.
 
 In general, if the registration policy requires an accompanying specification
 document (as it is the case for "specification required" and "standards
 action"), such document SHOULD explicitly say that the extension is expected to
 be used in EAR claims-sets identified by this profile.
 
-An extension MUST NOT change the semantics of the base EAR claims-set.
+An up-to-date view of the registered claims can be obtained via the
+{{IANA.cwt}} and {{IANA.jwt}} registries.
 
-A receiver MUST ignore any unknown claim.
+## Choosing between registered and unregistered claims
 
-## TEEP Application Extensions {#sec-extensions-teep}
+If an extension is to support functionality of a specific application (e.g.
+Veraison Services), its claims MAY be registered.
+
+If an extension is to support a protocol that may be applicable across multiple
+applications or environments (e.g., TEEP), its claims SHOULD be registered.
+
+Since, in general, there is no guarantee that an application will be confined
+within an environment, it is RECOMMENDED that extension claims that have
+meaning outside the application's context are always registered.
+
+It is also possible that claims that start out as application-specific acquire
+a more stable meaning over time. In such cases, it is RECOMMENDED that new
+equivalent claims are created in the "public space" and are registered as
+described in {{sec-registered-claims}}. The original "private space" claims
+SHOULD then be deprecated by the application.
+
+## TEEP Extensions {#sec-extensions-teep}
 
 The TEEP protocol {{-teep}} specifies the required claims that an attestation
 result must carry for a TAM (Trusted Application Manager) to make decisions on
@@ -297,7 +318,7 @@ EAR defines a TEEP application extension for the purpose of conveying such claim
 ~~~cddl
 {::include cddl/teep.cddl}
 ~~~
-{: #fig-cddl-teep title="TEEP Application Extension (CDDL Definition)" }
+{: #fig-cddl-teep title="TEEP Extension (CDDL Definition)" }
 
 ### JSON Serialization
 
@@ -317,9 +338,9 @@ Example:
 {::include cddl/teep-cbor-labels.cddl}
 ~~~
 
-## Veraison Deployment Extensions
+## Veraison Extensions
 
-The Veraison verifier defines two private, deployment-specific extensions:
+The Veraison verifier defines two private, application-specific extensions:
 
 * Processed Evidence:
 : The appraised evidence claims-set converted into a JSON object.
@@ -332,7 +353,7 @@ associated with the device, or any other endorsed attribute.
 ~~~cddl
 {::include cddl/veraison.cddl}
 ~~~
-{: #fig-cddl-veraison title="Veraison Deployment Extensions (CDDL Definition)" }
+{: #fig-cddl-veraison title="Veraison Extensions (CDDL Definition)" }
 
 ### JSON Serialization
 
@@ -471,10 +492,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
 
-### EAR TEEP Application Claims
+### EAR TEEP Claims
 
 * Claim Name: ear.teep-claims
-* Claim Description: EAR TEEP Application Claims
+* Claim Description: EAR TEEP Claims
 * JWT Claim Name: ear.teep-claims
 * Claim Key: 1004
 * Claim Value Type(s): array
