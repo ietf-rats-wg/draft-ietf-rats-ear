@@ -123,9 +123,9 @@ Where:
 `ear.status` (mandatory)
 : The overall appraisal status represented as one of the four trustworthiness
 tiers ({{sec-trusttiers}}).
-If the `ear.trustworthiness-vector` claim is also present, the value of this
-claim MUST be set to a tier of no higher trust than the tier corresponding to
-the worst trustworthiness claim across the entire trustworthiness vector.
+The value of this claim MUST be set to a tier of no higher trust than the tier
+corresponding to the worst trustworthiness claim across the entire
+trustworthiness vector.
 
 `eat_profile` (mandatory)
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
@@ -136,6 +136,11 @@ It MUST be the following tag URI ({{-tag-uri}})
 `ear.trustworthiness-vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal.
 See {{sec-tvector}} for the details.
+This claim MUST be present unless the party requesting Evidence appraisal
+explicitly asks for it to be dropped, e.g., via an API parameter or similar
+arrangement.  Such consumer would therefore rely entirely on the semantics of
+the `ear.status` claim.  This behaviour is NOT RECOMMENDED because of the
+resulting loss of quality of the appraisal result.
 
 `ear.raw-evidence` (optional)
 : The unabridged evidence submitted for appraisal, including any signed
