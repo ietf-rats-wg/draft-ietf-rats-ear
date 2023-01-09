@@ -246,9 +246,15 @@ result that doesn't carry a trustworthiness vector.
 
 ### Examples
 
+The example in {{fig-ex-cbor-1}} is semantically equivalent to that in
+{{fig-ex-json-1}}.  It shows the same "contraindicated" appraisal using the
+more compact CBOR serialization of the EAR claims-set.
+
 ~~~cbor-diag
 {::include cddl/examples/ear-cbor-1.diag}
 ~~~
+{: #fig-ex-cbor-1 title="CBOR claims-set: contraindicated appraisal" }
+
 
 # EAR Extensions {#sec-extensions}
 
@@ -293,10 +299,10 @@ An up-to-date view of the registered claims can be obtained via the
 
 ## Choosing between registered and unregistered claims
 
-If an extension is to support functionality of a specific application (e.g.
+If an extension supports functionality of a specific application (e.g.
 Veraison Services), its claims MAY be registered.
 
-If an extension is to support a protocol that may be applicable across multiple
+If an extension supports a protocol that may be applicable across multiple
 applications or environments (e.g., TEEP), its claims SHOULD be registered.
 
 Since, in general, there is no guarantee that an application will be confined
@@ -309,7 +315,7 @@ equivalent claims are created in the "public space" and are registered as
 described in {{sec-registered-claims}}. The original "private space" claims
 SHOULD then be deprecated by the application.
 
-## TEEP Extensions {#sec-extensions-teep}
+## TEEP Extension {#sec-extensions-teep}
 
 The TEEP protocol {{-teep}} specifies the required claims that an attestation
 result must carry for a TAM (Trusted Application Manager) to make decisions on
@@ -343,17 +349,24 @@ Example:
 {::include cddl/teep-cbor-labels.cddl}
 ~~~
 
-## Veraison Extensions
+Example:
+
+~~~cddl
+{::include cddl/examples/ext-teep-cbor-1.diag}
+~~~
+
+## Veraison Extensions {#sec-extensions-veraison}
 
 The Veraison verifier defines two private, application-specific extensions:
 
-* Processed Evidence:
+{:vspace}
+`ear.veraison.processed-evidence`
 : The appraised evidence claims-set converted into a JSON object.
 
-* Verifier Added Claims:
-: A JSON map containing any claims about the attester that are inferred by the
+`ear.veraison.verifier-added-claims`
+: A map containing any claims about the attester that are inferred by the
 verifier during the appraisal process.  For example: the certification status
-associated with the device, or any other endorsed attribute.
+associated with the device, or other endorsed attributes.
 
 ~~~cddl
 {::include cddl/veraison.cddl}
@@ -508,6 +521,27 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Specification Document(s): {{sec-extensions-teep}} of {{&SELF}}
 
 --- back
+
+# Common CDDL Types
+
+{:vspace}
+`non-empty`
+: A CDDL generic that can be used to ensure the presence of at least one item
+in an object with only optional fields.
+
+~~~cddl
+{::include cddl/generic-non-empty.cddl}
+~~~
+
+{:vspace}
+`base64-url-text`
+: string type representing a Base64 URL-encoded string (see {{Section 5 of
+!RFC4648}}).
+
+~~~cddl
+{::include cddl/base64-url-text.cddl}
+~~~
+
 
 # Acknowledgments
 {:numbered="false"}

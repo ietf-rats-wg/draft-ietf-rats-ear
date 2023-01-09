@@ -7,10 +7,7 @@ SHELL := /bin/bash
 include tools.mk
 
 check:: check-ear-json check-ear-json-examples
-#check:: check-ear-cbor check-ear-cbor-examples
-#check:: check-ext-veraison-cbor check-ext-veraison-cbor-examples
-#check:: check-ext-veraison-json check-ext-veraison-json-examples
-#check:: check-ext-teep-json check-ext-teep-json-examples
+check:: check-ear-cbor check-ear-cbor-examples
 
 # $1: label
 # $2: cddl fragments
@@ -40,54 +37,9 @@ CLEANFILES += $(3:.diag=.cbor)
 endef # cddl_check_template
 
 include ear-json-frags.mk
+include ear-cbor-frags.mk
 
 $(eval $(call cddl_check_template,ear-json,$(EAR_JSON_FRAGS),$(EAR_JSON_EXAMPLES)))
-
-CBOR_FRAGS := attestation-result.cddl
-CBOR_FRAGS += trustworthiness-vector.cddl
-CBOR_FRAGS += trust-tiers.cddl
-CBOR_FRAGS += cbor-labels.cddl
-CBOR_FRAGS += generic-non-empty.cddl
-
-CBOR_EXAMPLES := $(wildcard examples/cbor-*.diag)
-
-$(eval $(call cddl_check_template,cbor,$(CBOR_FRAGS),$(CBOR_EXAMPLES)))
-
-VERAISON_CBOR_FRAGS := attestation-result.cddl
-VERAISON_CBOR_FRAGS += trustworthiness-vector.cddl
-VERAISON_CBOR_FRAGS += trust-tiers.cddl
-VERAISON_CBOR_FRAGS += cbor-labels.cddl
-VERAISON_CBOR_FRAGS += generic-non-empty.cddl
-VERAISON_CBOR_FRAGS += veraison.cddl
-VERAISON_CBOR_FRAGS += veraison-cbor-labels.cddl
-
-VERAISON_CBOR_EXAMPLES := $(wildcard examples/veraison-cbor-*.diag)
-
-$(eval $(call cddl_check_template,veraison-cbor,$(VERAISON_CBOR_FRAGS),$(VERAISON_CBOR_EXAMPLES)))
-
-VERAISON_JSON_FRAGS := attestation-result.cddl
-VERAISON_JSON_FRAGS += trustworthiness-vector.cddl
-VERAISON_JSON_FRAGS += trust-tiers.cddl
-VERAISON_JSON_FRAGS += json-labels.cddl
-VERAISON_JSON_FRAGS += generic-non-empty.cddl
-VERAISON_JSON_FRAGS += veraison.cddl
-VERAISON_JSON_FRAGS += veraison-json-labels.cddl
-
-VERAISON_JSON_EXAMPLES := $(wildcard examples/veraison-json-*.diag)
-
-$(eval $(call cddl_check_template,veraison-json,$(VERAISON_JSON_FRAGS),$(VERAISON_JSON_EXAMPLES)))
-
-TEEP_JSON_FRAGS := attestation-result.cddl
-TEEP_JSON_FRAGS += trustworthiness-vector.cddl
-TEEP_JSON_FRAGS += trust-tiers.cddl
-TEEP_JSON_FRAGS += json-labels.cddl
-TEEP_JSON_FRAGS += generic-non-empty.cddl
-TEEP_JSON_FRAGS += teep.cddl
-TEEP_JSON_FRAGS += teep-json-labels.cddl
-TEEP_JSON_FRAGS += coswid-version-scheme.cddl
-
-TEEP_JSON_EXAMPLES := $(wildcard examples/teep-json-*.diag)
-
-$(eval $(call cddl_check_template,teep-json,$(TEEP_JSON_FRAGS),$(TEEP_JSON_EXAMPLES)))
+$(eval $(call cddl_check_template,ear-cbor,$(EAR_CBOR_FRAGS),$(EAR_CBOR_EXAMPLES)))
 
 clean: ; rm -f $(CLEANFILES)
