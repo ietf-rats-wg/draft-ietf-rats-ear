@@ -1,3 +1,32 @@
-ear.teep.claims = 65000
+ear.teep-claims = 65000
 
-; TODO
+eat.nonce = 10
+eat.ueid = 256
+eat.oemid = 258
+eat.hardware-model = 259
+eat.hardware-version = 260
+eat.manifests = 273 ; XXX provisional
+
+eat.nonce-type = bytes .size (8..64)
+eat.ueid-type = bytes .size (7..33)
+eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
+eat.hardware-model-type = bytes .size (1..32)
+
+eat.hardware-version-type = [
+  version: text
+  ? scheme: $version-scheme
+]
+
+eat.manifests-type = [ + manifest-format ]
+
+manifest-format = [
+  content-type: coap-content-format
+  content-format: bytes .cbor untagged-coswid
+]
+
+coap-content-format = uint .le 65535
+untagged-coswid = bytes ; XXX should import coswid
+
+oemid-pen = int
+oemid-ieee = bytes .size 3
+oemid-random = bytes .size 16

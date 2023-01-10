@@ -1,4 +1,4 @@
-ear.teep.claims = "ear.teep.claims"
+ear.teep-claims = "ear.teep-claims"
 
 eat.nonce = "nonce"
 eat.ueid = "ueid"
@@ -32,5 +32,3 @@ coap-content-format = uint .le 65535
 oemid-pen = int
 oemid-ieee = base64-url-text ; cddl(1)-unsupported: .size 4
 oemid-random = base64-url-text ; cddl(1)-unsupported: .size 24
-
-base64-url-text = tstr .regexp "[A-Za-z0-9_=-]+"

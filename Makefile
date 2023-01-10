@@ -11,6 +11,7 @@ else
 endif
 
 include cddl/ear-json-frags.mk
+include cddl/ear-cbor-frags.mk
 
 define cddl_targets
 
@@ -22,5 +23,6 @@ cddl/$(1)-autogen.cddl: $(addprefix cddl/,$(2)) $(addprefix cddl/examples/,$(3))
 endef # cddl_targets
 
 $(eval $(call cddl_targets,ear-json,$(EAR_JSON_FRAGS),$(EAR_JSON_EXAMPLES)))
+$(eval $(call cddl_targets,ear-cbor,$(EAR_CBOR_FRAGS),$(EAR_CBOR_EXAMPLES)))
 
 clean:: ; $(MAKE) -C cddl clean
