@@ -1,0 +1,4 @@
+ar4si.verifier-id = {
+  build => text
+  developer => text
+}

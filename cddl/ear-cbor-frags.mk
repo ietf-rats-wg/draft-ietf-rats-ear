@@ -1,4 +1,6 @@
-EAR_CBOR_FRAGS := attestation-result.cddl
+EAR_CBOR_FRAGS := ear.cddl
+EAR_CBOR_FRAGS += ear-appraisal.cddl
+EAR_CBOR_FRAGS += verifier-id.cddl
 EAR_CBOR_FRAGS += trustworthiness-vector.cddl
 EAR_CBOR_FRAGS += trust-tiers.cddl
 EAR_CBOR_FRAGS += veraison.cddl

@@ -1,4 +1,6 @@
-EAR_JSON_FRAGS := attestation-result.cddl
+EAR_JSON_FRAGS := ear.cddl
+EAR_JSON_FRAGS += ear-appraisal.cddl
+EAR_JSON_FRAGS += verifier-id.cddl
 EAR_JSON_FRAGS += trustworthiness-vector.cddl
 EAR_JSON_FRAGS += trust-tiers.cddl
 EAR_JSON_FRAGS += veraison.cddl

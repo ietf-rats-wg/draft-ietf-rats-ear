@@ -1,13 +1,10 @@
 ear.teep-claims = "ear.teep-claims"
 
-eat.nonce = "nonce"
 eat.ueid = "ueid"
 eat.oemid = "oemid"
 eat.hardware-model = "hwmodel"
 eat.hardware-version = "hwversion"
 eat.manifests = "manifests"
-
-eat.nonce-type = tstr .size (10..74)
 
 eat.ueid-type = base64-url-text ; cddl(1)-unsupported: .size (12..44)
 

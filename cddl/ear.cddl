@@ -1,0 +1,9 @@
+EAR = {
+  eat.profile => "tag:github.com,2023:veraison/ear"
+  iat => int
+  ear.verifier-id => ar4si.verifier-id
+  ? ear.raw-evidence => ear-bytes
+  eat.submods => { + text => EAR-appraisal }
+  ? eat.nonce => eat.nonce-type
+  * $$ear-extension
+}

@@ -1,9 +1,6 @@
-EAR = {
+EAR-appraisal = {
   ear.status => $ar4si.trust-tier
-  eat_profile => "tag:github.com,2022:veraison/ear"
   ? ear.trustworthiness-vector => ar4si.trustworthiness-vector
-  ? ear.raw-evidence => ear-bytes
-  iat => int
   ? ear.appraisal-policy-id => text
-  * $$ear-extension
+  * $$ear-appraisal-extension
 }
