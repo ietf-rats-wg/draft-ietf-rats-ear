@@ -158,6 +158,10 @@ entirely within a private deployment.
 See {{sec-ear-appraisal}} for the details about the contents of an
 `EAR-appraisal`.
 
+`eat.nonce` (optional)
+: A user supplied nonce that is echoed by the verifier to provide freshness.
+See {{Section 4.1 of -eat}}.
+
 `$$ear-extension` (optional)
 : Any registered or unregistered extension.
 An EAR extension MUST be a map.
