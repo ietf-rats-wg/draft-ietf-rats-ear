@@ -398,32 +398,32 @@ The list is provided in {{Section 4.3.1 of -teep}}.
 EAR defines a TEEP application extension for the purpose of conveying such claims.
 
 ~~~cddl
-TODO
+{::include cddl/teep.cddl}
 ~~~
 {: #fig-cddl-teep title="TEEP Extension (CDDL Definition)" }
 
 ### JSON Serialization
 
 ~~~cddl
-TODO
+{::include cddl/teep-json-labels.cddl}
 ~~~
 
 Example:
 
 ~~~cddl
-TODO
+{::include cddl/examples/ext-teep-json-1.diag}
 ~~~
 
 ### CBOR Serialization
 
 ~~~cddl
-TODO
+{::include cddl/teep-cbor-labels.cddl}
 ~~~
 
 Example:
 
 ~~~cddl
-TODO
+{::include cddl/examples/ext-teep-cbor-1.diag}
 ~~~
 
 ## Veraison Extensions {#sec-extensions-veraison}
