@@ -431,39 +431,40 @@ TODO
 The Veraison verifier defines two private, application-specific extensions:
 
 {:vspace}
-`ear.veraison.TODO1`
-: TODO
+`ear.veraison.annotated-evidence`
+: JSON representation of the evidence claims-set, including any annotations
+provided by the Veraison verifier.
 
-`ear.veraison.TODO2`
-: TODO
+`ear.veraison.policy-claims`
+: any extra claims added by the policy engine in the Veraison verifier.
 
 ~~~cddl
-TODO
+{::include cddl/veraison.cddl}
 ~~~
 {: #fig-cddl-veraison title="Veraison Extensions (CDDL Definition)" }
 
 ### JSON Serialization
 
 ~~~cddl
-TODO
+{::include cddl/veraison-json-labels.cddl}
 ~~~
 
 Example:
 
 ~~~cbor-diag
-TODO
+{::include cddl/examples/ext-veraison-json-1.diag}
 ~~~
 
 ### CBOR Serialization
 
 ~~~cddl
-TODO
+{::include cddl/veraison-cbor-labels.cddl}
 ~~~
 
 Example:
 
 ~~~cbor-diag
-TODO
+{::include cddl/examples/ext-veraison-cbor-1.diag}
 ~~~
 
 # Media Types

@@ -14,7 +14,8 @@
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d"
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d"
     }
   }
 }
