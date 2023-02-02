@@ -375,7 +375,7 @@ An up-to-date view of the registered claims can be obtained via the
 ## Choosing between registered and unregistered claims
 
 If an extension supports functionality of a specific application (e.g.
-Veraison Services), its claims MAY be registered.
+Project Veraison Services), its claims MAY be registered.
 
 If an extension supports a protocol that may be applicable across multiple
 applications or environments (e.g., TEEP), its claims SHOULD be registered.
@@ -430,22 +430,23 @@ Example:
 {::include cddl/examples/ext-teep-cbor-1.diag}
 ~~~
 
-## Veraison Extensions {#sec-extensions-veraison}
+## Project Veraison Extensions {#sec-extensions-veraison}
 
-The Veraison verifier defines two private, application-specific extensions:
+The Project Veraison verifier defines two private, application-specific
+extensions:
 
 {:vspace}
 `ear.veraison.annotated-evidence`
 : JSON representation of the evidence claims-set, including any annotations
-provided by the Veraison verifier.
+provided by the Project Veraison verifier.
 
 `ear.veraison.policy-claims`
-: any extra claims added by the policy engine in the Veraison verifier.
+: any extra claims added by the policy engine in the Project Veraison verifier.
 
 ~~~cddl
 {::include cddl/veraison.cddl}
 ~~~
-{: #fig-cddl-veraison title="Veraison Extensions (CDDL Definition)" }
+{: #fig-cddl-veraison title="Project Veraison Extensions (CDDL Definition)" }
 
 ### JSON Serialization
 
@@ -512,8 +513,8 @@ fit".
 
 ## `github.com/veraison/ear`
 
-The organization responsible for this implementation is Veraison, a Linux
-Foundation project hosted at the Confidential Computing Consortium.
+The organization responsible for this implementation is Project Veraison, a
+Linux Foundation project hosted at the Confidential Computing Consortium.
 The software, hosted at [](https://github.com/veraison/ear), provides a Golang
 package that allows encoding, decoding, signing and verification of EAR
 payloads together with a CLI (`arc`) to create, verify and visualize EARs on
@@ -523,7 +524,8 @@ implemented.
 The license is Apache 2.0.
 The developers can be contacted on the Zulip channel:
 [](https://veraison.zulipchat.com/#narrow/stream/357929-EAR/).
-The package is used by the Veraison verifier to produce attestation results.
+The package is used by the Project Veraison verifier to produce attestation
+results.
 
 # Security Considerations
 
