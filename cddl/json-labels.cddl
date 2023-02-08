@@ -9,7 +9,12 @@ ear.status = "ear.status"
 ear.trustworthiness-vector = "ear.trustworthiness-vector"
 ear.raw-evidence = "ear.raw-evidence"
 ear.appraisal-policy-id = "ear.appraisal-policy-id"
-eat_profile = "eat_profile"
+ear.verifier-id = "ear.verifier-id"
+; EAT JWT claims
+eat.profile = "eat_profile"
+eat.nonce = "eat_nonce"
+eat.submods = "submods"
+; JWT claims
 iat = "iat"
 
 ; ar4si.trustworthiness-vector 
@@ -25,3 +30,10 @@ sourced-data = "sourced-data"
 ; JSON types mapping
 ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
 ear-label = text
+
+; ar4si.verifier-id labels
+developer = "developer"
+build = "build"
+
+; EAT
+eat.nonce-type = text .size (10..74)

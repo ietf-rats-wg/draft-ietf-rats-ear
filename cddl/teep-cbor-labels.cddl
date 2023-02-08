@@ -1,13 +1,11 @@
 ear.teep-claims = 65000
 
-eat.nonce = 10
 eat.ueid = 256
 eat.oemid = 258
 eat.hardware-model = 259
 eat.hardware-version = 260
 eat.manifests = 273 ; XXX provisional
 
-eat.nonce-type = bytes .size (8..64)
 eat.ueid-type = bytes .size (7..33)
 eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
 eat.hardware-model-type = bytes .size (1..32)

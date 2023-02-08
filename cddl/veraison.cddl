@@ -1,17 +1,15 @@
-$$ear-extension //= (
-  ear.veraison.processed-evidence =>
-    ear-veraison-processed-evidence
+$$ear-appraisal-extension //= (
+  ear.veraison.annotated-evidence => ear-veraison-annotated-evidence
 )
 
-ear-veraison-processed-evidence = {
+ear-veraison-annotated-evidence = {
   + ear-label => any
 }
 
-$$ear-extension //= (
-  ear.veraison.verifier-added-claims =>
-    ear-veraison-verifier-added-claims
+$$ear-appraisal-extension //= (
+  ear.veraison.policy-claims => ear-veraison-policy-claims
 )
 
-ear-veraison-verifier-added-claims = {
+ear-veraison-policy-claims = {
   + ear-label => any
 }

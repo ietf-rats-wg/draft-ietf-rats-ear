@@ -1,4 +1,4 @@
-$$ear-extension //= (
+$$ear-appraisal-extension //= (
   ear.teep-claims => ear-teep-claims
 )
 
