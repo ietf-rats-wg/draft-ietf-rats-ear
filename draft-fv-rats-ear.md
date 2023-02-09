@@ -615,8 +615,10 @@ in an object with only optional fields.
 
 {:vspace}
 `base64-url-text`
-: string type representing a Base64 URL-encoded string (see {{Section 5 of
-!RFC4648}}).
+: Base64 encoding using the URL- and filename-safe character set defined in
+{{Section 5 of !RFC4648}}, with all trailing '=' characters omitted (as
+permitted by Section 3.2) and without the inclusion of any line breaks,
+whitespace, or other additional characters.
 
 ~~~cddl
 {::include cddl/base64-url-text.cddl}
