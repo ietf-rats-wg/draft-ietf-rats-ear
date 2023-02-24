@@ -1,2 +1,5 @@
 ear.veraison.annotated-evidence = -70000
 ear.veraison.policy-claims = -70001
+ear.veraison.key-attestation = -70002
+
+ear.veraison.attested-key-public = 0

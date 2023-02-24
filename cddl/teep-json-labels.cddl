@@ -6,11 +6,13 @@ eat.hardware-model = "hwmodel"
 eat.hardware-version = "hwversion"
 eat.manifests = "manifests"
 
-eat.ueid-type = base64-url-text ; cddl(1)-unsupported: .size (12..44)
+; cddl(1)-unsupported: .size (12..44)
+eat.ueid-type = base64-url-text
 
 eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
 
-eat.hardware-model-type = base64-url-text ; cddl(1)-unsupported: .size (4..44)
+; cddl(1)-unsupported: .size (4..44)
+eat.hardware-model-type = base64-url-text
 
 eat.hardware-version-type = [
   version:  tstr,
@@ -27,5 +29,7 @@ manifest-format = [
 coap-content-format = uint .le 65535
 
 oemid-pen = int
-oemid-ieee = base64-url-text ; cddl(1)-unsupported: .size 4
-oemid-random = base64-url-text ; cddl(1)-unsupported: .size 24
+; cddl(1)-unsupported: .size 4
+oemid-ieee = base64-url-text
+; cddl(1)-unsupported: .size 24
+oemid-random = base64-url-text
