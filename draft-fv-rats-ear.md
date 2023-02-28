@@ -40,6 +40,7 @@ normative:
   RFC7519: jwt
   RFC8392: cwt
   RFC8610: cddl
+  RFC5280: pkix
   STD94:
     -: cbor
     =: RFC8949
@@ -432,7 +433,7 @@ Example:
 
 ## Project Veraison Extensions {#sec-extensions-veraison}
 
-The Project Veraison verifier defines two private, application-specific
+The Project Veraison verifier defines three private, application-specific
 extensions:
 
 {:vspace}
@@ -442,6 +443,11 @@ provided by the Project Veraison verifier.
 
 `ear.veraison.policy-claims`
 : any extra claims added by the policy engine in the Project Veraison verifier.
+
+`ear.veraison.key-attestation`
+: contains the public key part of a successfully verified attested key.
+The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
+4.1.2.7 of -pkix}}).
 
 ~~~cddl
 {::include cddl/veraison.cddl}
@@ -458,6 +464,12 @@ Example:
 
 ~~~cbor-diag
 {::include cddl/examples/ext-veraison-json-1.diag}
+~~~
+
+Key attestation example:
+
+~~~cbor-diag
+{::include cddl/examples/ext-veraison-json-2.diag}
 ~~~
 
 ### CBOR Serialization
@@ -602,7 +614,7 @@ TODO
 
 --- back
 
-# Common CDDL Types
+# Common CDDL Types {#common-cddl-types}
 
 {:vspace}
 `non-empty`

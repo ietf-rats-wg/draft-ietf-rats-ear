@@ -13,3 +13,11 @@ $$ear-appraisal-extension //= (
 ear-veraison-policy-claims = {
   + ear-label => any
 }
+
+$$ear-appraisal-extension //= (
+  ear.veraison.key-attestation => ear-veraison-key-attestation
+)
+
+ear-veraison-key-attestation = {
+   ear.veraison.attested-key-public => ear-bytes
+}
