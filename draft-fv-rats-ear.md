@@ -145,6 +145,8 @@ See {{sec-verifier-id}} for further details on its structure and serialization.
 `ear.raw-evidence` (optional)
 : The unabridged evidence submitted for appraisal, including any signed
 container/envelope.
+This field may be consumed by other Verifiers in multi-stage verification
+scenarios or by auditors.
 
 `eat.submods` (mandatory)
 : A submodule map ({{Section 4.2.18 of -eat}}) holding one `EAR-appraisal` for
