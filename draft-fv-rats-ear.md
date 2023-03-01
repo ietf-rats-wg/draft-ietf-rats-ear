@@ -523,7 +523,7 @@ made the implemented protocols more mature.
 It is up to the individual working groups to use this information as they see
 fit".
 
-## Veraison
+## Veraison Project
 
 The organization responsible for this implementation is Project Veraison, a
 Linux Foundation project hosted at the Confidential Computing Consortium.
