@@ -636,6 +636,21 @@ whitespace, or other additional characters.
 {::include cddl/base64-url-text.cddl}
 ~~~
 
+# Open Issues
+
+<cref>Note to RFC Editor: please remove before publication.</cref>
+
+The list of currently open issues for this documents can be found at
+[](https://github.com/thomas-fossati/draft-ear/issues).
+
+# Document History
+
+<cref>Note to RFC Editor: please remove before publication.</cref>
+
+## draft-fv-rats-ear-00
+
+Initial release.
+
 # Acknowledgments
 {:numbered="false"}
 
