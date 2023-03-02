@@ -525,10 +525,19 @@ made the implemented protocols more mature.
 It is up to the individual working groups to use this information as they see
 fit".
 
-## `github.com/veraison/ear`
+## Project Veraison
 
 The organization responsible for this implementation is Project Veraison, a
 Linux Foundation project hosted at the Confidential Computing Consortium.
+
+The organization currently provides two separate implementations: one in Golang
+another in C17.
+
+The developers can be contacted on the Zulip channel:
+[](https://veraison.zulipchat.com/#narrow/stream/357929-EAR/).
+
+### `github.com/veraison/ear`
+
 The software, hosted at [](https://github.com/veraison/ear), provides a Golang
 package that allows encoding, decoding, signing and verification of EAR
 payloads together with a CLI (`arc`) to create, verify and visualize EARs on
@@ -536,9 +545,17 @@ the command line.
 The maturity level is currently alpha, and only the JWT serialization is
 implemented.
 The license is Apache 2.0.
-The developers can be contacted on the Zulip channel:
-[](https://veraison.zulipchat.com/#narrow/stream/357929-EAR/).
 The package is used by the Project Veraison verifier to produce attestation
+results.
+
+### `github.com/veraison/c-ear`
+
+The software, hosted at [](https://github.com/veraison/c-ear), provides a C17
+library that allows verification and partial decoding of EAR payloads.
+The maturity level is currently pre-alpha, and only the JWT serialization is
+implemented.
+The license is Apache 2.0.
+The library targets relying party applications that need to verify attestation
 results.
 
 # Security Considerations
