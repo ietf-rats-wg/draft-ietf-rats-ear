@@ -1,0 +1,38 @@
+ .-----------------------+
+| appraisal_context      o--> .------------------.
+|                        |   | verifier identity |
+|                        |   | attester identity |
+|                        |   | time of appraisal |
+|                        |   | ? freshness       |
+|                        |   | ? raw evidence    |
+|                        |    `------------------'
+|                        |
+| per_attester_appraisal o--> .-----------------------+
+|                        |   | appraisal_status       o--> {N,A,W,C}
+|                        |   | trustworthiness_vector o--> .------------------+
+|                        |   |                        |   | instance-identity o--> -128..127
+|                        |   |                        |   | configuration     o--> -128..127
+|                        |   |                        |   | executables       o--> -128..127
+|                        |   |                        |   | file-system       o--> -128..127
+|                        |   |                        |   | hardware          o--> -128..127
+|                        |   |                        |   | runtime-opaque    o--> -128..127
+|                        |   |                        |   | storage-opaque    o--> -128..127
+|                        |   |                        |   | sourced-data      o--> -128..127
+|                        |   |                        |    `------------------+
+|                        |   | appraisal_policy       |
+|                        |    `-----------------------'
+|                        |
+| standard-extensions    o--> .-----------.
+|                        |   | remediation |
+|                        |    '-+---------+-.
+|                        |     | key release |
+|                        |      '-+---------+-.
+|                        |       |     ...     |
+|                        |        '-----------'
+| custom-extensions      o--> .--------------.
+|                        |   |  vnd.X.extn-a  |
+|                        |    '-+------------+-.
+|                        |     |  vnd.X.extn-b  |
+|                        |      '--------------'
+| eat_profile            o--> "tag:github.com,2023:veraison/ear"
+ `-----------------------+
