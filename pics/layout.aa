@@ -3,7 +3,7 @@
 |                        |   | verifier identity |
 |                        |   | attester identity |
 |                        |   | time of appraisal |
-|                        |   | ? freshness       |
+|                        |   | ? nonce           |
 |                        |   | ? raw evidence    |
 |                        |    `------------------'
 |                        |
