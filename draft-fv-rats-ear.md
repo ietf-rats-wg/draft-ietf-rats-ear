@@ -558,6 +558,16 @@ The license is Apache 2.0.
 The library targets relying party applications that need to verify attestation
 results.
 
+### `github.com/veraison/rust-ear`
+
+The software, hosted at [](https://github.com/veraison/rust-ear), provides a
+Rust (2021 edition) library that allows verification and partial decoding of
+EAR payloads. The maturity level is currently pre-alpha, with limitted
+algorithm support.  Both JWT and COSE serializations are implemented.
+The license is Apache 2.0.
+The library targets relying party applications that need to verify attestation
+results.
+
 # Security Considerations
 
 TODO Security
