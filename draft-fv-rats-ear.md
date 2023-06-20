@@ -563,10 +563,10 @@ results.
 The software, hosted at [](https://github.com/veraison/rust-ear), provides a
 Rust (2021 edition) library that allows verification and partial decoding of
 EAR payloads. The maturity level is currently pre-alpha, with limitted
-algorithm support.  Both JWT and COSE serializations are implemented.
-The license is Apache 2.0.
-The library targets relying party applications that need to verify attestation
-results.
+algorithm support.  Both JWT and COSE serializations are implemented.  The
+license is Apache 2.0.  The library targets verifiers that need to produce
+attestation results as well as relying party applications that need to verify
+and consume attestation results.
 
 # Security Considerations
 
@@ -663,6 +663,101 @@ whitespace, or other additional characters.
 
 ~~~cddl
 {::include cddl/base64-url-text.cddl}
+~~~
+
+# Open Policy Agent Example
+
+Open Policy Agent [OPA](https://www.openpolicyagent.org) is a popular and
+flexible policy engine that is used in a variety of contexts, from cloud to
+IoT.  OPA policies are written using a purpose-built, declarative programming
+language called
+[Rego](https://www.openpolicyagent.org/docs/latest/policy-language/).  Rego has
+been designed to handle JSON claim-sets and their JWT envelopes as first class
+objects, which makes it an excellent fit for dealing with JWT EARs.
+
+The following example illustrates an OPA policy that a Relying Party would use
+to make decisions based on a JWT EAR received from a trusted verifier.
+
+~~~ rego
+package ear
+
+ear_appraisal = {
+    "verified": signature_verified,
+    "appraisal-status": status,
+    "trustworthiness-vector": trust_vector,
+} {
+    # verify EAR signature is correct and from one of the known and
+    # trusted verifiers
+    signature_verified := io.jwt.verify_es256(
+        input.ear_token,
+        json.marshal(input.trusted_verifiers)
+    )
+
+    # extract the EAR claims-set
+    [_, payload, _] := io.jwt.decode(input.ear_token)
+
+    # access the attester-specific appraisal record
+    app_rec := payload.submods.PARSEC_TPM
+    status := app_rec["ear.status"] == "affirming"
+
+    # extract the trustworhiness vector for further inspection
+    trust_vector := app_rec["ear.trustworthiness-vector"]
+}
+
+# add further conditions on the trust_vector here
+# ...
+~~~
+
+The result of the policy appraisal is the following JSON object:
+
+~~~ json
+{
+    "ear_appraisal": {
+        "appraisal-status": true,
+        "trustworthiness-vector": {
+            "executables": 2,
+            "hardware": 2,
+            "instance-identity": 2
+        },
+        "verified": true
+    }
+}
+~~~
+
+For completeness, the trusted verifier public key and the EAR JWT used in the
+example are provided below.
+
+~~~
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+{
+    "ear_token": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYXIucmF3L\
+WV2aWRlbmNlIjoiTnpRM01qWTVOek0yTlRZek56UUsiLCJlYXIudmVyaWZpZXItaWQiO\
+nsiYnVpbGQiOiJ2dHMgMC4wLjEiLCJkZXZlbG9wZXIiOiJodHRwczovL3ZlcmFpc29uL\
+XByb2plY3Qub3JnIn0sImVhdF9wcm9maWxlIjoidGFnOmdpdGh1Yi5jb20sMjAyMzp2Z\
+XJhaXNvbi9lYXIiLCJpYXQiOjEuNjY2NTI5MTg0ZSswOSwianRpIjoiNTViOGIzZmFkO\
+GRkMWQ4ZWFjNGU0OGYxMTdmZTUwOGIxMWY4NDRkOWYwMTg5YmZlZDliODc1MTVhNjc1N\
+DI2NCIsIm5iZiI6MTY3NzI0Nzg3OSwic3VibW9kcyI6eyJQQVJTRUNfVFBNIjp7ImVhc\
+i5hcHByYWlzYWwtcG9saWN5LWlkIjoiaHR0cHM6Ly92ZXJhaXNvbi5leGFtcGxlL3Bvb\
+GljeS8xLzYwYTAwNjhkIiwiZWFyLnN0YXR1cyI6ImFmZmlybWluZyIsImVhci50cnVzd\
+HdvcnRoaW5lc3MtdmVjdG9yIjp7ImV4ZWN1dGFibGVzIjoyLCJoYXJkd2FyZSI6Miwia\
+W5zdGFuY2UtaWRlbnRpdHkiOjJ9LCJlYXIudmVyYWlzb24ua2V5LWF0dGVzdGF0aW9uI\
+jp7ImFrcHViIjoiTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFY2pTc\
+DhfTVdNM2d5OFR1Z1dPMVRwUVNqX3ZJa3NMcEMtZzhsNVMzbHBHYjdQV1dHb0NBakVQO\
+F9BNTlWWndMWGd3b1p6TjBXeHVCUGpwYVdpV3NmQ1EifX19fQ.3Ym-f1LEgamxePUM7h\
+6Y2RJDGh9eeL0xKor0n1wE9jdAnLNwm3rTKFV2S2LbqVFoDtK9QGalT2t5RnUdfwZNmg\
+",
+    "trusted_verifiers": {
+        "keys": [
+            {
+                "alg": "ES256",
+                "crv": "P-256",
+                "kty": "EC",
+                "x": "usWxHK2PmfnHKwXPS54m0kTcGJ90UiglWiGahtagnv8",
+                "y": "IBOL-C3BttVivg-lSreASjpkttcsz-1rb7btKLv8EX4"
+            }
+        ]
+    }
+}
 ~~~
 
 # Open Issues
