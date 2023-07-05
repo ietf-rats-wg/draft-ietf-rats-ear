@@ -147,6 +147,8 @@ See {{sec-verifier-id}} for further details on its structure and serialization.
 container/envelope.
 This field may be consumed by other Verifiers in multi-stage verification
 scenarios or by auditors.
+There are privacy considerations associated with this claim.  See
+{{sec-priv-cons}}.
 
 `eat.submods` (mandatory)
 : A submodule map ({{Section 4.2.18 of -eat}}) holding one `EAR-appraisal` for
@@ -442,6 +444,8 @@ extensions:
 `ear.veraison.annotated-evidence`
 : JSON representation of the evidence claims-set, including any annotations
 provided by the Project Veraison verifier.
+There are privacy considerations associated with this claim.  See
+{{sec-priv-cons}}.
 
 `ear.veraison.policy-claims`
 : any extra claims added by the policy engine in the Project Veraison verifier.
@@ -571,6 +575,26 @@ and consume attestation results.
 # Security Considerations
 
 TODO Security
+
+# Privacy Considerations {#sec-priv-cons}
+
+EAR is designed to expose as little identifying information as possible about
+the attester.
+However, certain EAR claims have direct privacy implications.
+Implementations should therefore allow applying privacy-preserving techniques
+to those claims, for example allowing their redaction, anonymisation or
+outright removal.
+Specifically:
+
+* It SHOULD be possible to disable inclusion of the optional `ear.raw-evidence`
+  claim
+* It SHOULD be possible to disable inclusion of the optional
+  `ear.veraison.annotated-evidence` claim
+* It SHOULD be possible to allow redaction, anonymisation or removal of
+  specific claims from the `ear.veraison.annotated-evidence` object
+
+EAR is an EAT, therefore the privacy considerations in {{Section 8 of -eat}}
+apply.
 
 # IANA Considerations
 
