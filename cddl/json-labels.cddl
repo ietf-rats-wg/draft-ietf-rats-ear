@@ -17,7 +17,7 @@ eat.submods = "submods"
 ; JWT claims
 iat = "iat"
 
-; ar4si.trustworthiness-vector 
+; ar4si.trustworthiness-vector
 instance-identity = "instance-identity"
 configuration = "configuration"
 executables = "executables"
@@ -36,4 +36,4 @@ developer = "developer"
 build = "build"
 
 ; EAT
-eat.nonce-type = text .size (10..74)
+eat.nonce-type = base64-url-text .size (12..88)
