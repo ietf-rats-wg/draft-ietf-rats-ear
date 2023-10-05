@@ -165,6 +165,9 @@ See {{sec-ear-appraisal}} for the details about the contents of an
 
 `eat.nonce` (optional)
 : A user supplied nonce that is echoed by the verifier to provide freshness.
+The nonce is a sequence of bytes between 8 and 64 bytes long. When serialized
+as JWT, the nonce MUST be base64 encoded, resulting in a string between 12 and
+88 bytes long.
 See {{Section 4.1 of -eat}}.
 
 `$$ear-extension` (optional)
