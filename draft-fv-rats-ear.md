@@ -802,6 +802,12 @@ The list of currently open issues for this documents can be found at
 
 Initial release.
 
+## draft-fv-rats-ear-01
+
+* privacy considerations
+* OPA policy example
+* add rust-ear crate to the implementation status section
+
 # Acknowledgments
 {:numbered="false"}
 
