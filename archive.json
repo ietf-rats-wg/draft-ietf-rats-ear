@@ -1,0 +1,1554 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-07-09T01:15:47.635999+00:00",
+  "repo": "thomas-fossati/draft-ear",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    },
+    {
+      "name": "needs discussion",
+      "description": "The issue needs more discussion",
+      "color": "AB8D10"
+    }
+  ],
+  "issues": [
+    {
+      "number": 5,
+      "id": "I_kwDOIe69Es5ZFnVK",
+      "title": "environment identification",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/5",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed in today's (13/12/2022) Veraison meeting, we need to include claims to identify the verifier's execution environment, for example:\r\n* software release information (for Veraison it'd be core services and loaded plugins)\r\n* TEE identification (e.g., evidence)\r\n\r\nOne question we need to answer is where does it belong?  To the core claims-set or into an extension claim?",
+      "createdAt": "2022-12-13T16:31:45Z",
+      "updatedAt": "2023-02-08T16:26:57Z",
+      "closedAt": "2023-02-08T16:26:57Z",
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Fixed in #12 with the introduction of the [verifier-id](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.1) claim.",
+          "createdAt": "2023-02-08T16:26:57Z",
+          "updatedAt": "2023-02-08T16:26:57Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOIe69Es5ZM1Im",
+      "title": "Simon's review comments",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/6",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "1. `ear.raw-evidence` - perhaps worth noting that this may be more relevant for auditors than for further processing\r\n1. [Example in 3.3.1](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.3.1): could remove a few of the TV entries e.g/ Storage + Sourced data as another example of 'no claim made'\r\n1. Veraison processed evidence: perhaps worth adding something about the 'verified' status of members here? (relates to the 'unprocessed evidence' conversations)\r\n",
+      "createdAt": "2022-12-14T12:29:14Z",
+      "updatedAt": "2023-03-02T11:31:33Z",
+      "closedAt": "2023-03-02T11:31:33Z",
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOIe69Es5bLyGe",
+      "title": "add an optional nonce",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/9",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "To support cases where the request for evidence appraisal involves a challenge from the RP / Attester, we need to add an optional `eat_nonce` alongside the mandatory `iat`.",
+      "createdAt": "2023-01-11T22:38:26Z",
+      "updatedAt": "2023-02-08T15:14:03Z",
+      "closedAt": "2023-02-08T15:14:03Z",
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Fixed by #12 ",
+          "createdAt": "2023-02-08T15:13:46Z",
+          "updatedAt": "2023-02-08T15:13:46Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOIe69Es5bPSaH",
+      "title": "support for composite attesters",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/10",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "In a [composite device](https://www.ietf.org/archive/id/draft-ietf-rats-architecture-22.html#name-composite-device) evidence is assembled from multiple independent sources.\r\n\r\nAn example is the [Arm CCA attestation token](https://developer.arm.com/documentation/den0137/latest), which consists of separate (and separately signed) pieces of evidence glued together in an [EAT collection](https://datatracker.ietf.org/doc/draft-frost-rats-eat-collection/).\r\n\r\nA use case that we want to support is that of a verifier which will not be able to single-handedly appraise the whole thing and will instead carry out a partial appraisal and pass what it's done to the relying party with a clear indication of what remains to be done.  This is not unusual in confidential computing scenarios where the platform verifier can be separate from the workload verifier and they need to be part of a coordinated verification process.\r\n\r\nThe current structure does not cope well with that situation\r\n```\r\nEAR = {\r\n  ear.status => $ar4si.trust-tier\r\n  eat_profile => \"tag:github.com,2022:veraison/ear\"\r\n  ? ear.trustworthiness-vector => ar4si.trustworthiness-vector\r\n  ? ear.raw-evidence => ear-bytes\r\n  iat => int\r\n  ? ear.appraisal-policy-id => text\r\n  * $$ear-extension\r\n}\r\n```\r\nbecause there's only one \"global\" trustworthiness vector.\r\n\r\nOne way to address the issue is to split the EAR into two: a \"core\" object harbouring the trustworthiness vector associated to a specific piece of evidence (alongside other contextual stuff that makes sense on a per-evidence basis), and an outer container that will group the information with \"global\" scope:\r\n```\r\nEAR-core = {\r\n  ear.status => $ar4si.trust-tier\r\n  ? ear.trustworthiness-vector => ar4si.trustworthiness-vector\r\n  ? ear.appraisal-policy-id => text\r\n  * $$ear-core-extension\r\n}\r\n```\r\nand\r\n```\r\nEAR = {\r\n  eat_profile => \"tag:github.com,2022:veraison/ear\"\r\n  iat => int\r\n  ? eat_nonce = nonce-type\r\n  ear.verifier-id => ear-verifier-id\r\n  ? ear.raw-evidence => ear-bytes\r\n  submods-label => {\r\n    + text => EAR-core ; the submod name is an identifier for the portion of appraised evidence\r\n  }\r\n  * $$ear-extension\r\n}\r\n```\r\n\r\n--- \r\n* 01/12/2023 Edited as per https://github.com/thomas-fossati/draft-ear/issues/10#issuecomment-1380546331\r\n---\r\n\r\n\r\n\r\n",
+      "createdAt": "2023-01-12T13:40:46Z",
+      "updatedAt": "2023-02-08T14:52:20Z",
+      "closedAt": "2023-02-08T14:52:20Z",
+      "comments": [
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "NONE",
+          "body": "This is very much inline with what we discussed today (12/01). One thing though, I think, it still has value, if the in the outer EAR Wrapper we relay the complete raw evidence as is, in line with the current design of relaying the raw evidence.\r\n\r\nPlease note it is quite different from inner raw-evidence which pertains to individual (core) sub-attester evidence.",
+          "createdAt": "2023-01-12T15:15:56Z",
+          "updatedAt": "2023-01-12T15:15:56Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> This is very much inline with what we discussed today (12/01). One thing though, I think, it still has value, if the in the outer EAR Wrapper we relay the complete raw evidence as is, in line with the current design of relaying the raw evidence.\r\n\r\nThanks for checking if my memory dump effectively matched the whiteboard :-)\r\n\r\nYou are right, raw-evidence pertains to the outer scope.  I'll update the data model sketch above.\r\n",
+          "createdAt": "2023-01-12T17:48:08Z",
+          "updatedAt": "2023-01-12T17:48:08Z"
+        },
+        {
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Adding text from email.   We should track what is below.\r\n\r\n> we have a predefined/standardized system-wide tag so\r\n> that a Relying Party doesn\u2019t have to guess that the appraisal spans\r\n> the whole system?\r\n\r\nSounds good to me.  Do you have a proposal?\r\n\r\n> And if I read this right, we likely should be tracking an issue which\r\n> talks about the relationship between the system-wide appraisals, and\r\n> the appraisals for any actual subsystems.\r\n",
+          "createdAt": "2023-02-03T14:22:41Z",
+          "updatedAt": "2023-02-03T14:22:41Z"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOIe69Es5dkzOm",
+      "title": "System-wide tag",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/13",
+      "state": "OPEN",
+      "author": "ericvoit",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "needs discussion"
+      ],
+      "body": "We need a predefined/standardized system-wide tag so that a Relying Party know the appraisal spans the whole system.  When where there are submods, we need to talk about the relationship between the system-wide appraisals, and the appraisals for any actual subsystems.\r\n",
+      "createdAt": "2023-02-03T14:27:42Z",
+      "updatedAt": "2023-03-02T14:10:48Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "The \"multiple submods\" case materialises only when the appraisal is not complete.\r\n\r\nAn RP is not supposed to consume directly this kinds of EAR -- unless it's coupled with the Attester, which should be the exception in an AR4SI world.  In the \"uncoupled\" case, RP will need to forward this partial EAR to some other Verifier to complete the appraisal.\r\n\r\nA complete appraisal will typically only have one submod, which has system-wide scope.\r\n",
+          "createdAt": "2023-03-01T11:08:41Z",
+          "updatedAt": "2023-03-01T11:08:41Z"
+        },
+        {
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't think it is decided that a complete appraisal will summarize all the elements of a system.  At least with routers, there are different levels of system distribution.  And you might have each line card requiring its own appraisal each has a TPM.  I can imagine there are server clusters which also will need to provide a distributed view.\r\n\r\nWe could update the intro to the EAR document to show that such aggregate attestations are out of scope.  And that would also be a way to close the issue.  ",
+          "createdAt": "2023-03-01T13:38:37Z",
+          "updatedAt": "2023-03-01T13:38:37Z"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "I_kwDOIe69Es5d9ny1",
+      "title": "fix `base64-url-text` definition",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/14",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "As per https://github.com/ietf-rats-wg/eat/pull/364 this has been clarified to be \"without padding\".",
+      "createdAt": "2023-02-08T16:28:22Z",
+      "updatedAt": "2023-02-09T17:39:16Z",
+      "closedAt": "2023-02-09T17:39:16Z",
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOIe69Es5eaLEg",
+      "title": "Policy and evaluated claims",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/16",
+      "state": "OPEN",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "needs discussion"
+      ],
+      "body": "A Relying Party (RP) may wish to know which evidence claims were used in arriving at the Attestation Result (AR), and, therefore, which were not. There is nothing in the AR that can be used to indicate that, and, arguably, there shoudn't be, as this pertains to the underlying attestation scheme (which the RP is assumed to be famailar with*), and the verifier deployment-specific policy evaluation. Both of these elements are encoded as part of the `ear.appraisal-policy-id` field.\r\n\r\nCurrent description of `ear.appraisal-policy-id` is very brief, and gives no indication as to how it might be used. It may be worth expanding its description to call out that the field can be used by RP to identify whether the AR was generated in accodance with its understanding of the attestation scheme, or whether some third-party policy may have been applied.\r\n\r\n(*The assumption is that if RP is participating in an attestation scheme, it would be aware of how that scheme functions, and therefore how evidence would have been used in arriving at the AR. If this assumption is unreasonable, a case can be made for providing a well-defined \"scheme description\", either as part of AR or, more likely, a separate channel that RP can process. However, tath woud be a bigger discussion that does not pertain to this Issue.)",
+      "createdAt": "2023-02-14T10:42:13Z",
+      "updatedAt": "2023-03-02T14:10:49Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> The assumption is that if RP is participating in an attestation scheme\r\n\r\nAR4SI allows, and promotes, full decoupling between Attesters and RPs, so this assumption should not hold in general.  (It could be for some deployments, though that should be the exception.)\r\n\r\n> a case can be made for providing a well-defined \"scheme description\", either as part of AR or, more likely, a separate channel that RP can process. However, tath woud be a bigger discussion that does not pertain to this Issue.)\r\n\r\nProviding an in-band, verifier-signed EAR signal that conveys this kind of information seems like a valuable addition in terms of improved transparency of the operations.\r\n\r\nWe should track this, as you suggest, in a separate issue.\r\n",
+          "createdAt": "2023-03-01T11:20:33Z",
+          "updatedAt": "2023-03-01T11:20:33Z"
+        },
+        {
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> AR4SI allows, and promotes, full decoupling between Attesters and RPs, so this assumption should not hold in general. \r\n\r\nNote, all this is predicated on\r\n\r\n> A Relying Party (RP) may wish to know which evidence claims were used in arriving at the Attestation Result (AR)\r\n\r\nIf  RP is only AR4SI-aware, and is agnositic of the underlying evidence (which is what, I assume, is meant by \"decoupling\" here?), then, presumably, RP would not care about how the evidence was used to arrive at the AR? So to be more explicit about what is being assumed here:\r\n\r\n    \"Given a Relying Party (RP) that wishes to know how evidence was used in costructing the AR, \r\n      the assumption is that the RP is then familiar with the attesation scheme\".\r\n\r\nI believe this should hold in the majority (all?) cases. Either the RP doesn't care about the evidience and only about the verifier's evaluation (AR4SI), or it has an understanding of the scheme.\r\n\r\nWhat I'm suggesting in the footnote is that if this is not true, then there needs to be some sort of standardised \"grammar\" for describing the evidence in terms of it's use, that the RP can then interpret.\r\n\r\n> Providing an in-band, verifier-signed EAR signal that conveys this kind of information seems like a valuable addition in terms of improved transparency of the operations.\r\n\r\nDepends on what is meant by \"signal\" here.\r\n\r\nIf this is just taking about tagging/flagging evidence entries that were used by the verifier, then I don't see how that would add much itility?  If we're assuing that RP has no a-priory understanding of the evidence, telling it which part of that evidence were used in the evaluation doesn't really add any information.\r\n\r\nOn the other hand, a formalised, machine-readable eqivalent of the table here: https://github.com/thomas-fossati/draft-psa-token/issues/71, i.e. something that encodes the semantics of the evidence iterpretation, could potentially be useful.",
+          "createdAt": "2023-03-01T14:08:15Z",
+          "updatedAt": "2023-03-01T14:08:15Z"
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOIe69Es5epqrR",
+      "title": "raw-evidence per submod?",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/17",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "In a one-to-one conversation, @yogeshbdeshpande suggested that we add a \"per-component raw-evidence\" to each `EAR-appraisal` block.  Such _optional_ field would contain the raw evidence bytes that the specific submod is dealing with.  This allows a downstream Verifier to be agnostic of the top-level evidence format (i.e., `EAR.raw-evidence`) and only care about the Evidence of the sub-attester it has to process.",
+      "createdAt": "2023-02-16T16:15:26Z",
+      "updatedAt": "2023-03-21T17:06:39Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "Given the downstream RP is capable of consuming raw evidence as a form of Attestation Results, they may not require  an\r\n  eat.submods statement. Hence, eat.submods should be optional and the combination of `( ? raw-evidence, ? submods)` should be non-empty. \r\nNote: a profile may qualify the raw-evidence to an expected value such as: `raw-evidence => bytes .cbor my-accepted-claims`",
+          "createdAt": "2023-03-21T17:04:06Z",
+          "updatedAt": "2023-03-21T17:06:39Z"
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "I_kwDOIe69Es5ept97",
+      "title": "`Via` info",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/18",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "In a face to face discussion the case was brought up about (optionally) recording information regarding each individual verifier in a chained appraisal.  \r\n\r\nThis can be useful in debugging pathologies.  (And also as a signal to detect - and break - loops in the processing chain.)\r\n\r\nHTTP's `Via` field (https://www.rfc-editor.org/rfc/rfc9110.html#section-7.6.3) may be a good starting point.",
+      "createdAt": "2023-02-16T16:24:07Z",
+      "updatedAt": "2023-03-01T10:45:26Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 19,
+      "id": "I_kwDOIe69Es5fR46N",
+      "title": "Veraison extension for key attestation",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/19",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "See https://github.com/CCC-Attestation/attested-tls-poc/issues/16",
+      "createdAt": "2023-02-24T12:12:22Z",
+      "updatedAt": "2023-02-28T15:41:15Z",
+      "closedAt": "2023-02-28T15:41:15Z",
+      "comments": []
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOIe69Es5fzQ7F",
+      "title": "use CMW for `raw-evidence`?",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/24",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "[Ned's suggestion](https://mailarchive.ietf.org/arch/msg/rats/B0UEwmLogoYZefkuV1CSX52Uu1c/):\r\n\r\n_\"Should `ear-bytes` be tagged in some way such as a `cmw` or CBOR tag that enables the downstream parser to determine which encoding schema to use to decode it?\"_",
+      "createdAt": "2023-03-02T18:14:52Z",
+      "updatedAt": "2023-03-02T18:40:54Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "IIUC, the gist of Ned\u2019s suggestion is to reuse the cmw CDDL for `raw-evidence` rather than aliasing `ear-bytes` to cmw.\r\n ",
+          "createdAt": "2023-03-02T18:40:54Z",
+          "updatedAt": "2023-03-02T18:40:54Z"
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "id": "I_kwDOIe69Es5hhH6G",
+      "title": "add an attester-id claim into the top-level EAR",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/25",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Reporting a conversation with Ned from the CoRIM interim.\r\n\r\nAdd a claim that identifies the attester in the top level EAR structure.",
+      "createdAt": "2023-03-22T16:00:07Z",
+      "updatedAt": "2023-03-22T18:52:19Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "This is an identity claim that was used authenticate the Attester under which the Evidence is authenticated.",
+          "createdAt": "2023-03-22T17:58:44Z",
+          "updatedAt": "2023-03-22T17:58:44Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Which types would you expect for this claim?",
+          "createdAt": "2023-03-22T18:38:20Z",
+          "updatedAt": "2023-03-22T18:38:20Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "> Which types would you expect for this claim?\r\n\r\n`identity-triple-record` where the authenticated endpoint uses key identified by the triple and the accepted claims are inclusive of the `environment-map`. (Open: We may want to think about whether a `stateful-environment-record` might also make sense.)",
+          "createdAt": "2023-03-22T18:51:27Z",
+          "updatedAt": "2023-03-22T18:52:19Z"
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "id": "I_kwDOIe69Es5iMt9r",
+      "title": "\"default\" (error) submod",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/26",
+      "state": "OPEN",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The spec mandates that an EAR contains at least one submod. Should we have guidance on what implementations should do when a sensible submod cannot be created (e.g. due to an error)?\r\n\r\nErrors generated by a verifier can be broadly classified into two categories: those that caused by the input (the input is either erroneous or cannot be evaluated, e.g. due to the absence of necessary endorsements), and those that are agnostic of the input (OOM, communication failure, etc). The latter are typically communicated via a separate error state as part of the API (e.g. an error return code). The former should be communicated in the attestation result, as they pertain to the evidence submitted, and not a failure of the processing pipeline.\r\n\r\nIn the majority of cases, there is no problem in constructing a valid EAR to communicate the error condition -- if we know what the evidence is supposed to be, we know what the client is expecting the EAR to look like vis-\u00e0-vis the submods it contains. However, in situations where the nature of the evidence cannot be established, and cannot be inferred from context (the verifier can handle multiple different types of evidence), we do not know how to construct the EAR. An example of that is when Veraison cannot match the media type in the request to an appropriate evidence handler.\r\n\r\nIn such situations, the verifier needs to add a \"fake\" submod and populate the AR4SI to reflect the error condition. The question is what name should this submod be added under? This cannot be the submod name the client typically expects, as we do not know what that is. While this can be implementation specific, it maybe useful to reserve a particular name (e.g. \"ERROR\"), or at least have some non-normative guidance in the spec for this.",
+      "createdAt": "2023-03-30T12:14:09Z",
+      "updatedAt": "2023-03-30T12:14:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 27,
+      "id": "I_kwDOIe69Es5i1C8-",
+      "title": "ar4si suggests a different structure than current EAR",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/27",
+      "state": "OPEN",
+      "author": "nedmsmith",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "needs discussion"
+      ],
+      "body": "Reading the ar4si carefully, the structure of the EAR seems to break the intent of ar4si. I came up with the following CDDL.\r\n```\r\n;\r\n; interpreted from reading ar4si \r\n;\r\nar-augmented-bundle = [ + $ar-augmented-type-choice ]\r\n$ar-augmented-type-choice /= ar-augmented-map\r\nar-augmented-map = {\r\n    &(signed-ar: 0) => signed-ar-map ; presumably ar-augmented-bundle is a COSE/JOSE/other payload?\r\n    &(rp-pof: 1) => pof-type ; aka nonce\r\n    &(v-pof: 2) => epoch-type ; time since appraisal\r\n    * $$ar-augmented-map-extension\r\n}\r\n\r\nsigned-ar-map = { ; note: this looks a lot like a comid triple\r\n    &(identity-ev: 0) => $identity-claim-type-choice \r\n    ? &(trust-vector: 1) => [ + trustworthiness-claim-map ] ; results claims\r\n    * $$signed-ar-map-extension\r\n}\r\n$identity-claim-type-choice /= stateful-environment-map ; contains identity triple\r\n\r\ntrustworthiness-claim-map = {\r\n    &(tust-tier: 0) => trustworthiness-tier ; is associated with each trust claim\r\n    &(trust-quanta: 1) => $trustworthiness-quanta-type-choice\r\n    ? &(trust-policy: 2) => $policy-type-choice\r\n    * $$trustworthiness-claim-map-extension ; note: RP may want to see the actual claims accepted by the Verifier and maybe provenance\r\n}\r\n\r\ntrustworthiness-tier = &(none: 0, affirmed: 1, contraindicated: 2, warning: 3 )\r\n$trustworthiness-quanta-type-choice /= bytes ; assigned by verifier based on appraisal policy\r\n$policy-type-choice /= text ; could be a policy ID\r\n\r\n$$trustworthiness-claim-map-extension //= (\r\n    &(accepted-claims: -4711) => [ + conditional-reference-triple-record ]\r\n    &(entailment: -4712) => $entailment-type-choice\r\n)\r\n$entailment-type-choice /= conceptual-messages ; e.g., CMW containing Verifier inputs\r\n```\r\n\r\nSpecifically, ar4si expects the `trust-tier` is specific to each trust claim i.e., `trustworthiness-claim-map`. \r\nIt also indicates each claim may be influenced by a policy hence a policy (or possibly a policy identifier in its place) is also associated with each trust claim.\r\n\r\nar4si describes the Attester identity as \"Evidence\" but really it is a verified identity claim. Given CoMID is used to define Identity claims, the comid.identity-triple-record is a reasonable structure that need not be redefined. \r\n\r\nar4si doesn't try to limit the attestation results to what is defined in ar4si. For example, the Verifier has a set of claims it has determined are valid based on appraisal, aka `accepted-claims`, that simply can be copied into attestation results. This can be done by making `trustworthiness-claim-map` extensible and re-using existing mechanism for representing claims such as comid triples. This example happens to use `condition-endorsement-triple-record` but others could be meaningful. \r\n\r\nIf for logging / audit purposes the Verifier inputs are desired, the conceptual messages used by the Verifier could be copied into AR as claims entailment. It might make sense to do this on a per claim basis. But if not, it might make sense to extend higher up, possibly at the `signed-ar-map`? \r\n\r\nAdditionally, the `signed-ar-map` appears to have triples semantics in that it relates a triple subject, a stateful expression of the authenticated Attester, with a triple object, the set of asserted attestation results claims.  Possibly, it makes sense to model this as an attestation results triple? That would allow more fluid reuse of powerful expressions found in CoMID. ",
+      "createdAt": "2023-04-06T21:33:52Z",
+      "updatedAt": "2023-07-07T10:15:59Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Hi Ned, thanks for the write up.\r\n\r\nI am not sure I understand in which way EAR would break the AR4SI model.\r\n\r\nCould you please point out exactly which design choices we made in EAR go counter the AR4SI philosophy?\r\n\r\nNote that EAR doesn't aim to fully address the AR-augmented evidence topic.  Our goal is to provide a wrapper around a \"trustworthiness-vector appraisal\" with enough contextual metadata to be useful as a general purpose AR format.  The idea is that if one wants to build some sort of AR-augmented evidence, they can use EAR in conjunction with other Evidence - e.g., using an EAT collection with a well defined binder.",
+          "createdAt": "2023-04-18T15:58:48Z",
+          "updatedAt": "2023-04-18T15:58:48Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "> Could you please point out exactly which design choices we made in EAR go counter the AR4SI philosophy?\r\n\r\nThe `trustworthiness vector` is zero or more `trustworthiness claims`. A `trustworhiness tier` is associated with \"a specific Trusworthiness Claim\".\r\n\r\nThis suggests the tier and claim are members of the same map.  The EAR places the `trust-tier` along side the `ar4si.trustworniness-vector`. Since the vector is a list of thing, there should be a trust-tier for each possible thing.\r\n\r\nAr4si describes `Trustworthiness Claim` as a quanta of: `instance-identity`, `configuration`, `executables` etc... OR any state the vendor requires implying it should be extensible. \r\nBut EAR describes these as `ar4si.trustworthiness-vector` and models it as a map rather than a list/array and it is not extensible.\r\n\r\nI'm not saying the ar4si description is necessarily the best solution only that the EAR assertions that it is using ar4si are not correct representations of ar4si based on my reading of the text. \r\nI also advocate the ar4si authors use CDDL to express concisely what it is they did intend. ",
+          "createdAt": "2023-04-18T16:39:50Z",
+          "updatedAt": "2023-04-18T16:39:50Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> > Could you please point out exactly which design choices we made in EAR go counter the AR4SI philosophy?\r\n> \r\n> The `trustworthiness vector` is zero or more `trustworthiness claims`. A `trustworhiness tier` is associated with \"a specific Trusworthiness Claim\".\r\n> \r\n> This suggests the tier and claim are members of the same map. The EAR places the `trust-tier` along side the `ar4si.trustworniness-vector`. Since the vector is a list of thing, there should be a trust-tier for each possible thing.\r\n\r\nI think there's a bit of misunderstanding here.\r\n\r\nTrustworthiness (TW) claims are _\"Specific aspects for which a Verifier will assert trustworthiness [...]\"_\r\n\r\nThe specific TW claims are defined in [\u00a72.3.4](https://www.ietf.org/archive/id/draft-ietf-rats-ar4si-04.html#section-2.3.4), e.g., configuration, executables, etc.\r\n\r\nThese are the entries in the TW vector.  You can think of the TW vector as either a vector whose slot indexes have specific semantics (e.g., [0] is configuration, [1] is executables, etc.), like this:\r\n```\r\nTW-vector = [\r\n  configuration: -128..127\r\n  executables: -128..127\r\n  ; ...\r\n]\r\n```\r\nor an associative array (i.e., a map, like we do in [EAR](https://www.ietf.org/archive/id/draft-fv-rats-ear-00.html#section-3.2.1):\r\n```\r\nTW-vector = {\r\n  &(configuration: 0) => -128..127\r\n  &(executables: 1) => -128..127\r\n  ; ...\r\n}\r\n```\r\nBut that's just an implementation detail.\r\n\r\nEach TW claim is given a trust \"quantum\" in the -128..127 range with TW claim-specific semantics.  (Actually, some quanta 0, 1, and -1 have global semantics, but that's not important here.)\r\n\r\nThe -128..127 range is partitioned into 4 tiers - affirming, contraindicated, ... - and each tier is further subdivided into a standard and private space to allow deployment-specific extensions.  The tier partitioning is nice cos even if the RP doesn't know the exact semantics of a given value for a certain TW claim, it can always map it into one of the four broad categories and design the policy accordingly.\r\n",
+          "createdAt": "2023-04-18T17:32:49Z",
+          "updatedAt": "2023-04-18T18:16:39Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "`$ar4si.trustworthiness-claim` ought to be `$ar4si.trustworthiness-quantum`\r\nThe \"claim\" is the tuple consisting of the claim type, e.g., \"configuration\" code point and the quantum value. \r\n\r\n\r\nGiven: \"Trustworthiness Tier: a categorization of the levels of trustworthiness which may be assigned by a Verifier to **a specific** Trustworthiness Claim.\" \r\nIt seems the tier should apply to each claim in the TW-vector map. Namely:\r\n```\r\nTW-vector = {\r\n     ? &(instance-identity: 0) => [ quantum: -128..127, tier: $trusworthiness-tier ]\r\n...\r\n     * $$TW-vector-extension\r\n}\r\n```\r\nThe `TW-vector` above should be extensible IMO.\r\n\r\nAs an aside, I don't agree with quantum=1 since an Attester can assert Claims that don't have corresponding Reference Values. Appraisal doesn't fail. \r\n\r\n",
+          "createdAt": "2023-04-18T19:16:44Z",
+          "updatedAt": "2023-04-18T19:18:20Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> `$ar4si.trustworthiness-claim` ought to be `$ar4si.trustworthiness-quantum` The \"claim\" is the tuple consisting of the claim type, e.g., \"configuration\" code point and the quantum value.\r\n\r\nSure, we can adjust that.\r\n\r\n> Given: \"Trustworthiness Tier: a categorization of the levels of trustworthiness which may be assigned by a Verifier to **a specific** Trustworthiness Claim.\" It seems the tier should apply to each claim in the TW-vector map. Namely:\r\n> \r\n> ```\r\n> TW-vector = {\r\n>      ? &(instance-identity: 0) => [ quantum: -128..127, tier: $trusworthiness-tier ]\r\n> ...\r\n>      * $$TW-vector-extension\r\n> }\r\n> ```\r\n\r\n`tier` is implicit in the `quantum` value.\r\n\r\n> The `TW-vector` above should be extensible IMO.\r\n> \r\n> As an aside, I don't agree with quantum=1 since an Attester can assert Claims that don't have corresponding Reference Values. Appraisal doesn't fail.\r\n\r\nSure, our initial thinking was that a different profile would be minted for a different/extended configuration of claims.\r\n\r\n",
+          "createdAt": "2023-04-18T19:39:42Z",
+          "updatedAt": "2023-04-18T19:39:42Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "> tier is implicit in the quantum value.\r\n\r\nI can see how some of the tier values can be implied given a quantum value, but not all of them. I'm also concerned about combinatorics. For example, what does a tier of `contraindicated` mean in conjunction with a quantum of -1? Does it mean appraisal actually didn't malfunction?  I would be more comfortable if these were mutually exclusive.\r\n```\r\nEAR-appraisal = {\r\n     attestation-result => trust-tier / trust-vector\r\n     ...\r\n}\r\nTW-vector = {\r\n     ? &(instance-identity: 0) =>  -128..127\r\n...\r\n     * $$TW-vector-extension\r\n}\r\n```",
+          "createdAt": "2023-04-18T19:51:59Z",
+          "updatedAt": "2023-04-18T19:51:59Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> > tier is implicit in the quantum value.\r\n> \r\n> I can see how some of the tier values can be implied given a quantum value, but not all of them.\r\n\r\nHmm, no, all of them fall into one and only tier - see [here](https://github.com/veraison/ear/blob/56656d34b587fa7dd1326309fd188e3b24e4910a/trustclaim.go#L459-L477) for the exact ranges.\r\n\r\n> I'm also concerned about combinatorics. For example, what does a tier of `contraindicated` mean in conjunction with a quantum of -1? Does it mean appraisal actually didn't malfunction? I would be more comfortable if these were mutually exclusive.\r\n\r\nI am not sure I follow, but if you are referring to `ear.status`, there's a rule to set it from the vector:\r\n\r\n_\"The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.\"_\r\n",
+          "createdAt": "2023-04-18T20:00:51Z",
+          "updatedAt": "2023-04-18T20:00:51Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "If the `configuration` claim is affirmed, say 2, and the `executables` claim is contraindicated, say -125. Then what is the status in terms of `ear.status`? Since `ear.status` is common for all TW-vector claims, and claims don't have to have the same quantum, `ear.status` seems to require a function that aggregates the various tiers. ",
+          "createdAt": "2023-04-18T20:33:37Z",
+          "updatedAt": "2023-04-18T20:33:37Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> Since `ear.status` is common for all TW-vector claims, and claims don't have to have the same quantum, `ear.status` seems to require a function that aggregates the various tiers.\r\n\r\nexactly so, see [here](https://github.com/veraison/ear/blob/56656d34b587fa7dd1326309fd188e3b24e4910a/ear_appraisal.go#L28-L42)",
+          "createdAt": "2023-04-18T21:28:47Z",
+          "updatedAt": "2023-04-18T21:28:47Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "The summary status is the least trusted tier of any tier? \r\nFor example, if an environment is attested that doesn't process secrets and is rated at a tier of contraindicated, and another environment that does process secrets is rated at affirming, then the status will be contraindicated - even though secrets are protected?",
+          "createdAt": "2023-04-18T21:46:22Z",
+          "updatedAt": "2023-04-18T21:46:22Z"
+        },
+        {
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I had this discussion with Thomas last December.  While I am not actually a fan of the Summary status, it is directly calculable.  Which is good.\r\n\r\nMy worry is that it dis-advantages Verifiers which are more thorough than others.  At some point we will need to have the discussion on-list of the way the summary status might be used in the rules processing of a Relying Party.\r\n\r\nEric\r\n",
+          "createdAt": "2023-04-18T23:33:10Z",
+          "updatedAt": "2023-04-19T08:40:13Z"
+        },
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "NONE",
+          "body": "Some of our thinking indicates that there will be a few values (claims) that are unchanged from reference / endorsement to RP. The RP will be aware of which components are expected to have those values. This may be in addition to summary or aggregate claims that may be originated by a Verifier.",
+          "createdAt": "2023-04-18T23:40:17Z",
+          "updatedAt": "2023-04-18T23:40:17Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> Some of our thinking indicates that there will be a few values (claims) that are unchanged from reference / endorsement to RP. The RP will be aware of which components are expected to have those values. This may be in addition to summary or aggregate claims that may be originated by a Verifier.\r\n\r\nwe have seen something similar in \"split verification\" scenarios - in our case it's platform vs workload verification.  Veraison uses an [`annotated-evidence` extension](https://www.ietf.org/archive/id/draft-fv-rats-ear-00.html#section-4.5) for doing that kind of verifier-to-verifier communication.",
+          "createdAt": "2023-04-19T08:39:41Z",
+          "updatedAt": "2023-04-19T08:39:41Z"
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "id": "I_kwDOIe69Es5mq7Hy",
+      "title": "Using CoRIM as an EAR",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/28",
+      "state": "OPEN",
+      "author": "nedmsmith",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "CoRIM / CoMID triples are expressive structures that contain much of the verifier context already. Verifiers may generate partial attestation results corresponding to subcomponents in a device composition. CoMID triples such as `conditional-endorsed-triple-record` that has logic where given a set of accepted claims, a set of additional claims can be asserted. Attestation results fits this pattern where given a final set of accepted claims, the \"attestation results\" claims are asserted. \r\n\r\nThe EAR structure expects to retain much or all of the verifier's appraisal context in addition to producing attestation results. The corim \"accepted claims\" concept seems to already contain this context. The EAR seems to focus on retaining evidence input to the verifier, but it is unclear if the reference and endorsement inputs are also retained? Given the output of the verifier is a description of the Attester's current or active state, the verifier's \"accepted claims\" set seems to be the most appropriate representation of the current state. It is unclear, outside of audit requirements, why the EAR needs to retain only evidence. It is also unclear, outside of audit requirements, why the original signers of evidence is retained. The EAR description combines the audit requirements with multi-stage verifier requirements and abstracts all the verifier inputs as 'bytes' or 'text' even though the actual inputs may already be available in RIM or tag formats. \r\n\r\nIf CoRIM was used as the omnibus representation of verifier to verifier conceptual message, then little or no changes are needed to support it. The attestation results claims as defined by ar4si seem to be the outliers. However, using a triple similar to `conditional-endorsement-triple-record` the ar4si claims can be appended to a set of accepted claims. E.g.:\r\n```\r\nattestation-results-triple-record = [ \r\n  subj: accepted-claims\r\n  obj: ar4si-claims\r\n]\r\n```\r\nAr4si-claims could be a structure that is based on comid `measurement-values-map` where extensions to this structure can define ar4si specific claims. E.g.,\r\n```\r\n$$measurement-values-map-extension //= (\r\n  ? &(ar-status: -1) => $ar4si.trust-tier\r\n  ? &(trust-vector: -2) => ar4si.trustworthiness-vector\r\n  ? &(appr-policy-id: -3) => $policy-id-type-choice ; since RATS hasn't defined appraisal policies / out of scope\r\n)\r\n```\r\nThe current EAR is expected to be signed but doesn't define the signed container. If CoRIM  / COSE is used, the container signature block can be used to capture signer context such as the `iat` timestamp and `eat.nonce` nonces, or other context that is specific to the signing event. These can be added to the COSE `protected-header` field.\r\n\r\nThe CoRIM signer field could identify the verifier (as it already identifies the container's signer). \r\n\r\nThe CoRIM also identifies the profile that was applied.\r\n\r\nThe CoRIM can identify other RIMs that are needed to construct the device composition and to discover all the needed verifier inputs. This context may be a reasonable structure for informing an auditor also.\r\n\r\nIn summary, CoRIM seems to already have mechanism to address most, if not all, the requirements of an EAR. \r\nWhether or not attestation results should be encumbered with audit seems like an important question for further discussion. It seems reasonable that there could be a system of multiple verifiers, and that the partial results of one verifier should be inputted to a downstream verifier. However, an auditing system might require a first verifier to log activity with a stand-alone audit system rather than rely on a downstream verifier. \r\n\r\nDownstream verifiers might expect upstream verifiers to have fully processed an attestation result for a subcomponent as the \"partial attestation result\". A device composition might be the basis for a layout of verifiers in a multi-verifier architecture. That implies each verifier acts relatively independently. The only consideration for interdependent attestation results is the EAR.status, a.k.a., $ar4si.trust-tier which the EAR draft interprets as being an amalgamation of all the components in a device composition. Certainly, an entity could walk a  device composition hierarchy where subcomponents each have an ar4si.trust-tier result and compute an aggregate trust-tier value based on an aggregation algorithm (e.g., compute the average). It might make sense to leave such algorithms to the Relying Party who is ostensibly already considering ways to manage overall security risk.\r\n\r\nNevertheless, even if the verifier mesh is expected to amalgamate trust \"status\", it would be easy to add another claim for that purpose by extending `measurement-values-map`.  E.g.,\r\n```\r\n$$measurement-values-map-extension //= (\r\n  ? &(amalgamated-ar-status: -3) => [ amalgamation-algid, $ar4si.trust-tier ] \r\n)\r\n```\r\n",
+      "createdAt": "2023-05-23T17:48:18Z",
+      "updatedAt": "2023-06-07T12:05:42Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Hi Ned, thanks for this and apologies for the delay coming back to you.\r\n\r\nI agree with you that CoRIM/CoMID provide an info model that is rich enough to model all that EAR already provides.  It's also got a few intriguing properties, especially in the intra-verifier use case where the chained verifiers are all CoRIM-based.\r\n\r\nThe thing is that EAR is (by declaration) an EAT-based serialisation, so I am not sure CoRIM is in scope here.  I.e., what you are describing above looks more like a CAR (CoRIM Attestation/AR4SI Results) than a EAR :-)\r\n\r\nRe: modelling the \"accepted claims\" construct.  The approach we are experimenting with Veraison (which is captured in the `annotated-evidence` and `policy-claims` extensions) re-uses the EAT `Claims-Set`, which augments evidence claims with endorsed values.\r\n",
+          "createdAt": "2023-06-07T12:05:42Z",
+          "updatedAt": "2023-06-07T12:05:42Z"
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "id": "I_kwDOIe69Es5pOkK1",
+      "title": "Add an example OPA policy",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/32",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "thomas-fossati"
+      ],
+      "labels": [],
+      "body": "Add an example OPA policy that appraises a JWT EAR token.",
+      "createdAt": "2023-06-20T13:34:57Z",
+      "updatedAt": "2023-06-20T20:30:42Z",
+      "closedAt": "2023-06-20T20:30:42Z",
+      "comments": []
+    },
+    {
+      "number": 36,
+      "id": "I_kwDOIe69Es5q4zzY",
+      "title": "public keys as first class claims",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/36",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Especially when used as passport, a EAR may need to carry the public key of the attester as one of the claims.\r\n\r\nWe have experimented with this pattern in the [attested TLS PoC](https://github.com/CCC-Attestation/attested-tls-poc) where we minted the Veraison-specific `\"ear.veraison.key-attestation\"` extension (documented in -01).  However, this seems to be more generally applicable to any secure channel establishment (e.g., in confidential containers's [KBS](https://github.com/confidential-containers/kbs)).  It would therefore help promoting the claim to the `\"ear.\"` namespace.\r\n\r\n",
+      "createdAt": "2023-07-07T10:32:54Z",
+      "updatedAt": "2023-07-07T10:32:54Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOIe69Es5FLdsG",
+      "title": "Clarifying updates",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/1",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Specify that the ear.status tier must be no higher trust than what is\r\n  implied by the trust vector, but could be lower. This allows for the\r\n  possibility that the deployment-specific policy would evaluate the\r\n  evidence to be less trustworthy than the sum of its parts, without\r\n  necessarily overriding the trust level of any individual vector claim\r\n  (e.g. via a blacklist of specific devices).\r\n- Clarify that ear.raw-evidence should include the signature if present.\r\n- expand the meaning of \"iat\" claim name, as it is not immediately\r\n  obvious. It _is_ explained in the linked reference, but expanding it\r\n  here save the reader a click.\r\n- Change \"compute\" to \"evaluate\" in the ear.appraisal-policy-id, as\r\n  \"compute\" implies a higher level of rigidity than may be applied by\r\n  relying (or some other third) party-provided policies.",
+      "createdAt": "2022-12-12T11:29:38Z",
+      "updatedAt": "2022-12-12T12:39:42Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "d3ac6eea30bda67632ad8508d5d52f68a2904a6f",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "setrofim",
+      "headRefOid": "ef581039081e239dc016284f2b60b6baf5e338cb",
+      "closedAt": "2022-12-12T11:46:02Z",
+      "mergedAt": "2022-12-12T11:46:02Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40"
+      },
+      "comments": [
+        {
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "body": "## Policy ID calarification\r\n\r\nAdding as a comment here, rather than in the commit message as not necessarily related to the EAR spec per se.\r\n\r\nThe way we currently use policy ID in Veraision is to identify additional evaluation policies. The definition for EAR implies that \"policy ID\" covers not only what we call a \"policy\"  in Veraison, but also the \"scheme\". Currently, if no additional policy is specified, and the evidence is evaluated only according to the identified scheme, we do not set the policy ID in the result. Should be setting it to a scheme-defined value instead?",
+          "createdAt": "2022-12-12T11:33:22Z",
+          "updatedAt": "2022-12-12T11:33:22Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IUo8c",
+          "commit": {
+            "abbreviatedOid": "ef58103"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "\ud83d\udc4d ",
+          "createdAt": "2022-12-12T11:45:21Z",
+          "updatedAt": "2022-12-12T11:45:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOIe69Es5FPmrq",
+      "title": "extensibility considerations + barebones veraison",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/2",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Add \u00a74 about criteria for both application- and deployment-specific extensions\r\nAdd \u00a74.1 to document Veraison (deployment) extensions\r\n\r\nAlso reflow text to fit 79 columns.\r\n\r\nPreview at https://thomas-fossati.github.io/draft-ear/veraison/draft-fv-rats-ear.html\r\n\r\n",
+      "createdAt": "2022-12-12T21:44:48Z",
+      "updatedAt": "2022-12-13T14:18:32Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "veraison",
+      "headRefOid": "e45a3f58938dc043249e093f5211f2cafd18afc2",
+      "closedAt": "2022-12-13T14:18:32Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The distinction between deployment-specific and application-specific extensions is unclear. I'm guessing that the former is specific to a particular instance (deployment) of  a service, and the latter is specific to a service, but common across all deployments of that service? If that is the case, then shouldn't the Veraison extensions be application rather than deployment?",
+          "createdAt": "2022-12-13T10:31:52Z",
+          "updatedAt": "2022-12-13T10:32:08Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "subsumed by #3 ",
+          "createdAt": "2022-12-13T14:18:32Z",
+          "updatedAt": "2022-12-13T14:18:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IbDI1",
+          "commit": {
+            "abbreviatedOid": "e45a3f5"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-13T09:16:06Z",
+          "updatedAt": "2022-12-13T10:29:10Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\r\n: The appraised evidence claims-set extracted from the submitted token and converted into a JSON object.\r\n```",
+              "createdAt": "2022-12-13T09:22:11Z",
+              "updatedAt": "2022-12-13T10:29:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5IcaQW",
+          "commit": {
+            "abbreviatedOid": "e45a3f5"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-13T12:50:48Z",
+          "updatedAt": "2022-12-13T12:50:48Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOIe69Es5FTe0z",
+      "title": "add TEEP extension, media types and registrations",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/3",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "* Document the TEEP application extension (JSON only for now)\r\n* Provide media types definitions using the EAT media types framework\r\n* Add registrations for the core EAR claims and the TEEP extension\r\n\r\nThis PR builds on top of #2 \r\n\r\nRendered at https://thomas-fossati.github.io/draft-ear/teep/draft-fv-rats-ear.html",
+      "createdAt": "2022-12-13T10:42:53Z",
+      "updatedAt": "2022-12-13T12:51:35Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "teep",
+      "headRefOid": "1bd58611268ac00adc8237b5a9f71be51d0d7f31",
+      "closedAt": "2022-12-13T12:51:32Z",
+      "mergedAt": "2022-12-13T12:51:32Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "7b0c645c053f6ac78b5db35449b71b6073e8e43a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IcE3Y",
+          "commit": {
+            "abbreviatedOid": "1bd5861"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2022-12-13T11:51:42Z",
+          "updatedAt": "2022-12-13T11:51:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOIe69Es5FUi5I",
+      "title": "Clarify the distinction between claim types",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/4",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Replace \"application\" and \"deployment\" claim terminology with \"registered\" and \"unregistered\", as the meaning and distinction of \"deployment\" w.r.t. \"application\" may be confusing.\r\n- Restructure the claims section into subsections describing the registered and unregistered claims, and offering guidance on when each should be used.\r\n\r\nSigned-off-by: setrofim <setrofim@gmail.com>",
+      "createdAt": "2022-12-13T13:40:48Z",
+      "updatedAt": "2022-12-13T14:20:13Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "7b0c645c053f6ac78b5db35449b71b6073e8e43a",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "setrofim",
+      "headRefOid": "cbabe3d685ee9893d197740637c6a0dc6e3d2a87",
+      "closedAt": "2022-12-13T14:20:09Z",
+      "mergedAt": "2022-12-13T14:20:09Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "3724351646946bb5f463568ae739b3fd4024a553"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5Ic4OE",
+          "commit": {
+            "abbreviatedOid": "3ccd5ab"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "LGTM, thanks!\r\n\r\nI've left one suggested change on use of normative language.",
+          "createdAt": "2022-12-13T14:02:46Z",
+          "updatedAt": "2022-12-13T14:04:09Z",
+          "comments": [
+            {
+              "originalPosition": 83,
+              "body": "I wouldn't make this a prescription.  If the application wants to register, they can -- in fact, it's probably better, tough non-zero cost.\r\n\r\nWe could probably use a mild encouragement: _\"[...] its claims MAY be registered\"_",
+              "createdAt": "2022-12-13T14:02:46Z",
+              "updatedAt": "2022-12-13T14:04:09Z"
+            },
+            {
+              "originalPosition": 86,
+              "body": "```suggestion\r\napplications or environments (e.g., TEEP), its claims SHOULD be registered.\r\n```",
+              "createdAt": "2022-12-13T14:02:56Z",
+              "updatedAt": "2022-12-13T14:04:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5IdBcu",
+          "commit": {
+            "abbreviatedOid": "cbabe3d"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "\ud83d\udea2 it!",
+          "createdAt": "2022-12-13T14:19:32Z",
+          "updatedAt": "2022-12-13T14:19:32Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOIe69Es5F5H0N",
+      "title": "status and trustworthiness vector semantics",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/7",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "An attempt at trying to tighten the semantics around status and trustworthiness vector claims.\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2022-12-20T18:16:35Z",
+      "updatedAt": "2022-12-21T18:05:01Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "3724351646946bb5f463568ae739b3fd4024a553",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "tighten-status-semantics",
+      "headRefOid": "cf903e5372fd50205974c877e4c2ea29b4c55b64",
+      "closedAt": "2022-12-21T18:04:58Z",
+      "mergedAt": "2022-12-21T18:04:58Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "d871ee121f56fbed90bcd656ad7434423b821fec"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5JGpM5",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:22:41Z",
+          "updatedAt": "2022-12-21T17:22:41Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5JGpZq",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:23:22Z",
+          "updatedAt": "2022-12-21T17:23:22Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5JGpwG",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:24:23Z",
+          "updatedAt": "2022-12-21T17:24:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOIe69Es5HAJYL",
+      "title": "validate all CDDL (JSON and CBOR), included examples",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/8",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Signed-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2023-01-09T18:09:50Z",
+      "updatedAt": "2023-01-10T17:53:15Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "d871ee121f56fbed90bcd656ad7434423b821fec",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "validate",
+      "headRefOid": "88d1c1440318474519261105532ee90618eeebfc",
+      "closedAt": "2023-01-10T17:53:15Z",
+      "mergedAt": "2023-01-10T17:53:15Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "509365ff00ef1f0c73e47ff6bf8fe1e2945e5a4c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5KEUzc",
+          "commit": {
+            "abbreviatedOid": "88d1c14"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I can follow most of this.  And it makes sense.",
+          "createdAt": "2023-01-10T17:02:45Z",
+          "updatedAt": "2023-01-10T17:02:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOIe69Es5I17I2",
+      "title": "Redesign to support composite devices",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/11",
+      "state": "CLOSED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #10\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2023-01-30T18:22:02Z",
+      "updatedAt": "2023-02-08T15:14:43Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "509365ff00ef1f0c73e47ff6bf8fe1e2945e5a4c",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "composite",
+      "headRefOid": "e73df2ef8afe88ce35f8f07bf2f8dba3aaccef7d",
+      "closedAt": "2023-02-08T15:14:42Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "The diff might be a bit of a handful.  Looking at the [rendered version](https://thomas-fossati.github.io/draft-ear/composite/draft-fv-rats-ear.html) may be simpler.",
+          "createdAt": "2023-01-30T18:28:10Z",
+          "updatedAt": "2023-01-30T18:28:10Z"
+        },
+        {
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Main composite design looks good.  There remain a couple sub-issues.",
+          "createdAt": "2023-02-03T14:23:40Z",
+          "updatedAt": "2023-02-03T14:23:40Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Absorbed into #12 ",
+          "createdAt": "2023-02-08T15:14:42Z",
+          "updatedAt": "2023-02-08T15:14:42Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5MeeEC",
+          "commit": {
+            "abbreviatedOid": "e73df2e"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to start the process.\r\n\r\n> we still need a predefined/standardized system-wide tag so\r\n> that a Relying Party doesn\u2019t have to guess that the appraisal spans\r\n> the whole system?\r\n\r\n> And if I read this right, we likely should be tracking an issue which\r\n> talks about the relationship between the system-wide appraisals, and\r\n> the appraisals for any actual subsystems.\r\n",
+          "createdAt": "2023-02-03T14:25:03Z",
+          "updatedAt": "2023-02-03T14:25:03Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOIe69Es5I7Zgu",
+      "title": "Veraison and TEEP extensions",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/12",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "This is on top of the open \"composite device\" branch.\r\n\r\nThe relevant commits are:\r\n* https://github.com/thomas-fossati/draft-ear/commit/e9148d51c0efddbcf618b965e05c8a29c5829617\r\n* https://github.com/thomas-fossati/draft-ear/commit/718aba57d4cde985116c26222d01e780658742ef\r\n* https://github.com/thomas-fossati/draft-ear/commit/162e0b3bfdeb474a7f460be49cbebcfbb48f4be4",
+      "createdAt": "2023-01-31T15:53:48Z",
+      "updatedAt": "2023-02-08T14:52:23Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "509365ff00ef1f0c73e47ff6bf8fe1e2945e5a4c",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "extns",
+      "headRefOid": "20e09cd213a3f2f56e54d9b75f977c810134d169",
+      "closedAt": "2023-02-08T14:52:18Z",
+      "mergedAt": "2023-02-08T14:52:18Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "e6d84bb07cf5cfbc72e5aca188ceabe647620d0a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5Mha1W",
+          "commit": {
+            "abbreviatedOid": "1be4751"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM!",
+          "createdAt": "2023-02-03T22:25:58Z",
+          "updatedAt": "2023-02-03T22:25:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOIe69Es5Jiz7Q",
+      "title": "`base64-url-text` does not include padding",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/15",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #14\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2023-02-08T16:52:04Z",
+      "updatedAt": "2023-02-09T17:39:19Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "e6d84bb07cf5cfbc72e5aca188ceabe647620d0a",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "nopad",
+      "headRefOid": "ef9d50ca5c0e4f439e20df64de7780b4998fc10a",
+      "closedAt": "2023-02-09T17:39:14Z",
+      "mergedAt": "2023-02-09T17:39:14Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "8923ba95121de283b74b2b6a8fd25f743c5620e7"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5M_UF3",
+          "commit": {
+            "abbreviatedOid": "ef9d50c"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM!",
+          "createdAt": "2023-02-09T17:33:55Z",
+          "updatedAt": "2023-02-09T17:33:55Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOIe69Es5Kswzs",
+      "title": "Add Veraison key attestation extension",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/20",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #19",
+      "createdAt": "2023-02-24T13:14:14Z",
+      "updatedAt": "2023-02-28T15:41:18Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "8923ba95121de283b74b2b6a8fd25f743c5620e7",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "key-attestation-ext",
+      "headRefOid": "e1b90b683c25402ab481f631830fc2c1b712e8c3",
+      "closedAt": "2023-02-28T15:41:14Z",
+      "mergedAt": "2023-02-28T15:41:14Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "91de29aa54b7a64ec20135578df54cd0e1f84af8"
+      },
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "cc @paulhowardarm",
+          "createdAt": "2023-02-24T13:14:32Z",
+          "updatedAt": "2023-02-24T13:14:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5OVFlT",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-02-24T19:37:48Z",
+          "updatedAt": "2023-02-24T19:37:48Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5OhigW",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-02-28T12:21:12Z",
+          "updatedAt": "2023-02-28T12:26:29Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "Should be `TPM_PARSEC` -- to be consistent with `TPM_ENACTTRUST`?",
+              "createdAt": "2023-02-28T12:21:12Z",
+              "updatedAt": "2023-02-28T12:26:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5Ohuqq",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-02-28T12:43:44Z",
+          "updatedAt": "2023-02-28T12:43:45Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "good question :-)\r\n\r\nI \"think\" in this case it should be `PARSEC_TPM`, because Parsec acts as the RoT abstraction and could (in the future) drive a PSA backend too, and others as well.\r\n\r\nSo `PARSEC_PSA`, `PARSEC_DICE`, etc.",
+              "createdAt": "2023-02-28T12:43:44Z",
+              "updatedAt": "2023-02-28T12:43:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5Oh3Bh",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-02-28T12:56:52Z",
+          "updatedAt": "2023-02-28T12:56:53Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "Hm, in that case, shouildn't it just be `PARSEC`? How is the backend relevant here?",
+              "createdAt": "2023-02-28T12:56:52Z",
+              "updatedAt": "2023-02-28T12:56:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5OieJS",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-02-28T13:53:01Z",
+          "updatedAt": "2023-02-28T13:53:02Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "The underlying evidence formats are different: what Parsec does is it provides a single  API to request key (and platform) attestations, and uses a common encapsulation for the produced evidence.  But the encapsulated evidence is still in its native format, so different RoT backends will be associated to different Veraison schemes.",
+              "createdAt": "2023-02-28T13:53:01Z",
+              "updatedAt": "2023-02-28T15:40:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5OjRtW",
+          "commit": {
+            "abbreviatedOid": "e1b90b6"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-02-28T15:26:12Z",
+          "updatedAt": "2023-02-28T15:26:12Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "id": "PR_kwDOIe69Es5LA6j3",
+      "title": "add c-ear to the \"implementation status\" section",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/21",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-03-01T09:58:22Z",
+      "updatedAt": "2023-03-02T14:08:59Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "c-ear-impl",
+      "headRefOid": "ebf46a7b8fc2a4b4f611df56a94474871a00380e",
+      "closedAt": "2023-03-02T14:08:55Z",
+      "mergedAt": "2023-03-02T14:08:55Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "c024645af586882d726553a7119df2b6d4d19293"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5OqBpp",
+          "commit": {
+            "abbreviatedOid": "d585188"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-03-01T11:26:08Z",
+          "updatedAt": "2023-03-01T11:26:09Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\n## Veraison Project\r\n```",
+              "createdAt": "2023-03-01T11:26:08Z",
+              "updatedAt": "2023-03-01T11:26:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5OqB05",
+          "commit": {
+            "abbreviatedOid": "230e227"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-03-01T11:26:39Z",
+          "updatedAt": "2023-03-01T11:26:40Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\n## Project Veraison\r\n```",
+              "createdAt": "2023-03-01T11:26:39Z",
+              "updatedAt": "2023-03-01T11:26:40Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "id": "PR_kwDOIe69Es5LBKbd",
+      "title": "raw-evidence uses",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/22",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #6",
+      "createdAt": "2023-03-01T10:43:58Z",
+      "updatedAt": "2023-03-02T11:31:36Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "raw-evidence-uses",
+      "headRefOid": "120c7ab140c4444de372732ac944406d8ba12255",
+      "closedAt": "2023-03-02T11:31:32Z",
+      "mergedAt": "2023-03-02T11:31:32Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "d3e915c5ba1c44027214416e39799a774e5a9f1a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5Op1W-",
+          "commit": {
+            "abbreviatedOid": "120c7ab"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-03-01T10:55:53Z",
+          "updatedAt": "2023-03-01T10:55:53Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOIe69Es5LEP61",
+      "title": "add open issues pointer",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/23",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "also add a document history appendix to track changes",
+      "createdAt": "2023-03-01T20:33:23Z",
+      "updatedAt": "2023-03-02T11:31:20Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "issues",
+      "headRefOid": "e793cea63b910aa06c3205a07ccd02693c49f27a",
+      "closedAt": "2023-03-02T11:31:16Z",
+      "mergedAt": "2023-03-02T11:31:16Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "513989c48df79454eb0302de6da22991b1160c2b"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5OxnxU",
+          "commit": {
+            "abbreviatedOid": "2b39db8"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-03-02T11:22:44Z",
+          "updatedAt": "2023-03-02T11:23:27Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\n<cref>Note to RFC Editor: please remove before publication.</cref>\r\n```",
+              "createdAt": "2023-03-02T11:22:44Z",
+              "updatedAt": "2023-03-02T11:23:27Z"
+            },
+            {
+              "originalPosition": 13,
+              "body": "```suggestion\r\n<cref>Note to RFC Editor: please remove before publication.</cref>\r\n```",
+              "createdAt": "2023-03-02T11:22:56Z",
+              "updatedAt": "2023-03-02T11:23:27Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "id": "PR_kwDOIe69Es5TavtN",
+      "title": "Add github.com/veraison/rust-ear section",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/31",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add a section for the Rust EAR implementation under Project Veraison.",
+      "createdAt": "2023-06-20T09:26:57Z",
+      "updatedAt": "2023-06-20T11:28:02Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "1ba81a1dfc5a044c024b16cec9f9dc47ae149b3b",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "rust",
+      "headRefOid": "d70cb49757e67dc8a8957a81b771beee472cf8da",
+      "closedAt": "2023-06-20T11:27:59Z",
+      "mergedAt": "2023-06-20T11:27:59Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "d3a668e56e777ec1e74b1b3c21fa44234374b5fd"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5YrNb0",
+          "commit": {
+            "abbreviatedOid": "a861f10"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-06-20T09:30:39Z",
+          "updatedAt": "2023-06-20T09:30:40Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "this does not read entirely fluid to my stranger EARs :)\r\n\r\nmaybe:\r\n```suggestion\r\nEAR payloads. The maturity level is currently pre-alpha, with limitted\r\nalgorithm support.  Both JWT and COSE serializations are implemented.\r\n```",
+              "createdAt": "2023-06-20T09:30:39Z",
+              "updatedAt": "2023-06-20T11:20:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5Yr97h",
+          "commit": {
+            "abbreviatedOid": "248eb96"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "\ud83d\udc4d ",
+          "createdAt": "2023-06-20T11:23:24Z",
+          "updatedAt": "2023-06-20T11:23:24Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 33,
+      "id": "PR_kwDOIe69Es5TcK0d",
+      "title": "Add OPA policy example in appendix",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/33",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #32",
+      "createdAt": "2023-06-20T13:36:40Z",
+      "updatedAt": "2023-06-20T20:30:45Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "d3a668e56e777ec1e74b1b3c21fa44234374b5fd",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "opa-policy",
+      "headRefOid": "d0287c9dd958f2c758b86c6d8d9037fcf2180307",
+      "closedAt": "2023-06-20T20:30:41Z",
+      "mergedAt": "2023-06-20T20:30:41Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "89b51e643b188f645fa2bc7ed1032c490dbd15fc"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5YvL8n",
+          "commit": {
+            "abbreviatedOid": "d0287c9"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "LGTM!",
+          "createdAt": "2023-06-20T18:32:56Z",
+          "updatedAt": "2023-06-20T18:32:56Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5YvbVD",
+          "commit": {
+            "abbreviatedOid": "d0287c9"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-06-20T18:55:23Z",
+          "updatedAt": "2023-06-20T18:55:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "id": "PR_kwDOIe69Es5UrxeR",
+      "title": "add privacy considerations",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/34",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-05T09:40:45Z",
+      "updatedAt": "2023-07-05T13:09:50Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "89b51e643b188f645fa2bc7ed1032c490dbd15fc",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "privacy-draft",
+      "headRefOid": "472eb069b4f36d6e80259efef9a5d28f743861e5",
+      "closedAt": "2023-07-05T12:23:00Z",
+      "mergedAt": "2023-07-05T12:23:00Z",
+      "mergedBy": "ericvoit",
+      "mergeCommit": {
+        "oid": "1c5296324a262082f8872adf3388ebb781efdd0d"
+      },
+      "comments": [
+        {
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good to me",
+          "createdAt": "2023-07-05T12:22:30Z",
+          "updatedAt": "2023-07-05T12:22:30Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5aP9B9",
+          "commit": {
+            "abbreviatedOid": "472eb06"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM!",
+          "createdAt": "2023-07-05T09:53:36Z",
+          "updatedAt": "2023-07-05T09:53:36Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 35,
+      "id": "PR_kwDOIe69Es5UtDlE",
+      "title": "restrospectively add history log record for -01",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/35",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-05T13:21:25Z",
+      "updatedAt": "2023-07-05T13:59:39Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "1c5296324a262082f8872adf3388ebb781efdd0d",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "history",
+      "headRefOid": "b84e60185a43f8da9447231290269d89684ea626",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5aRvdv",
+          "commit": {
+            "abbreviatedOid": "b84e601"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-07-05T13:59:39Z",
+          "updatedAt": "2023-07-05T13:59:39Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
