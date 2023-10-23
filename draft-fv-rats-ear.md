@@ -27,8 +27,8 @@ pi: [toc, sortrefs, symrefs]
 
 author:
 - name: Thomas Fossati
-  org: Arm Limited
-  email: thomas.fossati@arm.com
+  org: Linaro
+  email: thomas.fossati@linaro.org
 - name: Eric Voit
   org: Cisco
   email: evoit@cisco.com
