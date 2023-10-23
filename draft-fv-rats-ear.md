@@ -808,6 +808,10 @@ Initial release.
 * OPA policy example
 * add rust-ear crate to the implementation status section
 
+## draft-fv-rats-ear-02
+
+* align JWT and CWT representations of eat_nonce
+
 # Acknowledgments
 {:numbered="false"}
 
