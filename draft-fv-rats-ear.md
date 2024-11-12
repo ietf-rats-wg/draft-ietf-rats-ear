@@ -35,6 +35,9 @@ author:
 - name: Sergei Trofimov
   org: Arm Limited
   email: sergei.trofimov@arm.com
+- name: Henk Birkholz
+  org: Fraunhofer SIT
+  email: henk.birkholz@ietf.contact
 
 normative:
   RFC7519: jwt
