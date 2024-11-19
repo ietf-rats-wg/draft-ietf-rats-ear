@@ -35,6 +35,13 @@ author:
 - name: Sergei Trofimov
   org: Arm Limited
   email: sergei.trofimov@arm.com
+- name: Henk Birkholz
+  org: Fraunhofer SIT
+  email: henk.birkholz@ietf.contact
+  street: Rheinstrasse 75
+  code: '64295'
+  city: Darmstadt
+  country: Germany
 
 normative:
   RFC7519: jwt
