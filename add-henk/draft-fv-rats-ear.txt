@@ -5,10 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 23 October 2024                                           Cisco
+Expires: 23 May 2025                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                           21 April 2024
+                                                             H. Birkholz
+                                                          Fraunhofer SIT
+                                                        19 November 2024
 
 
                         EAT Attestation Results
@@ -65,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 October 2024.
+   This Internet-Draft will expire on 23 May 2025.
 
 Copyright Notice
 
@@ -1201,30 +1203,31 @@ Table of Contents
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              06, 4 March 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-ar4si-06>.
+              07, 2 September 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              ar4si-07>.
 
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-25, 15
-              January 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-eat-25>.
+              Progress, Internet-Draft, draft-ietf-rats-eat-31, 6
+              September 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-rats-eat-31>.
 
    [I-D.ietf-rats-eat-media-type]
               Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
               Types", Work in Progress, Internet-Draft, draft-ietf-rats-
-              eat-media-type-07, 2 April 2024,
+              eat-media-type-12, 3 November 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-media-type-07>.
+              eat-media-type-12>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
               A. Tsukamoto, "Trusted Execution Environment Provisioning
               (TEEP) Protocol", Work in Progress, Internet-Draft, draft-
-              ietf-teep-protocol-18, 6 November 2023,
+              ietf-teep-protocol-20, 5 November 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
-              protocol-18>.
+              protocol-20>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1272,10 +1275,10 @@ Table of Contents
 10.2.  Informative References
 
    [IANA.cwt] IANA, "CBOR Web Token (CWT) Claims",
-              <http://www.iana.org/assignments/cwt>.
+              <https://www.iana.org/assignments/cwt>.
 
    [IANA.jwt] IANA, "JSON Web Token (JWT)",
-              <http://www.iana.org/assignments/jwt>.
+              <https://www.iana.org/assignments/jwt>.
 
    [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
@@ -1449,3 +1452,11 @@ Authors' Addresses
    Sergei Trofimov
    Arm Limited
    Email: sergei.trofimov@arm.com
+
+
+   Henk Birkholz
+   Fraunhofer SIT
+   Rheinstrasse 75
+   64295 Darmstadt
+   Germany
+   Email: henk.birkholz@ietf.contact
