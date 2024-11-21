@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-07-09T01:15:47.635999+00:00",
+  "timestamp": "2024-11-21T01:20:33.025054+00:00",
   "repo": "thomas-fossati/draft-ear",
   "labels": [
     {
@@ -136,7 +136,7 @@
       "comments": [
         {
           "author": "yogeshbdeshpande",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "body": "This is very much inline with what we discussed today (12/01). One thing though, I think, it still has value, if the in the outer EAR Wrapper we relay the complete raw evidence as is, in line with the current design of relaying the raw evidence.\r\n\r\nPlease note it is quite different from inner raw-evidence which pertains to individual (core) sub-attester evidence.",
           "createdAt": "2023-01-12T15:15:56Z",
           "updatedAt": "2023-01-12T15:15:56Z"
@@ -538,6 +538,158 @@
       "body": "Especially when used as passport, a EAR may need to carry the public key of the attester as one of the claims.\r\n\r\nWe have experimented with this pattern in the [attested TLS PoC](https://github.com/CCC-Attestation/attested-tls-poc) where we minted the Veraison-specific `\"ear.veraison.key-attestation\"` extension (documented in -01).  However, this seems to be more generally applicable to any secure channel establishment (e.g., in confidential containers's [KBS](https://github.com/confidential-containers/kbs)).  It would therefore help promoting the claim to the `\"ear.\"` namespace.\r\n\r\n",
       "createdAt": "2023-07-07T10:32:54Z",
       "updatedAt": "2023-07-07T10:32:54Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 38,
+      "id": "I_kwDOIe69Es5zZSvS",
+      "title": "Support for UCCS/UJCS?",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/38",
+      "state": "OPEN",
+      "author": "laurencelundblade",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Seems like you'd want UCCS or UJCS EARs -- lots of B2B over TLS for attestation results I'd expect.\r\n\r\nAs written, there's no option for this because CWT/JWT is a requirement.",
+      "createdAt": "2023-10-10T18:52:33Z",
+      "updatedAt": "2023-10-11T09:33:23Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "hi Laurence!\r\n\r\n> As written, there's no option for this because CWT/JWT is a requirement.\r\n\r\nAlways signing the EAR was a conscious choice to link strongly an AR to the verifier that was responsible for the appraisal.  In cases where it is not necessary to carry the signature across (e.g., in multi-stage verification within the same trust boundary), it can be stripped away easily.",
+          "createdAt": "2023-10-11T09:33:22Z",
+          "updatedAt": "2023-10-11T09:33:22Z"
+        }
+      ]
+    },
+    {
+      "number": 39,
+      "id": "I_kwDOIe69Es6SstG3",
+      "title": "baseline profile and derived profiles",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/39",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "We have observed a recurring pattern emerging in PSA, Arm CCA, and now EAR - see: https://github.com/veraison/rust-ear/pull/16, of using the EAT profile as a baseline and extending it.\r\n\r\nThe \"extensibility\" section should describe the mechanics in terms of deltas over the baseline profile, including suggesting a scheme for how to mint the corresponding new profile identifier in terms of the baseline.\r\n\r\nE.g.: for a \"CoCo 1.0.0\" EAR, the associated EAT profile could be constructed using the fragment identifier as in `\"tag:github.com,2023:veraison/ear#coco-1.0.0\"`.",
+      "createdAt": "2024-08-12T14:40:41Z",
+      "updatedAt": "2024-08-12T14:40:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 40,
+      "id": "I_kwDOIe69Es6Ss_rI",
+      "title": "Relax constraint that extensions must be maps",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/40",
+      "state": "OPEN",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The spec currently mandates that `$$ear-extension` and `$$ear-appraisal-extension` are maps. The intent seems to be to encourage bunching of multiple claims under one top-level codepoint, to minimize registration namespace pollution.\r\n\r\nHowever, the need to register claims already provides the pressure to do that, without needing to mandate it as a universal constraint. Additionally, this does not matter for private ranges. Finally, this is counter to how similar extension mechanisms work for CoRIM and PSA tokens (other EAT-based standards that allow extensions).\r\n\r\nThis constraint is unnecessary and should be removed. It should be replaced with a recommendation that for non-private claims, maps should be used to group multiple claims under a single top-level key (essentially, an application name space) to minimise the use of the public codepoint namespace.\r\n",
+      "createdAt": "2024-08-12T15:12:41Z",
+      "updatedAt": "2024-08-12T15:26:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 41,
+      "id": "I_kwDOIe69Es6VNHcS",
+      "title": "Support explicitly partial appraisals",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/41",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Looking only at the `ear.status` claim, there is no way to tell an RP (or a downstream verifier) that the appraisal conducted by the verifier is incomplete.  For example, if some relevant reference values have not been provisioned.\r\n\r\nThis is the case for CCA realms when no RIM/REMs/RPV reference values are provided, but the identity of the realm world can still be appraised by checking the RAK signature over the realm token and the RAK attestation made by the platform.  In such case, the realm-specific appraisal submod will be populated with _some_ but not all of the TV claims, and the `ear.status` computed accordingly, maybe with an \"affirming\" (but partial!) score, if the RAK checks out.\r\n\r\nIn that scenario, it'd be helpful to a relying party that does not inspect the TV to know that the appraisal is incomplete. The risk otherwise is it'd be tricked into thinking that everything is good when only _something_ is good.\r\n\r\n\r\n\r\n",
+      "createdAt": "2024-09-03T15:57:52Z",
+      "updatedAt": "2024-09-04T02:30:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "body": "ear.status, which represent the overall status of Appraisal for an attester is intended to accomplish the same objective.\r\n\r\nAs per EAR specification Section 3.2.2 Trust Tiers:\r\n`The trust tier type represents one of the equivalency classes in\r\n   which the $ar4si-trustworthiness-claim space is partitioned.  See\r\n   Section 2.3.2 of [I-D.ietf-rats-ar4si] for the details.`\r\n\r\nReading Section 2.3.2 Enumerated Encoding of [I-D.ietf-rats-ar4si]:\r\n\r\n`Value 1: The Evidence received contains unknown elements which the Verifier is unable to evaluate.\r\n\r\nAn example might be that the wrong type of Evidence has been delivered. Another case is that of Evidence coming from a composite Attester:`\r\n\r\n**`a Verifier may understand only part of it and leave as \"unknown\" the Trustworthiness claims related to features it can't appraise.`**\r\n\r\nWhat we have not encoded and grasped fully is the semantics for Value 1: \r\n\r\nWe should say, For SubMod: Realm Appraisal, we should state that PartAppraisal conducted, with each Vector Element \r\nbeen indicated accordingly..\r\n\r\nAlso one thing to note is that  $ar4si.trust-tier inside the EAR specification is capable of \r\nextensibility within its own right, so we should revisit the code space and recommend correctly, \r\ninstead of polluting by inserting such indicators outside as suggested to avoid duplication and confusion!\r\n",
+          "createdAt": "2024-09-03T18:07:20Z",
+          "updatedAt": "2024-09-03T18:07:20Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "I don't really get what you are proposing.  We probably need a chat.\r\n\r\nNoting that we could just get rid of `ear.status` - which is a conceptually wrong object in AR4SI land - and be done with the problem described in this issue.",
+          "createdAt": "2024-09-03T18:19:14Z",
+          "updatedAt": "2024-09-03T18:19:14Z"
+        },
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I am ok, to get rid of tight coupling of status to [2.3.2. ](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#section-2.3.2)[Enumeration Encoding](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#name-enumeration-encoding) which is really for each trust vector like instance identity etc.\r\n\r\nIf we get rid of status all together, means RP needs to inspect each of the Trust Vectors and make its own judgement, without any overall feedback from the Verifier, which is painful!",
+          "createdAt": "2024-09-03T18:21:55Z",
+          "updatedAt": "2024-09-03T18:22:35Z"
+        },
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "body": "`I don't really get what you are proposing. We probably need a chat.`\r\n\r\nWhat I meant was : Have we explored:\r\n\r\nOption a) Possibly using status value : 1 to indicate the same ??\r\n\r\nOption b) Affirming has range 2 to 31, could we say for this Attester, 30 ==> \"Affirming with Partial Evaluation\"\r\n",
+          "createdAt": "2024-09-03T18:30:11Z",
+          "updatedAt": "2024-09-03T18:30:11Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> I am ok, to get rid of tight coupling of status to [2.3.2. ](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#section-2.3.2)[Enumeration Encoding](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#name-enumeration-encoding) which is really for each trust vector like instance identity etc.\r\n\r\nThat's not what I was proposing.\r\n\r\n> If we get rid of status all together, means RP needs to inspect each of the Trust Vectors and make its own judgement, without any overall feedback from the Verifier, which is painful!\r\n\r\nThat's AR4SI -  which hopefully is not particularly painful (otherwise there would be little sense to use it in the first place.)\r\n\r\nThe conceptual problem with `ear.status` is it flattens 8 dimensions into 1.\r\nAnd in the process obviously lose vital information.\r\nThat's the main reason to avoid basing any decision on its value, and an excellent reason to get rid of it.",
+          "createdAt": "2024-09-03T18:56:55Z",
+          "updatedAt": "2024-09-03T19:01:43Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> Option a) Possibly using status value : 1 to indicate the same ??\r\n\r\nWhat \"same\"?\r\nWhere is value \"1\" taken from?\r\n\r\n> Option b) Affirming has range 2 to 31, could we say for this Attester, 30 ==> \"Affirming with Partial Evaluation\"\r\n\r\naffirming is a string:\r\n\r\n```\r\nar4si.trust-tier-none = \"none\"\r\nar4si.trust-tier-affirming = \"affirming\"\r\nar4si.trust-tier-warning = \"warning\"\r\nar4si.trust-tier-contraindicated = \"contraindicated\"\r\n```",
+          "createdAt": "2024-09-03T18:59:32Z",
+          "updatedAt": "2024-09-03T18:59:32Z"
+        },
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Value 1: is from https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#name-enumeration-encoding",
+          "createdAt": "2024-09-03T22:41:43Z",
+          "updatedAt": "2024-09-03T22:41:43Z"
+        },
+        {
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "body": "`Value 1: The Evidence received contains unknown elements which the Verifier is unable to evaluate. An example might be that the wrong type of Evidence has been delivered. Another case is that of Evidence coming from a composite Attester: a Verifier may understand only part of it and leave as \"unknown\" the Trustworthiness claims related to features it can't appraise`",
+          "createdAt": "2024-09-03T22:42:29Z",
+          "updatedAt": "2024-09-03T22:42:29Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "Not sure what the proposal is. If you look at the outer context of that sentence you'll notice that 1 is part of the `None` bucket.  So it's currently mapped to `ar4si.trust-tier-none = \"none\"`.",
+          "createdAt": "2024-09-04T02:30:24Z",
+          "updatedAt": "2024-09-04T02:30:24Z"
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "id": "I_kwDOIe69Es6clL8i",
+      "title": "Add expiration to token",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/42",
+      "state": "OPEN",
+      "author": "fitzthum",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The EAR has an `iat` field and can contain a nonce. This captures some sense of whether the token is new and an opinionated relying party could use this information to determine decide whether a token is fresh.\r\n\r\nThat said, there is no way for the verifier to report what the life of the token is (without using an extension). To me it seems like designating how long the results are valid should be a core functionality.\r\n\r\nWhile some parts of the token might be derived from the hardware evidence, which may or may not have a concept of expiration, other parts of the token follow from the configuration/policy of the verifier. Adding an expiration to the token can help capture that these verifier configurations can change, or that the evidence itself has some bounds. Generally it just seems prudent to have the token expire.",
+      "createdAt": "2024-10-31T14:24:00Z",
+      "updatedAt": "2024-10-31T15:31:07Z",
       "closedAt": null,
       "comments": []
     }
@@ -1515,24 +1667,26 @@
       "id": "PR_kwDOIe69Es5UtDlE",
       "title": "restrospectively add history log record for -01",
       "url": "https://github.com/thomas-fossati/draft-ear/pull/35",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "thomas-fossati",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-07-05T13:21:25Z",
-      "updatedAt": "2023-07-05T13:59:39Z",
+      "updatedAt": "2023-10-23T10:00:02Z",
       "baseRepository": "thomas-fossati/draft-ear",
       "baseRefName": "main",
       "baseRefOid": "1c5296324a262082f8872adf3388ebb781efdd0d",
       "headRepository": "thomas-fossati/draft-ear",
       "headRefName": "history",
       "headRefOid": "b84e60185a43f8da9447231290269d89684ea626",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-10-23T09:59:58Z",
+      "mergedAt": "2023-10-23T09:59:58Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "ffd34be91c8c49125b140bdda59b5cff40f72a57"
+      },
       "comments": [],
       "reviews": [
         {
@@ -1546,6 +1700,205 @@
           "body": "",
           "createdAt": "2023-07-05T13:59:39Z",
           "updatedAt": "2023-07-05T13:59:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 37,
+      "id": "PR_kwDOIe69Es5b8QKE",
+      "title": "nonce: align JWT and CWT representations",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/37",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "EAT had separate nonce definitions for JSON and CBOR, defining as a UTF-8 string for the former, and arbitrary bytes for the latter, resulting in incompatible representations.\r\n\r\nFor the EAR profile, to ensure compatibility between JWT and CWT, and allow maximum flexibility for the user, specify the nonce to be arbitrary bytes, base64-encoded when written as JSON/JWT.\r\n\r\nSee also the discussion here: https://github.com/ietf-rats-wg/eat/pull/421",
+      "createdAt": "2023-10-04T21:03:10Z",
+      "updatedAt": "2023-10-10T19:00:11Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "1c5296324a262082f8872adf3388ebb781efdd0d",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "nonce",
+      "headRefOid": "e46de9a30509198c9fc5dda48cd1d1a392e2fe7c",
+      "closedAt": "2023-10-05T19:23:09Z",
+      "mergedAt": "2023-10-05T19:23:09Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "e8152c2a9fdfdc7af5a2d3e6955d3d685474cb5d"
+      },
+      "comments": [
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "In this patch we also need to align the CDDL, which at the moment has, for the JSON serialisation:\r\n\r\n```\r\neat.nonce-type = text .size (10..74)\r\n```\r\n\r\nI wonder whether we should use `base64-url-text` like we do with all other \"opaque bytes\" types?",
+          "createdAt": "2023-10-05T09:50:44Z",
+          "updatedAt": "2023-10-05T09:50:44Z"
+        },
+        {
+          "author": "laurencelundblade",
+          "authorAssociation": "NONE",
+          "body": "It seems like you have a choice to require the b64 encoding of the nonce either in EAR or in Veraison. EAR will have use beyond Veraison, right? I think, not all EAR use cases will require translatability between CBOR and JSON.\r\n\r\nSo, the nonce in EAR could be the same as the nonce in EAT (and OpenID) -- no requirement for b64. Then the restriction to b64'd nonces goes in Verasion. This gives more alignment with EAT.\r\n\r\nYou can specify the nonce in EAR is fully translatable between CBOR and JSON. That's kind of what this PR does. But it should probably go further to specify the EAR nonce the way EAT specifies byte strings like UEID making use of the the JC<> construct and such. Probably say that the comparison of the nonce in JSON is only after b64 encoding is removed. \r\n\r\n\r\n",
+          "createdAt": "2023-10-05T19:33:52Z",
+          "updatedAt": "2023-10-05T19:33:52Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "> It seems like you have a choice to require the b64 encoding of the nonce either in EAR or in Veraison. EAR will have use beyond Veraison, right? I think, not all EAR use cases will require translatability between CBOR and JSON.\r\n> \r\n> So, the nonce in EAR could be the same as the nonce in EAT (and OpenID) -- no requirement for b64. Then the restriction to b64'd nonces goes in Verasion. This gives more alignment with EAT.\r\n\r\nWe are already fully aligned with EAT, I think \ud83d\ude05 \r\n\r\nEAR is an EAT profile that - among other things - constrains `eat_nonce`'s JSON type range.  And that's a proper profiling action, AFAICT.\r\n\r\n> You can specify the nonce in EAR is fully translatable between CBOR and JSON. That's kind of what this PR does. But it should probably go further to specify the EAR nonce the way EAT specifies byte strings like UEID making use of the the JC<> construct and such.\r\n\r\nWe haven't used `JC<>` in EAR.\r\n\r\nInstead we have abstract, \"info-model\" [labels](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3-2) for keys and their types that get instantiated into the [JSON](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.3) and [CBOR](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.4) data-models.\r\n\r\n> Probably say that the comparison of the nonce in JSON is only after b64 encoding is removed.\r\n\r\nIf the nonce has gone through a translation, yes.  That looks like a clarification we should add.\r\n\r\n\r\n\r\n",
+          "createdAt": "2023-10-05T20:07:12Z",
+          "updatedAt": "2023-10-05T20:15:19Z"
+        },
+        {
+          "author": "laurencelundblade",
+          "authorAssociation": "NONE",
+          "body": "I see that you don't use JC<> and instead have separate CDDL for CBOR and JSON. You could probably use JC<> and get rid of most of the separate CDDL. EAT almost did.\r\n\r\nEAT ran into trouble with nesting of CBOR in JSON and JSON in CBOR. The CDDL wasn't powerful enough.\r\n\r\nIt kind of looks like you require all submods to be the same encoding. You don't allow the sort of encoding that EAT does.\r\n\r\nYou are also defining your CDDL from the ground up, replicating CDDL lines, rather than referencing CDDL in EAT, UCCS, AR4SI and so on. I suppose that's OK as EAT does it, but that is sometimes considered bad practice.\r\n\r\nEAT replicates out of necessity that came for a lot of IETF process and accidents. If UCCS/UJCS were defined first and fully as normative, then EAT could have just referenced it. Would have even been better if CDDL were invented before JWT and CWT.",
+          "createdAt": "2023-10-10T19:00:11Z",
+          "updatedAt": "2023-10-10T19:00:11Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5i6B-_",
+          "commit": {
+            "abbreviatedOid": "099233e"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "LGTM, thanks!  One small correction inline: we need to use a normative (BCP14) \"must\" because the constraint we are establishing affects interop.",
+          "createdAt": "2023-10-05T09:41:23Z",
+          "updatedAt": "2023-10-05T09:46:39Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nas JWT, the nonce MUST be base64 encoded, resulting in a string between 12 and\r\n```",
+              "createdAt": "2023-10-05T09:41:23Z",
+              "updatedAt": "2023-10-05T09:46:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5i-g1U",
+          "commit": {
+            "abbreviatedOid": "e46de9a"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "awesome, thanks!",
+          "createdAt": "2023-10-05T19:22:59Z",
+          "updatedAt": "2023-10-05T19:22:59Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 43,
+      "id": "PR_kwDOIe69Es6Bojw2",
+      "title": "Add Henk",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/43",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-11-12T13:25:07Z",
+      "updatedAt": "2024-11-19T18:06:43Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "8210750d345e746889409e081980198a52ebc910",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "add-henk",
+      "headRefOid": "863ad632201ba223c1db3f55813009525d98b7d1",
+      "closedAt": "2024-11-19T18:06:40Z",
+      "mergedAt": "2024-11-19T18:06:40Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "f74603a1a3d16a74bd08213ed73a5656def57bbc"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es6Q0ZMh",
+          "commit": {
+            "abbreviatedOid": "23a5b98"
+          },
+          "author": "henkbirkholz",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2024-11-12T13:50:37Z",
+          "updatedAt": "2024-11-12T13:50:46Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\n- name: Henk Birkholz\r\n  org: Fraunhofer SIT\r\n  email: henk.birkholz@ietc.contact\r\n  street: Rheinstrasse 75\r\n  code: '64295'\r\n  city: Darmstadt\r\n  country: Germany\r\n```",
+              "createdAt": "2024-11-12T13:50:37Z",
+              "updatedAt": "2024-11-12T13:50:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6Q0nyF",
+          "commit": {
+            "abbreviatedOid": "4ff86ba"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-12T14:10:38Z",
+          "updatedAt": "2024-11-12T14:10:38Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\n  email: henk.birkholz@ietf.contact\r\n```",
+              "createdAt": "2024-11-12T14:10:38Z",
+              "updatedAt": "2024-11-12T14:10:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6Q1jpG",
+          "commit": {
+            "abbreviatedOid": "1d9d9ac"
+          },
+          "author": "henkbirkholz",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-12T15:36:21Z",
+          "updatedAt": "2024-11-12T15:36:21Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es6RyHMJ",
+          "commit": {
+            "abbreviatedOid": "1d9d9ac"
+          },
+          "author": "henkbirkholz",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-19T15:30:06Z",
+          "updatedAt": "2024-11-19T15:30:06Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es6RyULa",
+          "commit": {
+            "abbreviatedOid": "1d9d9ac"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-19T15:48:27Z",
+          "updatedAt": "2024-11-19T15:48:27Z",
           "comments": []
         }
       ]
