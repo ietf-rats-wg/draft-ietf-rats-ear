@@ -1,15 +1,15 @@
 {
   "eat_profile": "tag:github.com,2023:veraison/ear",
   "iat": 1666529184,
-  "ear.verifier-id": {
+  "ar4si.verifier-id": {
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
   "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
   "submods": {
     "PARSEC_TPM": {
-      "ear.status": "affirming",
-      "ear.trustworthiness-vector": {
+      "ar4si.status": "affirming",
+      "ar4si.trustworthiness-vector": {
         "instance-identity": 2,
         "executables": 2,
         "hardware": 2

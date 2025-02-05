@@ -1,1 +1,0 @@
-base64-url-text = tstr .regexp "[A-Za-z0-9_-]+"

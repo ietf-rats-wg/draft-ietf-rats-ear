@@ -1,0 +1,17 @@
+;# import rfc9711 as eat
+;# import rfc9393
+
+$$ear-appraisal-extension //= (
+  ear.teep-claims-label => ear-teep-claims
+)
+
+ear-teep-claims = non-empty<{
+  ? eat.nonce-label => eat.nonce-type
+  ? eat.ueid-label => eat.ueid-type
+  ? eat.oemid-label => eat.oemid-pen / eat.oemid-ieee / eat.oemid-random
+  ? eat.hardware-model-label => eat.hardware-model-type
+  ? eat.hardware-version-label => eat.hardware-version-type
+  ? eat.manifests-label => eat.manifests-type
+}>
+
+ear.teep-claims-label = eat.JC<"ear.teep-claims", 65000>
