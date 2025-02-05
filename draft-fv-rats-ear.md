@@ -133,7 +133,7 @@ The EAR claims-set is as follows:
 
 Where:
 
-`eat.profile` (mandatory)
+`eat_profile` (mandatory)
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
@@ -147,7 +147,7 @@ representation).
 
 `ear.verifier-id` (mandatory)
 : Identifying information about the appraising verifier.
-See {{sec-verifier-id}} for further details on its structure and serialization.
+See {{Section 3.3 of -ar4si}} for further details on its structure and serialization.
 
 `ear.raw-evidence` (optional)
 : The unabridged evidence submitted for appraisal, including any signed
@@ -157,7 +157,7 @@ scenarios or by auditors.
 There are privacy considerations associated with this claim.  See
 {{sec-priv-cons}}.
 
-`eat.submods` (mandatory)
+`submods` (mandatory)
 : A submodule map ({{Section 4.2.18 of -eat}}) holding one `EAR-appraisal` for
 each separately appraised attester.
 The map MUST contain at least one entry.
@@ -170,7 +170,7 @@ entirely within a private deployment.
 See {{sec-ear-appraisal}} for the details about the contents of an
 `EAR-appraisal`.
 
-`eat.nonce` (optional)
+`eat_nonce` (optional)
 : A user supplied nonce that is echoed by the verifier to provide freshness.
 The nonce is a sequence of bytes between 8 and 64 bytes long. When serialized
 as JWT, the nonce MUST be base64 encoded, resulting in a string between 12 and
@@ -182,26 +182,6 @@ See {{Section 4.1 of -eat}}.
 An EAR extension MUST be a map.
 See {{sec-extensions}} for further details.
 
-## Verifier Software Identification {#sec-verifier-id}
-
-{{Section 2.2.2 of -ar4si}} defines an information model for identifying the
-software that runs the verifier.  The `ar4si.verifier-id` claim provides its
-serialization as follows:
-
-~~~cddl
-{::include cddl/verifier-id.cddl}
-~~~
-{: #fig-cddl-verifier-id title="Verifier Software Identification Claim (CDDL Definition)" }
-
-Where:
-
-`build` (mandatory)
-: A text string that uniquely identifies the software build running the verifier.
-
-`developer` (mandatory)
-: A text string that uniquely identifies the organizational unit responsible
-for this `build`.
-
 ## EAR Appraisal Claims {#sec-ear-appraisal}
 
 ~~~cddl
@@ -212,7 +192,7 @@ for this `build`.
 {:vspace}
 `ear.status` (mandatory)
 : The overall appraisal status for this attester represented as one of the four
-trustworthiness tiers ({{sec-trusttiers}}).
+trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The value of this claim MUST be set to a tier of no higher trust than the tier
 corresponding to the worst trustworthiness claim across the entire
 trustworthiness vector.
@@ -220,7 +200,7 @@ trustworthiness vector.
 `ear.trustworthiness-vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
-See {{sec-tvector}} for the details.
+See {{Section 3.1 of -ar4si}} for the details.
 This claim MUST be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
@@ -236,49 +216,7 @@ result.
 An EAR appraisal extension MUST be a map.
 See {{sec-extensions}} for further details.
 
-### Trustworthiness Vector {#sec-tvector}
-
-The `ar4si-trustworthiness-vector` claim is an embodiment of the AR4SI
-trustworthiness vector ({{Section 2.3.5 of -ar4si}}) and it is defined as
-follows:
-
-~~~cddl
-{::include cddl/trustworthiness-vector.cddl}
-~~~
-{: #fig-cddl-tvec title="Trustworthiness Vector (CDDL Definition)" }
-
-It contains an entry for each one of the eight AR4SI appraisals that have been
-conducted on the submitted evidence ({{Section 2.3.4 of -ar4si}}).
-The value of each entry is chosen in the -128..127 range according to the rules
-described in {{Sections 2.3.3 and 2.3.4 of -ar4si}}.
-All categories are optional.
-A missing entry means that the verifier makes no claim about this specific
-appraisal facet because the category is not applicable to the submitted
-evidence.
-As required by the `non-empty` macro, at least one entry MUST be present in the
-vector.
-
-### Trust Tiers {#sec-trusttiers}
-
-The trust tier type represents one of the equivalency classes in which the
-`$ar4si-trustworthiness-claim` space is partitioned.
-See {{Section 2.3.2 of -ar4si}} for the details.
-The allowed values for the type are as follows:
-
-~~~cddl
-{::include cddl/trust-tiers.cddl}
-~~~
-{: #fig-cddl-ttiers title="Trustworthiness Tiers (CDDL Definition)" }
-
 ## JSON Serialisation
-
-To serialize the EAR claims-set in JSON format, the following substitutions are
-applied to the encoding-agnostic CDDL definitions in {{sec-ear}},
-{{sec-tvector}} and {{sec-trusttiers}}:
-
-~~~cddl
-{::include cddl/json-labels.cddl}
-~~~
 
 ### Examples
 
@@ -327,10 +265,6 @@ to complete the partial appraisal.
 {: #fig-ex-json-2 title="JSON claims-set: simple affirming appraisal" }
 
 ## CBOR Serialisation
-
-~~~cddl
-{::include cddl/cbor-labels.cddl}
-~~~
 
 ### Examples
 
@@ -417,29 +351,17 @@ The list is provided in {{Section 4.3.1 of -teep}}.
 EAR defines a TEEP application extension for the purpose of conveying such claims.
 
 ~~~cddl
-{::include cddl/teep.cddl}
+{::include cddl/ext-teep.cddl}
 ~~~
 {: #fig-cddl-teep title="TEEP Extension (CDDL Definition)" }
 
-### JSON Serialization
-
-~~~cddl
-{::include cddl/teep-json-labels.cddl}
-~~~
-
-Example:
+### JSON Serialization Example
 
 ~~~cddl
 {::include cddl/examples/ext-teep-json-1.diag}
 ~~~
 
-### CBOR Serialization
-
-~~~cddl
-{::include cddl/teep-cbor-labels.cddl}
-~~~
-
-Example:
+### CBOR Serialization Example
 
 ~~~cddl
 {::include cddl/examples/ext-teep-cbor-1.diag}
@@ -466,35 +388,21 @@ The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
 4.1.2.7 of -pkix}}).
 
 ~~~cddl
-{::include cddl/veraison.cddl}
+{::include cddl/ext-veraison.cddl}
 ~~~
 {: #fig-cddl-veraison title="Project Veraison Extensions (CDDL Definition)" }
 
-### JSON Serialization
-
-~~~cddl
-{::include cddl/veraison-json-labels.cddl}
-~~~
-
-Example:
+### JSON Serialization Examples
 
 ~~~cbor-diag
 {::include cddl/examples/ext-veraison-json-1.diag}
 ~~~
 
-Key attestation example:
-
 ~~~cbor-diag
 {::include cddl/examples/ext-veraison-json-2.diag}
 ~~~
 
-### CBOR Serialization
-
-~~~cddl
-{::include cddl/veraison-cbor-labels.cddl}
-~~~
-
-Example:
+### CBOR Serialization Example
 
 ~~~cbor-diag
 {::include cddl/examples/ext-veraison-cbor-1.diag}
@@ -608,7 +516,7 @@ apply.
 
 # IANA Considerations
 
-## New EAT Claims {#sec-iana-ear-claims}
+## New EAT Claims {#sec-iana-ear-claims}
 
 This specification adds the following values to the "JSON Web Token Claims"
 registry {{IANA.jwt}} and the "CBOR Web Token Claims" registry {{IANA.cwt}}.
@@ -631,7 +539,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
-### EAR Trustworthiness Vector
+### Trustworthiness Vector
 
 * Claim Name: ear.trustworthiness-vector
 * Claim Description: EAR Trustworthiness Vector
@@ -639,7 +547,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Key: 1001
 * Claim Value Type(s): map
 * Change Controller: IESG
-* Specification Document(s): {{sec-tvector}} of {{&SELF}}
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
 ### EAR Raw Evidence
 
@@ -661,15 +569,15 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
-### EAR Verifier Software Identifier
+### Verifier Software Identifier
 
 * Claim Name: ear.verifier-id
-* Claim Description: EAR Verifier Software Identifier
+* Claim Description: AR4SI Verifier Software Identifier
 * JWT Claim Name: ear.verifier-id
 * Claim Key: 1004
 * Claim Value Type(s): map
 * Change Controller: IESG
-* Specification Document(s): {{sec-verifier-id}} of {{&SELF}}
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
 
 ### EAR TEEP Claims
 
@@ -686,17 +594,6 @@ in an object with only optional fields.
 
 ~~~cddl
 {::include cddl/generic-non-empty.cddl}
-~~~
-
-{:vspace}
-`base64-url-text`
-: Base64 encoding using the URL- and filename-safe character set defined in
-{{Section 5 of !RFC4648}}, with all trailing '=' characters omitted (as
-permitted by Section 3.2) and without the inclusion of any line breaks,
-whitespace, or other additional characters.
-
-~~~cddl
-{::include cddl/base64-url-text.cddl}
 ~~~
 
 # Open Policy Agent Example

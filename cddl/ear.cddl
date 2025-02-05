@@ -3,8 +3,8 @@
 
 EAR = {
   eat.profile-label => "tag:github.com,2023:veraison/ear"
-  iat-label => int
-  ar4si.verifier-id-label => ar4si.verifier-id
+  eat.iat-claim-label => int
+  verifier-id-label => ar4si.verifier-id
   ? raw-evidence-label => eat.binary-data
   eat.submods-label => { + text => EAR-appraisal }
   ? eat.nonce-label => eat.nonce-type
@@ -13,9 +13,4 @@ EAR = {
 
 ; EAR-specific claims
 raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
-
-; TODO(tho) add these as EAT claims to AR4SI?
-ar4si.verifier-id-label = eat.JC<"ar4si.verifier-id", 1004>
-
-; CWT/JWT claims
-iat-label = eat.JC<"iat", 6>
+verifier-id-label = eat.JC<"ear.verifier-id", 1004>

@@ -1,14 +1,12 @@
 ;# import ar4si as ar4si
 
 EAR-appraisal = {
-  ar4si.status-label => ar4si.trust-tier
-  ? ar4si.trustworthiness-vector-label => ar4si.trustworthiness-vector
-  ? ear.appraisal-policy-id-label => text
+  status-label => ar4si.trust-tier
+  ? trustworthiness-vector-label => ar4si.trustworthiness-vector
+  ? appraisal-policy-id-label => text
   * $$ear-appraisal-extension
 }
 
-ear.appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
-
-; TODO(tho) add these as EAT claims to AR4SI?
-ar4si.status-label = eat.JC<"ar4si.status", 1000>
-ar4si.trustworthiness-vector-label = eat.JC<"ar4si.trustworthiness-vector", 1001>
+status-label = eat.JC<"ear.status", 1000>
+trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
+appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
