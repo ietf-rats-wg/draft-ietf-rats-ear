@@ -1,0 +1,35 @@
+$.start.$ = trustworthiness-vector / trustworthiness-tier / verifier-id / trustworthiness-claim
+trustworthiness-vector = non-empty<{
+    ? instance-identity-label => trustworthiness-claim,
+    ? configuration-label => trustworthiness-claim,
+    ? executables-label => trustworthiness-claim,
+    ? file-system-label => trustworthiness-claim,
+    ? hardware-label => trustworthiness-claim,
+    ? runtime-opaque-label => trustworthiness-claim,
+    ? storage-opaque-label => trustworthiness-claim,
+    ? sourced-data-label => trustworthiness-claim,
+}>
+instance-identity-label = JC<"instance-identity", 0>
+configuration-label = JC<"configuration", 1>
+executables-label = JC<"executables", 2>
+file-system-label = JC<"file-system", 3>
+hardware-label = JC<"hardware", 4>
+runtime-opaque-label = JC<"runtime-opaque", 5>
+storage-opaque-label = JC<"storage-opaque", 6>
+sourced-data-label = JC<"sourced-data", 7>
+trustworthiness-claim = -128 .. 127
+trustworthiness-tier-none-label = JC<"none", 0>
+trustworthiness-tier-affirming-label = JC<"affirming", 2>
+trustworthiness-tier-warning-label = JC<"warning", 32>
+trustworthiness-tier-contraindicated-label = JC<"contraindicated", 96>
+trustworthiness-tier /= trustworthiness-tier-none-label / trustworthiness-tier-affirming-label / trustworthiness-tier-warning-label / trustworthiness-tier-contraindicated-label
+verifier-id = {
+  developer-label => text,
+  build-label => text,
+}
+developer-label = JC<"developer", 0>
+build-label = JC<"build", 1>
+non-empty<M> = M .within ({+ any => any})
+JSON-ONLY<J> = J .feature "json"
+CBOR-ONLY<C> = C .feature "cbor"
+JC<J, C> = JSON-ONLY<J> / CBOR-ONLY<C>

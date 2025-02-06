@@ -1,9 +1,16 @@
+;# import rfc9711 as eat
+;# import ar4si as ar4si
+
 EAR = {
-  eat.profile => "tag:github.com,2023:veraison/ear"
-  iat => int
-  ear.verifier-id => ar4si.verifier-id
-  ? ear.raw-evidence => ear-bytes
-  eat.submods => { + text => EAR-appraisal }
-  ? eat.nonce => eat.nonce-type
+  eat.profile-label => "tag:github.com,2023:veraison/ear"
+  eat.iat-claim-label => int
+  verifier-id-label => ar4si.verifier-id
+  ? raw-evidence-label => eat.binary-data
+  eat.submods-label => { + text => EAR-appraisal }
+  ? eat.nonce-label => eat.nonce-type
   * $$ear-extension
 }
+
+; EAR-specific claims
+raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
+verifier-id-label = eat.JC<"ear.verifier-id", 1004>
