@@ -1,7 +1,7 @@
 ;# import ar4si as ar4si
 
 EAR-appraisal = {
-  status-label => ar4si.trust-tier
+  status-label => ar4si.trustworthiness-tier
   ? trustworthiness-vector-label => ar4si.trustworthiness-vector
   ? appraisal-policy-id-label => text
   * $$ear-appraisal-extension
