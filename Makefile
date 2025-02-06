@@ -14,7 +14,7 @@ else
 endif
 endif
 
-$(drafts_xml):: cddl
+$(drafts_xml): cddl
 
 .PHONY: cddl
 cddl: ; $(MAKE) -C cddl check
