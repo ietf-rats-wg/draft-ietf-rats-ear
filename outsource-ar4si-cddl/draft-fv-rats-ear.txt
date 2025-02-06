@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 23 May 2025                                               Cisco
+Expires: 10 August 2025                                            Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                        19 November 2024
+                                                         6 February 2025
 
 
                         EAT Attestation Results
@@ -67,11 +67,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 May 2025.
+   This Internet-Draft will expire on 10 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -88,24 +88,21 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  EAT Attestation Result
-     3.1.  Verifier Software Identification
-     3.2.  EAR Appraisal Claims
-       3.2.1.  Trustworthiness Vector
-       3.2.2.  Trust Tiers
-     3.3.  JSON Serialisation
+     3.1.  EAR Appraisal Claims
+     3.2.  JSON Serialisation
+       3.2.1.  Examples
+     3.3.  CBOR Serialisation
        3.3.1.  Examples
-     3.4.  CBOR Serialisation
-       3.4.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
      4.3.  Choosing between registered and unregistered claims
      4.4.  TEEP Extension
-       4.4.1.  JSON Serialization
-       4.4.2.  CBOR Serialization
+       4.4.1.  JSON Serialization Example
+       4.4.2.  CBOR Serialization Example
      4.5.  Project Veraison Extensions
-       4.5.1.  JSON Serialization
-       4.5.2.  CBOR Serialization
+       4.5.1.  JSON Serialization Examples
+       4.5.2.  CBOR Serialization Example
    5.  Media Types
    6.  Implementation Status
      6.1.  Project Veraison
@@ -115,12 +112,12 @@ Table of Contents
    7.  Security Considerations
    8.  Privacy Considerations
    9.  IANA Considerations
-     9.1.   New EAT Claims
+     9.1.  New EAT Claims
        9.1.1.  EAR Status
-       9.1.2.  EAR Trustworthiness Vector
+       9.1.2.  Trustworthiness Vector
        9.1.3.  EAR Raw Evidence
        9.1.4.  EAR Appraisal Policy Identifier
-       9.1.5.  EAR Verifier Software Identifier
+       9.1.5.  Verifier Software Identifier
        9.1.6.  EAR TEEP Claims
    10. References
      10.1.  Normative References
@@ -177,21 +174,28 @@ Table of Contents
 
    The EAR claims-set is as follows:
 
+   ;# import rfc9711 as eat
+   ;# import ar4si as ar4si
+
    EAR = {
-     eat.profile => "tag:github.com,2023:veraison/ear"
-     iat => int
-     ear.verifier-id => ar4si.verifier-id
-     ? ear.raw-evidence => ear-bytes
-     eat.submods => { + text => EAR-appraisal }
-     ? eat.nonce => eat.nonce-type
+     eat.profile-label => "tag:github.com,2023:veraison/ear"
+     eat.iat-claim-label => int
+     verifier-id-label => ar4si.verifier-id
+     ? raw-evidence-label => eat.binary-data
+     eat.submods-label => { + text => EAR-appraisal }
+     ? eat.nonce-label => eat.nonce-type
      * $$ear-extension
    }
+
+   ; EAR-specific claims
+   raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
+   verifier-id-label = eat.JC<"ear.verifier-id", 1004>
 
                       Figure 1: EAR (CDDL Definition)
 
    Where:
 
-   eat.profile (mandatory)  The EAT profile (Section 6 of
+   eat_profile (mandatory)  The EAT profile (Section 6 of
       [I-D.ietf-rats-eat]) associated with the EAR claims-set and
       encodings defined by this document.  It MUST be the following tag
       URI ([RFC4151]) tag:github.com,2023:veraison/ear.
@@ -202,8 +206,8 @@ Table of Contents
       (i.e., disallowing the floating point representation).
 
    ear.verifier-id (mandatory)  Identifying information about the
-      appraising verifier.  See Section 3.1 for further details on its
-      structure and serialization.
+      appraising verifier.  See Section 3.3 of [I-D.ietf-rats-ar4si] for
+      further details on its structure and serialization.
 
    ear.raw-evidence (optional)  The unabridged evidence submitted for
       appraisal, including any signed container/envelope.  This field
@@ -211,7 +215,7 @@ Table of Contents
       scenarios or by auditors.  There are privacy considerations
       associated with this claim.  See Section 8.
 
-   eat.submods (mandatory)  A submodule map (Section 4.2.18 of
+   submods (mandatory)  A submodule map (Section 4.2.18 of
       [I-D.ietf-rats-eat]) holding one EAR-appraisal for each separately
       appraised attester.  The map MUST contain at least one entry.  For
       each appraised attester the verifier chooses a unique label.  For
@@ -219,10 +223,10 @@ Table of Contents
       constructed from the associated EAT profile.  A verifier SHOULD
       publicly and permanently document its labelling scheme for each
       supported evidence type, unless EAR payloads are produced and
-      consumed entirely within a private deployment.  See Section 3.2
+      consumed entirely within a private deployment.  See Section 3.1
       for the details about the contents of an EAR-appraisal.
 
-   eat.nonce (optional)  A user supplied nonce that is echoed by the
+   eat_nonce (optional)  A user supplied nonce that is echoed by the
       verifier to provide freshness.  The nonce is a sequence of bytes
       between 8 and 64 bytes long.  When serialized as JWT, the nonce
       MUST be base64 encoded, resulting in a string between 12 and 88
@@ -232,54 +236,40 @@ Table of Contents
       An EAR extension MUST be a map.  See Section 4 for further
       details.
 
-3.1.  Verifier Software Identification
+3.1.  EAR Appraisal Claims
 
-   Section 2.2.2 of [I-D.ietf-rats-ar4si] defines an information model
-   for identifying the software that runs the verifier.  The
-   ar4si.verifier-id claim provides its serialization as follows:
-
-   ar4si.verifier-id = {
-     build => text
-     developer => text
-   }
-
-     Figure 2: Verifier Software Identification Claim (CDDL Definition)
-
-   Where:
-
-   build (mandatory)  A text string that uniquely identifies the
-      software build running the verifier.
-
-   developer (mandatory)  A text string that uniquely identifies the
-      organizational unit responsible for this build.
-
-3.2.  EAR Appraisal Claims
+   ;# import ar4si as ar4si
 
    EAR-appraisal = {
-     ear.status => $ar4si.trust-tier
-     ? ear.trustworthiness-vector => ar4si.trustworthiness-vector
-     ? ear.appraisal-policy-id => text
+     status-label => ar4si.trustworthiness-tier
+     ? trustworthiness-vector-label => ar4si.trustworthiness-vector
+     ? appraisal-policy-id-label => text
      * $$ear-appraisal-extension
    }
 
-              Figure 3: EAR Appraisal Claims (CDDL Definition)
+   status-label = eat.JC<"ear.status", 1000>
+   trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
+   appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
+
+              Figure 2: EAR Appraisal Claims (CDDL Definition)
 
    ear.status (mandatory)
       The overall appraisal status for this attester represented as one
-      of the four trustworthiness tiers (Section 3.2.2).  The value of
-      this claim MUST be set to a tier of no higher trust than the tier
-      corresponding to the worst trustworthiness claim across the entire
-      trustworthiness vector.
+      of the four trustworthiness tiers (Section 3.2 of
+      [I-D.ietf-rats-ar4si]).  The value of this claim MUST be set to a
+      tier of no higher trust than the tier corresponding to the worst
+      trustworthiness claim across the entire trustworthiness vector.
 
    ear.trustworthiness-vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
-      appraisal for this attester.  See Section 3.2.1 for the details.
-      This claim MUST be present unless the party requesting Evidence
-      appraisal explicitly asks for it to be dropped, e.g., via an API
-      parameter or similar arrangement.  Such consumer would therefore
-      rely entirely on the semantics of the ear.status claim.  This
-      behaviour is NOT RECOMMENDED because of the resulting loss of
-      quality of the appraisal result.
+      appraisal for this attester.  See Section 3.1 of
+      [I-D.ietf-rats-ar4si] for the details.  This claim MUST be present
+      unless the party requesting Evidence appraisal explicitly asks for
+      it to be dropped, e.g., via an API parameter or similar
+      arrangement.  Such consumer would therefore rely entirely on the
+      semantics of the ear.status claim.  This behaviour is NOT
+      RECOMMENDED because of the resulting loss of quality of the
+      appraisal result.
 
    ear.appraisal-policy-id (optional)
       An unique identifier of the appraisal policy used to evaluate the
@@ -289,100 +279,11 @@ Table of Contents
       Any registered or unregistered extension.  An EAR appraisal
       extension MUST be a map.  See Section 4 for further details.
 
-3.2.1.  Trustworthiness Vector
+3.2.  JSON Serialisation
 
-   The ar4si-trustworthiness-vector claim is an embodiment of the AR4SI
-   trustworthiness vector (Section 2.3.5 of [I-D.ietf-rats-ar4si]) and
-   it is defined as follows:
+3.2.1.  Examples
 
-   ar4si.trustworthiness-vector = non-empty<{
-     ? instance-identity => $ar4si.trustworthiness-claim
-     ? configuration => $ar4si.trustworthiness-claim
-     ? executables => $ar4si.trustworthiness-claim
-     ? file-system => $ar4si.trustworthiness-claim
-     ? hardware => $ar4si.trustworthiness-claim
-     ? runtime-opaque => $ar4si.trustworthiness-claim
-     ? storage-opaque => $ar4si.trustworthiness-claim
-     ? sourced-data => $ar4si.trustworthiness-claim
-   }>
-
-   $ar4si.trustworthiness-claim = -128..127
-
-             Figure 4: Trustworthiness Vector (CDDL Definition)
-
-   It contains an entry for each one of the eight AR4SI appraisals that
-   have been conducted on the submitted evidence (Section 2.3.4 of
-   [I-D.ietf-rats-ar4si]).  The value of each entry is chosen in the
-   -128..127 range according to the rules described in Sections 2.3.3
-   and 2.3.4 of [I-D.ietf-rats-ar4si].  All categories are optional.  A
-   missing entry means that the verifier makes no claim about this
-   specific appraisal facet because the category is not applicable to
-   the submitted evidence.  As required by the non-empty macro, at least
-   one entry MUST be present in the vector.
-
-3.2.2.  Trust Tiers
-
-   The trust tier type represents one of the equivalency classes in
-   which the $ar4si-trustworthiness-claim space is partitioned.  See
-   Section 2.3.2 of [I-D.ietf-rats-ar4si] for the details.  The allowed
-   values for the type are as follows:
-
-   $ar4si.trust-tier /= ar4si.trust-tier-none
-   $ar4si.trust-tier /= ar4si.trust-tier-affirming
-   $ar4si.trust-tier /= ar4si.trust-tier-warning
-   $ar4si.trust-tier /= ar4si.trust-tier-contraindicated
-
-             Figure 5: Trustworthiness Tiers (CDDL Definition)
-
-3.3.  JSON Serialisation
-
-   To serialize the EAR claims-set in JSON format, the following
-   substitutions are applied to the encoding-agnostic CDDL definitions
-   in Section 3, Section 3.2.1 and Section 3.2.2:
-
-   ; $ar4si.trust-tier choice
-   ar4si.trust-tier-none = "none"
-   ar4si.trust-tier-affirming = "affirming"
-   ar4si.trust-tier-warning = "warning"
-   ar4si.trust-tier-contraindicated = "contraindicated"
-
-   ; EAR JWT claims
-   ear.status = "ear.status"
-   ear.trustworthiness-vector = "ear.trustworthiness-vector"
-   ear.raw-evidence = "ear.raw-evidence"
-   ear.appraisal-policy-id = "ear.appraisal-policy-id"
-   ear.verifier-id = "ear.verifier-id"
-   ; EAT JWT claims
-   eat.profile = "eat_profile"
-   eat.nonce = "eat_nonce"
-   eat.submods = "submods"
-   ; JWT claims
-   iat = "iat"
-
-   ; ar4si.trustworthiness-vector
-   instance-identity = "instance-identity"
-   configuration = "configuration"
-   executables = "executables"
-   file-system = "file-system"
-   hardware = "hardware"
-   runtime-opaque = "runtime-opaque"
-   storage-opaque = "storage-opaque"
-   sourced-data = "sourced-data"
-
-   ; JSON types mapping
-   ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
-   ear-label = text
-
-   ; ar4si.verifier-id labels
-   developer = "developer"
-   build = "build"
-
-   ; EAT
-   eat.nonce-type = base64-url-text .size (12..88)
-
-3.3.1.  Examples
-
-   The example in Figure 6 shows an EAR claims-set corresponding to a
+   The example in Figure 3 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
    problems with the attester's state reported in the submitted
    evidence.  Specifically, the identified issue is related to
@@ -414,7 +315,7 @@ Table of Contents
      }
    }
 
-            Figure 6: JSON claims-set: contraindicated appraisal
+            Figure 3: JSON claims-set: contraindicated appraisal
 
    The breakdown of the trustworthiness vector is as follows:
 
@@ -434,7 +335,7 @@ Table of Contents
 
    *  Sourced Data (none): no claim being made
 
-   The example in Figure 7 contains the appraisal for a composite device
+   The example in Figure 4 contains the appraisal for a composite device
    with two attesters named "CCA Platform" and "CCA Realm" respectively.
    Both attesters have either "affirming" or (implicit) "none" values in
    their associated trustworthiness vectors.  Note that the "none"
@@ -477,54 +378,14 @@ Table of Contents
      }
    }
 
-           Figure 7: JSON claims-set: simple affirming appraisal
+           Figure 4: JSON claims-set: simple affirming appraisal
 
-3.4.  CBOR Serialisation
+3.3.  CBOR Serialisation
 
-   ; $ar4si.trust-tier code-points
-   ar4si.trust-tier-none = 0
-   ar4si.trust-tier-affirming = 2
-   ar4si.trust-tier-warning = 32
-   ar4si.trust-tier-contraindicated = 96
+3.3.1.  Examples
 
-   ; EAR CWT claims
-   ear.status = 1000
-   ear.trustworthiness-vector = 1001
-   ear.raw-evidence = 1002
-   ear.appraisal-policy-id = 1003
-   ear.verifier-id = 1004
-   ; EAT CWT claims
-   eat.profile = 265
-   eat.nonce = 10
-   eat.submods= 266
-   ; CWT claims
-   iat = 6
-
-   ; ar4si.trustworthiness-vector keys
-   instance-identity = 0
-   configuration = 1
-   executables = 2
-   file-system = 3
-   hardware = 4
-   runtime-opaque = 5
-   storage-opaque = 6
-   sourced-data = 7
-
-   ; CBOR type mappings
-   ear-bytes = bytes
-   ear-label = int / text
-
-   ; ar4si.verifier-id keys
-   developer = 0
-   build = 1
-
-   ; EAT
-   eat.nonce-type = bytes .size (8..64)
-
-3.4.1.  Examples
-
-   The example in Figure 8 is semantically equivalent to that in
-   Figure 6.  It shows the same "contraindicated" appraisal using the
+   The example in Figure 5 is semantically equivalent to that in
+   Figure 3.  It shows the same "contraindicated" appraisal using the
    more compact CBOR serialization of the EAR claims-set.
 
    {
@@ -548,7 +409,7 @@ Table of Contents
      }
    }
 
-            Figure 8: CBOR claims-set: contraindicated appraisal
+            Figure 5: CBOR claims-set: contraindicated appraisal
 
 4.  EAR Extensions
 
@@ -598,7 +459,7 @@ Table of Contents
 4.3.  Choosing between registered and unregistered claims
 
    If an extension supports functionality of a specific application
-   (e.g.  Project Veraison Services), its claims MAY be registered.
+   (e.g. Project Veraison Services), its claims MAY be registered.
 
    If an extension supports a protocol that may be applicable across
    multiple applications or environments (e.g., TEEP), its claims SHOULD
@@ -628,60 +489,27 @@ Table of Contents
    EAR defines a TEEP application extension for the purpose of conveying
    such claims.
 
+   ;# import rfc9711 as eat
+   ;# import rfc9393
+
    $$ear-appraisal-extension //= (
-     ear.teep-claims => ear-teep-claims
+     ear.teep-claims-label => ear-teep-claims
    )
 
    ear-teep-claims = non-empty<{
-     ? eat.nonce => eat.nonce-type
-     ? eat.ueid => eat.ueid-type
-     ? eat.oemid => eat.oemid-type
-     ? eat.hardware-model => eat.hardware-model-type
-     ? eat.hardware-version => eat.hardware-version-type
-     ? eat.manifests => eat.manifests-type
+     ? eat.nonce-label => eat.nonce-type
+     ? eat.ueid-label => eat.ueid-type
+     ? eat.oemid-label => eat.oemid-pen / eat.oemid-ieee / eat.oemid-random
+     ? eat.hardware-model-label => eat.hardware-model-type
+     ? eat.hardware-version-label => eat.hardware-version-type
+     ? eat.manifests-label => eat.manifests-type
    }>
 
-                 Figure 9: TEEP Extension (CDDL Definition)
+   ear.teep-claims-label = eat.JC<"ear.teep-claims", 65000>
 
-4.4.1.  JSON Serialization
+                 Figure 6: TEEP Extension (CDDL Definition)
 
-   ear.teep-claims = "ear.teep-claims"
-
-   eat.ueid = "ueid"
-   eat.oemid = "oemid"
-   eat.hardware-model = "hwmodel"
-   eat.hardware-version = "hwversion"
-   eat.manifests = "manifests"
-
-   ; cddl(1)-unsupported: .size (12..44)
-   eat.ueid-type = base64-url-text
-
-   eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
-
-   ; cddl(1)-unsupported: .size (4..44)
-   eat.hardware-model-type = base64-url-text
-
-   eat.hardware-version-type = [
-     version:  tstr,
-     ? scheme:  $version-scheme
-   ]
-
-   eat.manifests-type = [ + manifest-format ]
-
-   manifest-format = [
-     content-type:   coap-content-format,
-     content-format: base64-url-text / text
-   ]
-
-   coap-content-format = uint .le 65535
-
-   oemid-pen = int
-   ; cddl(1)-unsupported: .size 4
-   oemid-ieee = base64-url-text
-   ; cddl(1)-unsupported: .size 24
-   oemid-random = base64-url-text
-
-   Example:
+4.4.1.  JSON Serialization Example
 
    {
      "eat_profile": "tag:github.com,2023:veraison/ear",
@@ -712,40 +540,7 @@ Table of Contents
      }
    }
 
-4.4.2.  CBOR Serialization
-
-   ear.teep-claims = 65000
-
-   eat.ueid = 256
-   eat.oemid = 258
-   eat.hardware-model = 259
-   eat.hardware-version = 260
-   eat.manifests = 273 ; XXX provisional
-
-   eat.ueid-type = bytes .size (7..33)
-   eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
-   eat.hardware-model-type = bytes .size (1..32)
-
-   eat.hardware-version-type = [
-     version: text
-     ? scheme: $version-scheme
-   ]
-
-   eat.manifests-type = [ + manifest-format ]
-
-   manifest-format = [
-     content-type: coap-content-format
-     content-format: bytes .cbor untagged-coswid
-   ]
-
-   coap-content-format = uint .le 65535
-   untagged-coswid = bytes ; XXX should import coswid
-
-   oemid-pen = int
-   oemid-ieee = bytes .size 3
-   oemid-random = bytes .size 16
-
-   Example:
+4.4.2.  CBOR Serialization Example
 
    {
      265: "tag:github.com,2023:veraison/ear",
@@ -795,41 +590,39 @@ Table of Contents
       key.  The key is a DER encoded ASN.1 SubjectPublicKeyInfo
       structure (Section 4.1.2.7 of [RFC5280]).
 
+   ;# import rfc9711 as eat
+
    $$ear-appraisal-extension //= (
-     ear.veraison.annotated-evidence => ear-veraison-annotated-evidence
+     ear.veraison.annotated-evidence-label => ear-veraison-annotated-evidence
    )
 
    ear-veraison-annotated-evidence = {
-     + ear-label => any
+     + text => any
    }
 
    $$ear-appraisal-extension //= (
-     ear.veraison.policy-claims => ear-veraison-policy-claims
+     ear.veraison.policy-claims-label => ear-veraison-policy-claims
    )
 
    ear-veraison-policy-claims = {
-     + ear-label => any
+     + text => any
    }
 
    $$ear-appraisal-extension //= (
-     ear.veraison.key-attestation => ear-veraison-key-attestation
+     ear.veraison.key-attestation-label => ear-veraison-key-attestation
    )
 
    ear-veraison-key-attestation = {
-      ear.veraison.attested-key-public => ear-bytes
+     "akpub" => eat.binary-data
    }
 
-          Figure 10: Project Veraison Extensions (CDDL Definition)
+   ear.veraison.annotated-evidence-label = eat.JC<"ear.veraison.annotated-evidence", -70000>
+   ear.veraison.policy-claims-label = eat.JC<"ear.veraison.policy-claims", -70001>
+   ear.veraison.key-attestation-label = eat.JC<"ear.veraison.key-attestation", -70002>
 
-4.5.1.  JSON Serialization
+          Figure 7: Project Veraison Extensions (CDDL Definition)
 
-   ear.veraison.annotated-evidence = "ear.veraison.annotated-evidence"
-   ear.veraison.policy-claims = "ear.veraison.policy-claims"
-   ear.veraison.key-attestation = "ear.veraison.key-attestation"
-
-   ear.veraison.attested-key-public = "akpub"
-
-   Example:
+4.5.1.  JSON Serialization Examples
 
    {
      "eat_profile": "tag:github.com,2023:veraison/ear",
@@ -892,8 +685,6 @@ Table of Contents
      }
    }
 
-   Key attestation example:
-
    {
      "eat_profile": "tag:github.com,2023:veraison/ear",
      "iat": 1666529184,
@@ -920,15 +711,7 @@ Table of Contents
      }
    }
 
-4.5.2.  CBOR Serialization
-
-   ear.veraison.annotated-evidence = -70000
-   ear.veraison.policy-claims = -70001
-   ear.veraison.key-attestation = -70002
-
-   ear.veraison.attested-key-public = 0
-
-   Example:
+4.5.2.  CBOR Serialization Example
 
    {
      265: "tag:github.com,2023:veraison/ear",
@@ -1096,7 +879,7 @@ Table of Contents
 
 9.  IANA Considerations
 
-9.1.   New EAT Claims
+9.1.  New EAT Claims
 
    This specification adds the following values to the "JSON Web Token
    Claims" registry [IANA.jwt] and the "CBOR Web Token Claims" registry
@@ -1125,9 +908,9 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.2 of RFCthis
+   *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.2.  EAR Trustworthiness Vector
+9.1.2.  Trustworthiness Vector
 
    *  Claim Name: ear.trustworthiness-vector
 
@@ -1141,7 +924,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.2.1 of RFCthis
+   *  Specification Document(s): Section 3.1 of RFCthis
 
 9.1.3.  EAR Raw Evidence
 
@@ -1173,13 +956,13 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.2 of RFCthis
+   *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.5.  EAR Verifier Software Identifier
+9.1.5.  Verifier Software Identifier
 
    *  Claim Name: ear.verifier-id
 
-   *  Claim Description: EAR Verifier Software Identifier
+   *  Claim Description: AR4SI Verifier Software Identifier
 
    *  JWT Claim Name: ear.verifier-id
 
@@ -1189,7 +972,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3 of RFCthis
 
 9.1.6.  EAR TEEP Claims
 
@@ -1233,10 +1016,6 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <https://www.rfc-editor.org/rfc/rfc4648>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -1301,15 +1080,6 @@ Appendix A.  Common CDDL Types
       one item in an object with only optional fields.
 
    non-empty<M> = (M) .within ({ + any => any })
-
-   base64-url-text
-      Base64 encoding using the URL- and filename-safe character set
-      defined in Section 5 of [RFC4648], with all trailing '='
-      characters omitted (as permitted by Section 3.2) and without the
-      inclusion of any line breaks, whitespace, or other additional
-      characters.
-
-   base64-url-text = tstr .regexp "[A-Za-z0-9_-]+"
 
 Appendix B.  Open Policy Agent Example
 
