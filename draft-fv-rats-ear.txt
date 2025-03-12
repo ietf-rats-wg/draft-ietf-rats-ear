@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 10 August 2025                                            Cisco
+Expires: 13 September 2025                                         Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         6 February 2025
+                                                           12 March 2025
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2025.
+   This Internet-Draft will expire on 13 September 2025.
 
 Copyright Notice
 
@@ -902,7 +902,7 @@ Table of Contents
 
    *  JWT Claim Name: ear.status
 
-   *  Claim Key: 1000
+   *  Claim Key: 1000 (suggested)
 
    *  Claim Value Type(s): unsigned integer (0, 2, 32, 96)
 
@@ -918,7 +918,7 @@ Table of Contents
 
    *  JWT Claim Name: ear.trustworthiness-vector
 
-   *  Claim Key: 1001
+   *  Claim Key: 1001 (suggested)
 
    *  Claim Value Type(s): map
 
@@ -934,7 +934,7 @@ Table of Contents
 
    *  JWT Claim Name: ear.raw-evidence
 
-   *  Claim Key: 1002
+   *  Claim Key: 1002 (suggested)
 
    *  Claim Value Type(s): bytes
 
@@ -950,7 +950,7 @@ Table of Contents
 
    *  JWT Claim Name: ear.appraisal-policy-id
 
-   *  Claim Key: 1003
+   *  Claim Key: 1003 (suggested)
 
    *  Claim Value Type(s): text
 
@@ -966,7 +966,7 @@ Table of Contents
 
    *  JWT Claim Name: ear.verifier-id
 
-   *  Claim Key: 1004
+   *  Claim Key: 1004 (suggested)
 
    *  Claim Value Type(s): map
 
@@ -986,9 +986,9 @@ Table of Contents
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              07, 2 September 2024,
+              08, 6 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              ar4si-07>.
+              ar4si-08>.
 
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
@@ -1008,9 +1008,9 @@ Table of Contents
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
               A. Tsukamoto, "Trusted Execution Environment Provisioning
               (TEEP) Protocol", Work in Progress, Internet-Draft, draft-
-              ietf-teep-protocol-20, 5 November 2024,
+              ietf-teep-protocol-21, 3 March 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
-              protocol-20>.
+              protocol-21>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
