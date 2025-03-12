@@ -534,7 +534,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear.status
 * Claim Description: EAR Status
 * JWT Claim Name: ear.status
-* Claim Key: 1000
+* Claim Key: 1000 (suggested)
 * Claim Value Type(s): unsigned integer (0, 2, 32, 96)
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
@@ -544,7 +544,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear.trustworthiness-vector
 * Claim Description: EAR Trustworthiness Vector
 * JWT Claim Name: ear.trustworthiness-vector
-* Claim Key: 1001
+* Claim Key: 1001 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
@@ -554,7 +554,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear.raw-evidence
 * Claim Description: EAR Raw Evidence
 * JWT Claim Name: ear.raw-evidence
-* Claim Key: 1002
+* Claim Key: 1002 (suggested)
 * Claim Value Type(s): bytes
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
@@ -564,7 +564,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear.appraisal-policy-id
 * Claim Description: EAR Appraisal Policy Identifier
 * JWT Claim Name: ear.appraisal-policy-id
-* Claim Key: 1003
+* Claim Key: 1003 (suggested)
 * Claim Value Type(s): text
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
@@ -574,7 +574,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear.verifier-id
 * Claim Description: AR4SI Verifier Software Identifier
 * JWT Claim Name: ear.verifier-id
-* Claim Key: 1004
+* Claim Key: 1004 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
