@@ -1,17 +1,19 @@
+<!-- regenerate: on (set to off if you edit this file) -->
+
 # EAT Attestation Results
 
-This is the working area for the individual Internet-Draft, "EAT Attestation Results".
+This is the working area for the IETF [RATS Working Group](https://datatracker.ietf.org/group/rats/documents/) Internet-Draft, "EAT Attestation Results".
 
-* [Editor's Copy](https://thomas-fossati.github.io/draft-ear/#go.draft-fv-rats-ear.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-fv-rats-ear)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-fv-rats-ear)
-* [Compare Editor's Copy to Individual Draft](https://thomas-fossati.github.io/draft-ear/#go.draft-fv-rats-ear.diff)
+* [Editor's Copy](https://ietf-rats-wg.github.io/draft-ietf-rats-ear/#go.draft-ietf-rats-ear.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-rats-ear)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-rats-ear)
+* [Compare Editor's Copy to Working Group Draft](https://ietf-rats-wg.github.io/draft-ietf-rats-ear/#go.draft-ietf-rats-ear.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/thomas-fossati/draft-ear/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/ietf-rats-wg/draft-ietf-rats-ear/blob/main/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.
