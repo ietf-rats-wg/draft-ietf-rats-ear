@@ -3,7 +3,7 @@ title: "EAT Attestation Results"
 abbrev: "EAR"
 category: std
 
-docname: draft-fv-rats-ear-latest
+docname: draft-ietf-rats-ear-latest
 submissiontype: IETF
 number:
 date:
