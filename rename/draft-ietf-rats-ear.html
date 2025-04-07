@@ -1,0 +1,2835 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>EAT Attestation Results</title>
+<meta content="Thomas Fossati" name="author">
+<meta content="Eric Voit" name="author">
+<meta content="Sergei Trofimov" name="author">
+<meta content="Henk Birkholz" name="author">
+<meta content="
+       This document defines the EAT Attestation Result (EAR) message format. 
+       EAR is used by a verifier to encode the result of the appraisal over an
+attester's evidence.
+It embeds an AR4SI's &quot;trustworthiness vector&quot; to present a normalized view of
+the evaluation results, thus easing the task of defining and computing
+authorization policies by relying parties.
+Alongside the trustworthiness vector, EAR provides contextual information bound
+to the appraisal process.
+This allows a relying party (or an auditor) to reconstruct the frame of
+reference in which the trustworthiness vector was originally computed.
+EAR supports simple devices with one attester as well as composite devices that
+are made of multiple attesters, allowing the state of each attester to be
+separately examined.
+EAR can also accommodate registered and unregistered extensions.
+It can be serialized and protected using either CWT or JWT. 
+    " name="description">
+<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="EAT" name="keyword">
+<meta content="attestation result" name="keyword">
+<meta content="attestation verifier" name="keyword">
+<meta content="AR4SI" name="keyword">
+<meta content="draft-ietf-rats-ear-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.28.1
+    Python 3.12.9
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.6
+    lxml 5.3.0
+    platformdirs 4.3.7
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.3
+    setuptools 70.3.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-rats-ear.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+}
+dl:not(.dlNewline) > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+}
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* Comments */
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:is(:link, :focus, :hover),
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin: 2px 0.5em 0;
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">EAR</td>
+<td class="right">April 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Fossati, et al.</td>
+<td class="center">Expires 9 October 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Remote ATtestation ProcedureS</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-04-07" class="published">7 April 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-10-09">9 October 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">T. Fossati</div>
+<div class="org">Linaro</div>
+</div>
+<div class="author">
+      <div class="author-name">E. Voit</div>
+<div class="org">Cisco</div>
+</div>
+<div class="author">
+      <div class="author-name">S. Trofimov</div>
+<div class="org">Arm Limited</div>
+</div>
+<div class="author">
+      <div class="author-name">H. Birkholz</div>
+<div class="org">Fraunhofer SIT</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">EAT Attestation Results</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines the EAT Attestation Result (EAR) message format.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">EAR is used by a verifier to encode the result of the appraisal over an
+attester's evidence.
+It embeds an AR4SI's "trustworthiness vector" to present a normalized view of
+the evaluation results, thus easing the task of defining and computing
+authorization policies by relying parties.
+Alongside the trustworthiness vector, EAR provides contextual information bound
+to the appraisal process.
+This allows a relying party (or an auditor) to reconstruct the frame of
+reference in which the trustworthiness vector was originally computed.
+EAR supports simple devices with one attester as well as composite devices that
+are made of multiple attesters, allowing the state of each attester to be
+separately examined.
+EAR can also accommodate registered and unregistered extensions.
+It can be serialized and protected using either CWT or JWT.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html">https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-rats-ear/">https://datatracker.ietf.org/doc/draft-ietf-rats-ear/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Remote ATtestation ProcedureS Working Group mailing list (<span><a href="mailto:rats@ietf.org">mailto:rats@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/rats/">https://mailarchive.ietf.org/arch/browse/rats/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/rats/">https://www.ietf.org/mailman/listinfo/rats/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/thomas-fossati/draft-ear">https://github.com/thomas-fossati/draft-ear</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 9 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-eat-attestation-result" class="internal xref">EAT Attestation Result</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-ear-appraisal-claims" class="internal xref">EAR Appraisal Claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-json-serialisation" class="internal xref">JSON Serialisation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-cbor-serialisation" class="internal xref">CBOR Serialisation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-examples-2" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-ear-extensions" class="internal xref">EAR Extensions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-unregistered-claims" class="internal xref">Unregistered claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-registered-claims" class="internal xref">Registered claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-choosing-between-registered" class="internal xref">Choosing between registered and unregistered claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-teep-extension" class="internal xref">TEEP Extension</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4.2.1">
+                    <p id="section-toc.1-1.4.2.4.2.1.1"><a href="#section-4.4.1" class="auto internal xref">4.4.1</a>.  <a href="#name-json-serialization-example" class="internal xref">JSON Serialization Example</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4.2.2">
+                    <p id="section-toc.1-1.4.2.4.2.2.1"><a href="#section-4.4.2" class="auto internal xref">4.4.2</a>.  <a href="#name-cbor-serialization-example" class="internal xref">CBOR Serialization Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-project-veraison-extensions" class="internal xref">Project Veraison Extensions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5.2.1">
+                    <p id="section-toc.1-1.4.2.5.2.1.1"><a href="#section-4.5.1" class="auto internal xref">4.5.1</a>.  <a href="#name-json-serialization-examples" class="internal xref">JSON Serialization Examples</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5.2.2">
+                    <p id="section-toc.1-1.4.2.5.2.2.1"><a href="#section-4.5.2" class="auto internal xref">4.5.2</a>.  <a href="#name-cbor-serialization-example-2" class="internal xref">CBOR Serialization Example</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-media-types" class="internal xref">Media Types</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-project-veraison" class="internal xref">Project Veraison</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.1">
+                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="auto internal xref">6.1.1</a>.  <a href="#name-githubcom-veraison-ear" class="internal xref"><code>github.com/veraison/ear</code></a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.2">
+                    <p id="section-toc.1-1.6.2.1.2.2.1"><a href="#section-6.1.2" class="auto internal xref">6.1.2</a>.  <a href="#name-githubcom-veraison-c-ear" class="internal xref"><code>github.com/veraison/c-ear</code></a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.3">
+                    <p id="section-toc.1-1.6.2.1.2.3.1"><a href="#section-6.1.3" class="auto internal xref">6.1.3</a>.  <a href="#name-githubcom-veraison-rust-ear" class="internal xref"><code>github.com/veraison/rust-ear</code></a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-new-eat-claims" class="internal xref">New EAT Claims</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.1">
+                    <p id="section-toc.1-1.9.2.1.2.1.1"><a href="#section-9.1.1" class="auto internal xref">9.1.1</a>.  <a href="#name-ear-status" class="internal xref">EAR Status</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.2">
+                    <p id="section-toc.1-1.9.2.1.2.2.1"><a href="#section-9.1.2" class="auto internal xref">9.1.2</a>.  <a href="#name-trustworthiness-vector" class="internal xref">Trustworthiness Vector</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.3">
+                    <p id="section-toc.1-1.9.2.1.2.3.1"><a href="#section-9.1.3" class="auto internal xref">9.1.3</a>.  <a href="#name-ear-raw-evidence" class="internal xref">EAR Raw Evidence</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.4">
+                    <p id="section-toc.1-1.9.2.1.2.4.1"><a href="#section-9.1.4" class="auto internal xref">9.1.4</a>.  <a href="#name-ear-appraisal-policy-identi" class="internal xref">EAR Appraisal Policy Identifier</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.5">
+                    <p id="section-toc.1-1.9.2.1.2.5.1"><a href="#section-9.1.5" class="auto internal xref">9.1.5</a>.  <a href="#name-verifier-software-identifie" class="internal xref">Verifier Software Identifier</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.6">
+                    <p id="section-toc.1-1.9.2.1.2.6.1"><a href="#section-9.1.6" class="auto internal xref">9.1.6</a>.  <a href="#name-ear-teep-claims" class="internal xref">EAR TEEP Claims</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-common-cddl-types" class="internal xref">Common CDDL Types</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-open-policy-agent-example" class="internal xref">Open Policy Agent Example</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-open-issues" class="internal xref">Open Issues</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-document-history" class="internal xref">Document History</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
+                <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-draft-fv-rats-ear-00" class="internal xref">draft-fv-rats-ear-00</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-D.2" class="auto internal xref">D.2</a>.  <a href="#name-draft-fv-rats-ear-01" class="internal xref">draft-fv-rats-ear-01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#appendix-D.3" class="auto internal xref">D.3</a>.  <a href="#name-draft-fv-rats-ear-02" class="internal xref">draft-fv-rats-ear-02</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">This document defines the EAT <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> Attestation Result (EAR) message format.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">EAR is used by a verifier to encode the result of the appraisal over an
+attester's evidence.
+It embeds an AR4SI's "trustworthiness vector" <span>[<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> to present a
+normalized view of the evaluation results, thus easing the task of defining and
+computing authorization policies by relying parties.
+Alongside the trustworthiness vector, EAR provides contextual information bound
+to the appraisal process.
+This allows a relying party (or an auditor) to reconstruct the frame of
+reference in which the trustworthiness vector was originally computed.
+EAR supports simple devices with one attester as well as composite devices that
+are made of multiple attesters (see <span><a href="https://rfc-editor.org/rfc/rfc9334#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>) allowing the
+state of each attester to be separately examined.
+EAR can also accommodate registered and unregistered extensions.
+It can be serialized and protected using either CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> or JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">This document uses terms and concepts defined by the RATS architecture.
+For a complete glossary see <span><a href="https://rfc-editor.org/rfc/rfc9334#section-4" class="relref">Section 4</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The terminology from CBOR <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> and COSE <span>[<a href="#STD96" class="cite xref">STD96</a>]</span> applies;
+in particular, CBOR diagnostic notation is defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#STD94" class="cite xref">STD94</a>]</span>
+and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-ear">
+<section id="section-3">
+      <h2 id="name-eat-attestation-result">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eat-attestation-result" class="section-name selfRef">EAT Attestation Result</a>
+      </h2>
+<p id="section-3-1">EAR is an EAT token which can be serialized as JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The EAR claims-set is as follows:<a href="#section-3-2" class="pilcrow">¶</a></p>
+<span id="name-ear-cddl-definition"></span><div id="fig-cddl-ear">
+<figure id="figure-1">
+        <div class="lang-cddl sourcecode" id="section-3-3.1">
+<pre>
+;# import rfc9711 as eat
+;# import ar4si as ar4si
+
+EAR = {
+  eat.profile-label =&gt; "tag:github.com,2023:veraison/ear"
+  eat.iat-claim-label =&gt; int
+  verifier-id-label =&gt; ar4si.verifier-id
+  ? raw-evidence-label =&gt; eat.binary-data
+  eat.submods-label =&gt; { + text =&gt; EAR-appraisal }
+  ? eat.nonce-label =&gt; eat.nonce-type
+  * $$ear-extension
+}
+
+; EAR-specific claims
+raw-evidence-label = eat.JC&lt;"ear.raw-evidence", 1002&gt;
+verifier-id-label = eat.JC&lt;"ear.verifier-id", 1004&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-ear-cddl-definition" class="selfRef">EAR (CDDL Definition)</a>
+        </figcaption></figure>
+</div>
+<p id="section-3-4">Where:<a href="#section-3-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3-5">
+        <dt id="section-3-5.1">
+<code>eat_profile</code> (mandatory)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.2">
+          <p id="section-3-5.2.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set
+and encodings defined by this document.
+It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>)
+<code>tag:github.com,2023:veraison/ear</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.3">
+<code>iat</code> (mandatory)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.4">
+          <p id="section-3-5.4.1">"Issued At" claim -- the time at which the EAR is issued.
+See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for the
+EAT-specific encoding restrictions (i.e., disallowing the floating point
+representation).<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.5">
+<code>ear.verifier-id</code> (mandatory)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.6">
+          <p id="section-3-5.6.1">Identifying information about the appraising verifier.
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for further details on its structure and serialization.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.7">
+<code>ear.raw-evidence</code> (optional)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.8">
+          <p id="section-3-5.8.1">The unabridged evidence submitted for appraisal, including any signed
+container/envelope.
+This field may be consumed by other Verifiers in multi-stage verification
+scenarios or by auditors.
+There are privacy considerations associated with this claim.  See
+<a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.<a href="#section-3-5.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.9">
+<code>submods</code> (mandatory)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.10">
+          <p id="section-3-5.10.1">A submodule map (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.2.18" class="relref">Section 4.2.18</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) holding one <code>EAR-appraisal</code> for
+each separately appraised attester.
+The map <span class="bcp14">MUST</span> contain at least one entry.
+For each appraised attester the verifier chooses a unique label.
+For example, when evidence is in EAT format, the label could be constructed
+from the associated EAT profile.
+A verifier <span class="bcp14">SHOULD</span> publicly and permanently document its labelling scheme for
+each supported evidence type, unless EAR payloads are produced and consumed
+entirely within a private deployment.
+See <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.1</a> for the details about the contents of an
+<code>EAR-appraisal</code>.<a href="#section-3-5.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.11">
+<code>eat_nonce</code> (optional)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.12">
+          <p id="section-3-5.12.1">A user supplied nonce that is echoed by the verifier to provide freshness.
+The nonce is a sequence of bytes between 8 and 64 bytes long. When serialized
+as JWT, the nonce <span class="bcp14">MUST</span> be base64 encoded, resulting in a string between 12 and
+88 bytes long.
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>.<a href="#section-3-5.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-5.13">
+<code>$$ear-extension</code> (optional)</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.14">
+          <p id="section-3-5.14.1">Any registered or unregistered extension.
+An EAR extension <span class="bcp14">MUST</span> be a map.
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3-5.14.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<div id="sec-ear-appraisal">
+<section id="section-3.1">
+        <h3 id="name-ear-appraisal-claims">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-ear-appraisal-claims" class="section-name selfRef">EAR Appraisal Claims</a>
+        </h3>
+<span id="name-ear-appraisal-claims-cddl-d"></span><div id="fig-cddl-ear-appraisal">
+<figure id="figure-2">
+          <div class="lang-cddl sourcecode" id="section-3.1-1.1">
+<pre>
+;# import ar4si as ar4si
+
+EAR-appraisal = {
+  status-label =&gt; ar4si.trustworthiness-tier
+  ? trustworthiness-vector-label =&gt; ar4si.trustworthiness-vector
+  ? appraisal-policy-id-label =&gt; text
+  * $$ear-appraisal-extension
+}
+
+status-label = eat.JC&lt;"ear.status", 1000&gt;
+trustworthiness-vector-label = eat.JC&lt;"ear.trustworthiness-vector", 1001&gt;
+appraisal-policy-id-label = eat.JC&lt;"ear.appraisal-policy-id", 1003&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-ear-appraisal-claims-cddl-d" class="selfRef">EAR Appraisal Claims (CDDL Definition)</a>
+          </figcaption></figure>
+</div>
+<span class="break"></span><dl class="dlNewline" id="section-3.1-2">
+          <dt id="section-3.1-2.1">
+<code>ear.status</code> (mandatory)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">The overall appraisal status for this attester represented as one of the four
+trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
+The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier
+corresponding to the worst trustworthiness claim across the entire
+trustworthiness vector.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.3">
+<code>ear.trustworthiness-vector</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.4">
+            <p id="section-3.1-2.4.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal for
+this attester.
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.1" class="relref">Section 3.1</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.
+This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
+explicitly asks for it to be dropped, e.g., via an API parameter or similar
+arrangement.  Such consumer would therefore rely entirely on the semantics of
+the <code>ear.status</code> claim.  This behaviour is <span class="bcp14">NOT RECOMMENDED</span> because of the
+resulting loss of quality of the appraisal result.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.5">
+<code>ear.appraisal-policy-id</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.6">
+            <p id="section-3.1-2.6.1">An unique identifier of the appraisal policy used to evaluate the attestation
+result.<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.7">
+<code>$$ear-appraisal-extension</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.8">
+            <p id="section-3.1-2.8.1">Any registered or unregistered extension.
+An EAR appraisal extension <span class="bcp14">MUST</span> be a map.
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="json-serialisation">
+<section id="section-3.2">
+        <h3 id="name-json-serialisation">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-json-serialisation" class="section-name selfRef">JSON Serialisation</a>
+        </h3>
+<div id="examples">
+<section id="section-3.2.1">
+          <h4 id="name-examples">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+          </h4>
+<p id="section-3.2.1-1">The example in <a href="#fig-ex-json-1" class="auto internal xref">Figure 3</a> shows an EAR claims-set corresponding to a
+"contraindicated" appraisal, meaning the verifier has found some problems with
+the attester's state reported in the submitted evidence.
+Specifically, the identified issue is related to unauthorized code or
+configuration loaded in runtime memory (i.e., value 96 in the executables
+category).
+The appraisal is for a device with one attester labelled "PSA".  Note that in
+case there is only one attester, the labelling can be freely chosen because
+there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<span id="name-json-claims-set-contraindic"></span><div id="fig-ex-json-1">
+<figure id="figure-3">
+            <div class="lang-cbor-diag sourcecode" id="section-3.2.1-2.1">
+<pre>
+{
+  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "iat": 1666529184,
+  "ear.verifier-id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "submods": {
+    "PSA": {
+      "ear.status": "contraindicated",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2,
+        "executables": 96,
+        "hardware": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d"
+    }
+  }
+}
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-json-claims-set-contraindic" class="selfRef">JSON claims-set: contraindicated appraisal</a>
+            </figcaption></figure>
+</div>
+<p id="section-3.2.1-3">The breakdown of the trustworthiness vector is as follows:<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2.1-4.1">
+              <p id="section-3.2.1-4.1.1">Instance Identity (affirming): recognized and not compromised<a href="#section-3.2.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.2">
+              <p id="section-3.2.1-4.2.1">Configuration (warning): known vulnerabilities<a href="#section-3.2.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.3">
+              <p id="section-3.2.1-4.3.1">Executables (contraindicated): contraindicated run-time<a href="#section-3.2.1-4.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.4">
+              <p id="section-3.2.1-4.4.1">File System (none): no claim being made<a href="#section-3.2.1-4.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.5">
+              <p id="section-3.2.1-4.5.1">Hardware (affirming): genuine<a href="#section-3.2.1-4.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.6">
+              <p id="section-3.2.1-4.6.1">Runtime Opaque (none): no claim being made<a href="#section-3.2.1-4.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.7">
+              <p id="section-3.2.1-4.7.1">Storage Opaque (none): no claim being made<a href="#section-3.2.1-4.7.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.2.1-4.8">
+              <p id="section-3.2.1-4.8.1">Sourced Data (none): no claim being made<a href="#section-3.2.1-4.8.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.2.1-5">The example in <a href="#fig-ex-json-2" class="auto internal xref">Figure 4</a> contains the appraisal for a composite device
+with two attesters named "CCA Platform" and "CCA Realm" respectively.
+Both attesters have either "affirming" or (implicit) "none" values in their
+associated trustworthiness vectors.
+Note that the "none" values can refer to either an AR4SI category that is
+unapplicable for the specific attester (ideally, the applicability should be
+specified by the evidence format itself), or to the genuine lack of information
+at the attester site regarding the specific category.  For example, the
+reference values for the "CCA Realm" executables (i.e., the confidential
+computing workload) may not be known to the CCA platform verifier.
+In such cases, it is up to the downstream entity (typically, the relying party)
+to complete the partial appraisal.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+<span id="name-json-claims-set-simple-affi"></span><div id="fig-ex-json-2">
+<figure id="figure-4">
+            <div class="lang-cbor-diag sourcecode" id="section-3.2.1-6.1">
+<pre>
+{
+  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "iat": 1666529300,
+  "ear.verifier-id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
+  "submods": {
+    "CCA Platform": {
+      "ear.status": "affirming",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2,
+        "executables": 2,
+        "hardware": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d"
+    },
+    "CCA Realm": {
+      "ear.status": "affirming",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d"
+    }
+  }
+}
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-json-claims-set-simple-affi" class="selfRef">JSON claims-set: simple affirming appraisal</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="cbor-serialisation">
+<section id="section-3.3">
+        <h3 id="name-cbor-serialisation">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-cbor-serialisation" class="section-name selfRef">CBOR Serialisation</a>
+        </h3>
+<div id="examples-1">
+<section id="section-3.3.1">
+          <h4 id="name-examples-2">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
+          </h4>
+<p id="section-3.3.1-1">The example in <a href="#fig-ex-cbor-1" class="auto internal xref">Figure 5</a> is semantically equivalent to that in
+<a href="#fig-ex-json-1" class="auto internal xref">Figure 3</a>.  It shows the same "contraindicated" appraisal using the
+more compact CBOR serialization of the EAR claims-set.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<span id="name-cbor-claims-set-contraindic"></span><div id="fig-ex-cbor-1">
+<figure id="figure-5">
+            <div class="lang-cbor-diag sourcecode" id="section-3.3.1-2.1">
+<pre>
+{
+  265: "tag:github.com,2023:veraison/ear",
+  6: 1666529184,
+  1004: {
+    0: "https://veraison-project.org",
+    1: "vts 0.0.1"
+  },
+  1002: h'6C696665626F61746D616E',
+  266: {
+    "PSA": {
+      1000: 96,
+      1001: {
+        0: 2,
+        2: 96,
+        4: 2
+      },
+      1003: "https://veraison.example/policy/1/60a0068d"
+    }
+  }
+}
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-cbor-claims-set-contraindic" class="selfRef">CBOR claims-set: contraindicated appraisal</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-extensions">
+<section id="section-4">
+      <h2 id="name-ear-extensions">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-ear-extensions" class="section-name selfRef">EAR Extensions</a>
+      </h2>
+<p id="section-4-1">EAR provides core semantics for describing the result of appraising attestation
+evidence.
+However, a given application may offer extra functionality to its relying
+parties, or tailor the attestation result to the needs of the application (e.g.,
+TEEP <span>[<a href="#I-D.ietf-teep-protocol" class="cite xref">I-D.ietf-teep-protocol</a>]</span>).
+To accommodate such cases, both <code>EAR</code> and <code>EAR-appraisal</code> claims-sets can be
+extended by plugging new claims into the <code>$$ear-extension</code> (or
+<code>$$ear-appraisal-extension</code>, respectively) CDDL socket.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The rules that govern extensibility of EAR are those defined in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> and
+<span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> for CWTs and JWTs respectively.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">An extension <span class="bcp14">MUST NOT</span> change the semantics of the <code>EAR</code> and <code>EAR-appraisal</code>
+claims-sets.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">A receiver <span class="bcp14">MUST</span> ignore any unknown claim.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<div id="unregistered-claims">
+<section id="section-4.1">
+        <h3 id="name-unregistered-claims">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-unregistered-claims" class="section-name selfRef">Unregistered claims</a>
+        </h3>
+<p id="section-4.1-1">An application-specific extension will normally mint its claim from the "private
+space" - using integer values less than -65536 for CWT, and Public or
+Private Claim Names as defined in Sections <a href="https://rfc-editor.org/rfc/rfc7519#section-4.2" class="relref">4.2</a> and <a href="https://rfc-editor.org/rfc/rfc7519#section-4.3" class="relref">4.3</a> of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> when
+serializing to JWT.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">It is <span class="bcp14">RECOMMENDED</span> that JWT EARs use Collision-Resistant Public Claim Names
+(<span><a href="https://rfc-editor.org/rfc/rfc7519#section-2" class="relref">Section 2</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>) rather than Private Claim Names.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-registered-claims">
+<section id="section-4.2">
+        <h3 id="name-registered-claims">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-registered-claims" class="section-name selfRef">Registered claims</a>
+        </h3>
+<p id="section-4.2-1">If an extension will be used across multiple applications, or is intended to be
+used across multiple environments, the associated extension claims
+<span class="bcp14">SHOULD</span> be registered in one, or both, the CWT and JWT claim registries.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">In general, if the registration policy requires an accompanying specification
+document (as it is the case for "specification required" and "standards
+action"), such document <span class="bcp14">SHOULD</span> explicitly say that the extension is expected to
+be used in EAR claims-sets identified by this profile.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">An up-to-date view of the registered claims can be obtained via the
+<span>[<a href="#IANA.cwt" class="cite xref">IANA.cwt</a>]</span> and <span>[<a href="#IANA.jwt" class="cite xref">IANA.jwt</a>]</span> registries.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="choosing-between-registered-and-unregistered-claims">
+<section id="section-4.3">
+        <h3 id="name-choosing-between-registered">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-choosing-between-registered" class="section-name selfRef">Choosing between registered and unregistered claims</a>
+        </h3>
+<p id="section-4.3-1">If an extension supports functionality of a specific application (e.g.
+Project Veraison Services), its claims <span class="bcp14">MAY</span> be registered.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">If an extension supports a protocol that may be applicable across multiple
+applications or environments (e.g., TEEP), its claims <span class="bcp14">SHOULD</span> be registered.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Since, in general, there is no guarantee that an application will be confined
+within an environment, it is <span class="bcp14">RECOMMENDED</span> that extension claims that have
+meaning outside the application's context are always registered.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">It is also possible that claims that start out as application-specific acquire
+a more stable meaning over time. In such cases, it is <span class="bcp14">RECOMMENDED</span> that new
+equivalent claims are created in the "public space" and are registered as
+described in <a href="#sec-registered-claims" class="auto internal xref">Section 4.2</a>. The original "private space" claims
+<span class="bcp14">SHOULD</span> then be deprecated by the application.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-extensions-teep">
+<section id="section-4.4">
+        <h3 id="name-teep-extension">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-teep-extension" class="section-name selfRef">TEEP Extension</a>
+        </h3>
+<p id="section-4.4-1">The TEEP protocol <span>[<a href="#I-D.ietf-teep-protocol" class="cite xref">I-D.ietf-teep-protocol</a>]</span> specifies the required claims that an attestation
+result must carry for a TAM (Trusted Application Manager) to make decisions on
+how to remediate a TEE (Trusted Execution Environment) that is out of
+compliance, or update a TEE that is requesting an authorized change.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">The list is provided in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-teep-protocol-21#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-teep-protocol" class="cite xref">I-D.ietf-teep-protocol</a>]</span>.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">EAR defines a TEEP application extension for the purpose of conveying such claims.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<span id="name-teep-extension-cddl-definit"></span><div id="fig-cddl-teep">
+<figure id="figure-6">
+          <div class="lang-cddl sourcecode" id="section-4.4-4.1">
+<pre>
+;# import rfc9711 as eat
+;# import rfc9393
+
+$$ear-appraisal-extension //= (
+  ear.teep-claims-label =&gt; ear-teep-claims
+)
+
+ear-teep-claims = non-empty&lt;{
+  ? eat.nonce-label =&gt; eat.nonce-type
+  ? eat.ueid-label =&gt; eat.ueid-type
+  ? eat.oemid-label =&gt; eat.oemid-pen / eat.oemid-ieee / eat.oemid-random
+  ? eat.hardware-model-label =&gt; eat.hardware-model-type
+  ? eat.hardware-version-label =&gt; eat.hardware-version-type
+  ? eat.manifests-label =&gt; eat.manifests-type
+}&gt;
+
+ear.teep-claims-label = eat.JC&lt;"ear.teep-claims", 65000&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-teep-extension-cddl-definit" class="selfRef">TEEP Extension (CDDL Definition)</a>
+          </figcaption></figure>
+</div>
+<div id="json-serialization-example">
+<section id="section-4.4.1">
+          <h4 id="name-json-serialization-example">
+<a href="#section-4.4.1" class="section-number selfRef">4.4.1. </a><a href="#name-json-serialization-example" class="section-name selfRef">JSON Serialization Example</a>
+          </h4>
+<div class="lang-cddl sourcecode" id="section-4.4.1-1">
+<pre>
+{
+  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "iat": 1666529184,
+  "ear.verifier-id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "submods": {
+    "PSA": {
+      "ear.status": "contraindicated",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2,
+        "executables": 96,
+        "hardware": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d",
+      "ear.teep-claims": {
+        "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
+        "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+        "oemid": "Av8B",
+        "hwmodel": "fJYq",
+        "hwversion": ["1.2.5", 16384]
+      }
+    }
+  }
+}
+</pre><a href="#section-4.4.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="cbor-serialization-example">
+<section id="section-4.4.2">
+          <h4 id="name-cbor-serialization-example">
+<a href="#section-4.4.2" class="section-number selfRef">4.4.2. </a><a href="#name-cbor-serialization-example" class="section-name selfRef">CBOR Serialization Example</a>
+          </h4>
+<div class="lang-cddl sourcecode" id="section-4.4.2-1">
+<pre>
+{
+  265: "tag:github.com,2023:veraison/ear",
+  6: 1666529184,
+  1004: {
+    0: "https://veraison-project.org",
+    1: "vts 0.0.1"
+  },
+  1002: h'6C696665626F61746D616E',
+  266: {
+    "PSA": {
+      1000: 0,
+      1001: {
+        0: 2,
+        1: 2,
+        2: 2,
+        4: 2
+      },
+      1003: "https://veraison.example/policy/1/60a0068d",
+      65000: {
+        10: h'948f8860d13a463e',
+        256: h'0198f50a4ff6c05861c8860d13a638ea',
+        258: 64242,
+        259: h'ee80f5a66c1fb9742999a8fdab930893',
+        260: ["1.2.5", 16384]
+      }
+    }
+  }
+}
+</pre><a href="#section-4.4.2-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-extensions-veraison">
+<section id="section-4.5">
+        <h3 id="name-project-veraison-extensions">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-project-veraison-extensions" class="section-name selfRef">Project Veraison Extensions</a>
+        </h3>
+<p id="section-4.5-1">The Project Veraison verifier defines three private, application-specific
+extensions:<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlNewline" id="section-4.5-2">
+          <dt id="section-4.5-2.1"><code>ear.veraison.annotated-evidence</code></dt>
+          <dd style="margin-left: 1.5em" id="section-4.5-2.2">
+            <p id="section-4.5-2.2.1">JSON representation of the evidence claims-set, including any annotations
+provided by the Project Veraison verifier.
+There are privacy considerations associated with this claim.  See
+<a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.<a href="#section-4.5-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.5-2.3"><code>ear.veraison.policy-claims</code></dt>
+          <dd style="margin-left: 1.5em" id="section-4.5-2.4">
+            <p id="section-4.5-2.4.1">any extra claims added by the policy engine in the Project Veraison verifier.<a href="#section-4.5-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.5-2.5"><code>ear.veraison.key-attestation</code></dt>
+          <dd style="margin-left: 1.5em" id="section-4.5-2.6">
+            <p id="section-4.5-2.6.1">contains the public key part of a successfully verified attested key.
+The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure (<span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.1.2.7" class="relref">Section 4.1.2.7</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>).<a href="#section-4.5-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<span id="name-project-veraison-extensions-"></span><div id="fig-cddl-veraison">
+<figure id="figure-7">
+          <div class="lang-cddl sourcecode" id="section-4.5-3.1">
+<pre>
+;# import rfc9711 as eat
+
+$$ear-appraisal-extension //= (
+  ear.veraison.annotated-evidence-label =&gt; ear-veraison-annotated-evidence
+)
+
+ear-veraison-annotated-evidence = {
+  + text =&gt; any
+}
+
+$$ear-appraisal-extension //= (
+  ear.veraison.policy-claims-label =&gt; ear-veraison-policy-claims
+)
+
+ear-veraison-policy-claims = {
+  + text =&gt; any
+}
+
+$$ear-appraisal-extension //= (
+  ear.veraison.key-attestation-label =&gt; ear-veraison-key-attestation
+)
+
+ear-veraison-key-attestation = {
+  "akpub" =&gt; eat.binary-data
+}
+
+ear.veraison.annotated-evidence-label = eat.JC&lt;"ear.veraison.annotated-evidence", -70000&gt;
+ear.veraison.policy-claims-label = eat.JC&lt;"ear.veraison.policy-claims", -70001&gt;
+ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -70002&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-project-veraison-extensions-" class="selfRef">Project Veraison Extensions (CDDL Definition)</a>
+          </figcaption></figure>
+</div>
+<div id="json-serialization-examples">
+<section id="section-4.5.1">
+          <h4 id="name-json-serialization-examples">
+<a href="#section-4.5.1" class="section-number selfRef">4.5.1. </a><a href="#name-json-serialization-examples" class="section-name selfRef">JSON Serialization Examples</a>
+          </h4>
+<div class="breakable lang-cbor-diag sourcecode" id="section-4.5.1-1">
+<pre>
+{
+  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "iat": 1666529184,
+  "ear.verifier-id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "submods": {
+    "PSA_IOT": {
+      "ear.status": "contraindicated",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2,
+        "executables": 96,
+        "hardware": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d",
+      "ear.veraison.annotated-evidence": {
+        "eat-profile": "http://arm.com/psa/2.0.0",
+        "psa-client-id": 1,
+        "psa-security-lifecycle": 12288,
+        "psa-implementation-id":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+        "psa-software-components": [
+          {
+            "measurement-value":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+            "signer-id":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+          },
+          {
+            "measurement-value":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+            "signer-id":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+          }
+        ],
+        "psa-nonce":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+        "psa-instance-id":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+        "psa-certification-reference": "1234567890123-12345"
+      },
+      "ear.veraison.policy-claims": {
+        "psa-certified": {
+          "certificate-number": "1234567890123-12345",
+          "date-of-issue": "23/06/2022",
+          "test-lab": "Riscure",
+          "certification-holder": "ACME Inc.",
+          "certified-product": "RoadRunner",
+          "hardware-version": "Gizmo v1.0.2",
+          "software-version": "TrustedFirmware-M v1.0.6",
+          "certification-type": "PSA Certified Level 1 v2.1",
+          "developer-type": "PSA Certified – Device"
+        }
+      }
+    }
+  }
+}
+</pre><a href="#section-4.5.1-1" class="pilcrow">¶</a>
+</div>
+<div class="lang-cbor-diag sourcecode" id="section-4.5.1-2">
+<pre>
+{
+  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "iat": 1666529184,
+  "ear.verifier-id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "submods": {
+    "PARSEC_TPM": {
+      "ear.status": "affirming",
+      "ear.trustworthiness-vector": {
+        "instance-identity": 2,
+        "executables": 2,
+        "hardware": 2
+      },
+      "ear.appraisal-policy-id":
+        "https://veraison.example/policy/1/60a0068d",
+      "ear.veraison.key-attestation": {
+        "akpub":
+          "MFkwEwYHKoZIzj0CAQYIKoZIz___"
+      }
+    }
+  }
+}
+</pre><a href="#section-4.5.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="cbor-serialization-example-1">
+<section id="section-4.5.2">
+          <h4 id="name-cbor-serialization-example-2">
+<a href="#section-4.5.2" class="section-number selfRef">4.5.2. </a><a href="#name-cbor-serialization-example-2" class="section-name selfRef">CBOR Serialization Example</a>
+          </h4>
+<div class="breakable lang-cbor-diag sourcecode" id="section-4.5.2-1">
+<pre>
+{
+  265: "tag:github.com,2023:veraison/ear",
+  6: 1666529184,
+  1004: {
+    0: "https://veraison-project.org",
+    1: "vts 0.0.1"
+  },
+  1002: h'6C696665626F61746D616E',
+  266: {
+    "PSA_IOT": {
+      1000: 0,
+      1001: {
+        0: 2,
+        1: 2,
+        2: 2,
+        4: 2
+      },
+      1003: "https://veraison.example/policy/1/60a0068d",
+      -70000: {
+        "eat-profile": "http://arm.com/psa/2.0.0",
+        "psa-client-id": 1,
+        "psa-security-lifecycle": 12288,
+        "psa-implementation-id":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+        "psa-software-components": [
+          {
+            "measurement-value":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+            "signer-id":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+          },
+          {
+            "measurement-value":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+            "signer-id":
+              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+          }
+        ],
+        "psa-nonce":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+        "psa-instance-id":
+          "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+        "psa-certification-reference": "1234567890123-12345"
+      },
+      -70001: {
+        "psa-certified": {
+          "certificate-number": "1234567890123-12345",
+          "date-of-issue": "23/06/2022",
+          "test-lab": "Riscure",
+          "certification-holder": "ACME Inc.",
+          "certified-product": "RoadRunner",
+          "hardware-version": "Gizmo v1.0.2",
+          "software-version": "TrustedFirmware-M v1.0.6",
+          "certification-type": "PSA Certified Level 1 v2.1",
+          "developer-type": "PSA Certified – Device"
+        }
+      }
+    }
+  }
+}
+</pre><a href="#section-4.5.2-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="media-types">
+<section id="section-5">
+      <h2 id="name-media-types">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-media-types" class="section-name selfRef">Media Types</a>
+      </h2>
+<p id="section-5-1">Media types for EAR are automatically derived from the base EAT media type
+<span>[<a href="#I-D.ietf-rats-eat-media-type" class="cite xref">I-D.ietf-rats-eat-media-type</a>]</span> using the profile string defined in <a href="#sec-ear" class="auto internal xref">Section 3</a>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">For example, a JWT serialization would use:<a href="#section-5-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-3">
+<pre>
+application/eat-jwt; eat_profile="tag:github.com,2023:veraison/ear"
+</pre><a href="#section-5-3" class="pilcrow">¶</a>
+</div>
+<p id="section-5-4">A CWT serialization would instead use:<a href="#section-5-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-5">
+<pre>
+application/eat-cwt; eat_profile="tag:github.com,2023:veraison/ear"
+</pre><a href="#section-5-5" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="implementation-status">
+<section id="section-6">
+      <h2 id="name-implementation-status">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      </h2>
+<p id="section-6-1">This section records the status of known implementations of the protocol
+defined by this specification at the time of posting of this Internet-Draft,
+and is based on a proposal described in <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.
+The description of implementations in this section is intended to assist the
+IETF in its decision processes in progressing drafts to RFCs.
+Please note that the listing of any individual implementation here does not
+imply endorsement by the IETF.
+Furthermore, no effort has been spent to verify the information presented here
+that was supplied by IETF contributors.
+This is not intended as, and must not be construed to be, a catalog of
+available implementations or their features.
+Readers are advised to note that other implementations may exist.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">According to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>, "this will allow reviewers and working groups to
+assign due consideration to documents that have the benefit of running code,
+which may serve as evidence of valuable experimentation and feedback that have
+made the implemented protocols more mature.
+It is up to the individual working groups to use this information as they see
+fit".<a href="#section-6-2" class="pilcrow">¶</a></p>
+<div id="project-veraison">
+<section id="section-6.1">
+        <h3 id="name-project-veraison">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-project-veraison" class="section-name selfRef">Project Veraison</a>
+        </h3>
+<p id="section-6.1-1">The organization responsible for this implementation is Project Veraison, a
+Linux Foundation project hosted at the Confidential Computing Consortium.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">The organization currently provides two separate implementations: one in Golang
+another in C17.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">The developers can be contacted on the Zulip channel:
+<span><a href="https://veraison.zulipchat.com/#narrow/stream/357929-EAR/">https://veraison.zulipchat.com/#narrow/stream/357929-EAR/</a></span>.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<div id="githubcomveraisonear">
+<section id="section-6.1.1">
+          <h4 id="name-githubcom-veraison-ear">
+<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-githubcom-veraison-ear" class="section-name selfRef"><code>github.com/veraison/ear</code></a>
+          </h4>
+<p id="section-6.1.1-1">The software, hosted at <span><a href="https://github.com/veraison/ear">https://github.com/veraison/ear</a></span>, provides a Golang
+package that allows encoding, decoding, signing and verification of EAR
+payloads together with a CLI (<code>arc</code>) to create, verify and visualize EARs on
+the command line.
+The maturity level is currently alpha, and only the JWT serialization is
+implemented.
+The license is Apache 2.0.
+The package is used by the Project Veraison verifier to produce attestation
+results.<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="githubcomveraisonc-ear">
+<section id="section-6.1.2">
+          <h4 id="name-githubcom-veraison-c-ear">
+<a href="#section-6.1.2" class="section-number selfRef">6.1.2. </a><a href="#name-githubcom-veraison-c-ear" class="section-name selfRef"><code>github.com/veraison/c-ear</code></a>
+          </h4>
+<p id="section-6.1.2-1">The software, hosted at <span><a href="https://github.com/veraison/c-ear">https://github.com/veraison/c-ear</a></span>, provides a C17
+library that allows verification and partial decoding of EAR payloads.
+The maturity level is currently pre-alpha, and only the JWT serialization is
+implemented.
+The license is Apache 2.0.
+The library targets relying party applications that need to verify attestation
+results.<a href="#section-6.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="githubcomveraisonrust-ear">
+<section id="section-6.1.3">
+          <h4 id="name-githubcom-veraison-rust-ear">
+<a href="#section-6.1.3" class="section-number selfRef">6.1.3. </a><a href="#name-githubcom-veraison-rust-ear" class="section-name selfRef"><code>github.com/veraison/rust-ear</code></a>
+          </h4>
+<p id="section-6.1.3-1">The software, hosted at <span><a href="https://github.com/veraison/rust-ear">https://github.com/veraison/rust-ear</a></span>, provides a
+Rust (2021 edition) library that allows verification and partial decoding of
+EAR payloads. The maturity level is currently pre-alpha, with limitted
+algorithm support.  Both JWT and COSE serializations are implemented.  The
+license is Apache 2.0.  The library targets verifiers that need to produce
+attestation results as well as relying party applications that need to verify
+and consume attestation results.<a href="#section-6.1.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">TODO Security<a href="#section-7-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-priv-cons">
+<section id="section-8">
+      <h2 id="name-privacy-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+      </h2>
+<p id="section-8-1">EAR is designed to expose as little identifying information as possible about
+the attester.
+However, certain EAR claims have direct privacy implications.
+Implementations should therefore allow applying privacy-preserving techniques
+to those claims, for example allowing their redaction, anonymisation or
+outright removal.
+Specifically:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8-2.1">
+          <p id="section-8-2.1.1">It <span class="bcp14">SHOULD</span> be possible to disable inclusion of the optional <code>ear.raw-evidence</code>
+claim<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-8-2.2">
+          <p id="section-8-2.2.1">It <span class="bcp14">SHOULD</span> be possible to disable inclusion of the optional
+<code>ear.veraison.annotated-evidence</code> claim<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-8-2.3">
+          <p id="section-8-2.3.1">It <span class="bcp14">SHOULD</span> be possible to allow redaction, anonymisation or removal of
+specific claims from the <code>ear.veraison.annotated-evidence</code> object<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-8-3">EAR is an EAT, therefore the privacy considerations in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>
+apply.<a href="#section-8-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-9">
+      <h2 id="name-iana-considerations">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<div id="sec-iana-ear-claims">
+<section id="section-9.1">
+        <h3 id="name-new-eat-claims">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-new-eat-claims" class="section-name selfRef">New EAT Claims</a>
+        </h3>
+<p id="section-9.1-1">This specification adds the following values to the "JSON Web Token Claims"
+registry <span>[<a href="#IANA.jwt" class="cite xref">IANA.jwt</a>]</span> and the "CBOR Web Token Claims" registry <span>[<a href="#IANA.cwt" class="cite xref">IANA.cwt</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">Each entry below is an addition to both registries.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">The "Claim Description", "Change Controller" and "Specification Documents" are
+common and equivalent for the JWT and CWT registries.
+The "Claim Key" and "Claim Value Types(s)" are for the CWT registry only.
+The "Claim Name" is as defined for the CWT registry, not the JWT registry.
+The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<div id="ear-status">
+<section id="section-9.1.1">
+          <h4 id="name-ear-status">
+<a href="#section-9.1.1" class="section-number selfRef">9.1.1. </a><a href="#name-ear-status" class="section-name selfRef">EAR Status</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.1-1.1">
+              <p id="section-9.1.1-1.1.1">Claim Name: ear.status<a href="#section-9.1.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.2">
+              <p id="section-9.1.1-1.2.1">Claim Description: EAR Status<a href="#section-9.1.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.3">
+              <p id="section-9.1.1-1.3.1">JWT Claim Name: ear.status<a href="#section-9.1.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.4">
+              <p id="section-9.1.1-1.4.1">Claim Key: 1000 (suggested)<a href="#section-9.1.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.5">
+              <p id="section-9.1.1-1.5.1">Claim Value Type(s): unsigned integer (0, 2, 32, 96)<a href="#section-9.1.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.6">
+              <p id="section-9.1.1-1.6.1">Change Controller: IESG<a href="#section-9.1.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-1.7">
+              <p id="section-9.1.1-1.7.1">Specification Document(s): <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.1</a> of RFCthis<a href="#section-9.1.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="trustworthiness-vector">
+<section id="section-9.1.2">
+          <h4 id="name-trustworthiness-vector">
+<a href="#section-9.1.2" class="section-number selfRef">9.1.2. </a><a href="#name-trustworthiness-vector" class="section-name selfRef">Trustworthiness Vector</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.2-1.1">
+              <p id="section-9.1.2-1.1.1">Claim Name: ear.trustworthiness-vector<a href="#section-9.1.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.2">
+              <p id="section-9.1.2-1.2.1">Claim Description: EAR Trustworthiness Vector<a href="#section-9.1.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.3">
+              <p id="section-9.1.2-1.3.1">JWT Claim Name: ear.trustworthiness-vector<a href="#section-9.1.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.4">
+              <p id="section-9.1.2-1.4.1">Claim Key: 1001 (suggested)<a href="#section-9.1.2-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.5">
+              <p id="section-9.1.2-1.5.1">Claim Value Type(s): map<a href="#section-9.1.2-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.6">
+              <p id="section-9.1.2-1.6.1">Change Controller: IESG<a href="#section-9.1.2-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.2-1.7">
+              <p id="section-9.1.2-1.7.1">Specification Document(s): <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.1</a> of RFCthis<a href="#section-9.1.2-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="ear-raw-evidence">
+<section id="section-9.1.3">
+          <h4 id="name-ear-raw-evidence">
+<a href="#section-9.1.3" class="section-number selfRef">9.1.3. </a><a href="#name-ear-raw-evidence" class="section-name selfRef">EAR Raw Evidence</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.3-1.1">
+              <p id="section-9.1.3-1.1.1">Claim Name: ear.raw-evidence<a href="#section-9.1.3-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.2">
+              <p id="section-9.1.3-1.2.1">Claim Description: EAR Raw Evidence<a href="#section-9.1.3-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.3">
+              <p id="section-9.1.3-1.3.1">JWT Claim Name: ear.raw-evidence<a href="#section-9.1.3-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.4">
+              <p id="section-9.1.3-1.4.1">Claim Key: 1002 (suggested)<a href="#section-9.1.3-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.5">
+              <p id="section-9.1.3-1.5.1">Claim Value Type(s): bytes<a href="#section-9.1.3-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.6">
+              <p id="section-9.1.3-1.6.1">Change Controller: IESG<a href="#section-9.1.3-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.3-1.7">
+              <p id="section-9.1.3-1.7.1">Specification Document(s): <a href="#sec-ear" class="auto internal xref">Section 3</a> of RFCthis<a href="#section-9.1.3-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="ear-appraisal-policy-identifier">
+<section id="section-9.1.4">
+          <h4 id="name-ear-appraisal-policy-identi">
+<a href="#section-9.1.4" class="section-number selfRef">9.1.4. </a><a href="#name-ear-appraisal-policy-identi" class="section-name selfRef">EAR Appraisal Policy Identifier</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.4-1.1">
+              <p id="section-9.1.4-1.1.1">Claim Name: ear.appraisal-policy-id<a href="#section-9.1.4-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.2">
+              <p id="section-9.1.4-1.2.1">Claim Description: EAR Appraisal Policy Identifier<a href="#section-9.1.4-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.3">
+              <p id="section-9.1.4-1.3.1">JWT Claim Name: ear.appraisal-policy-id<a href="#section-9.1.4-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.4">
+              <p id="section-9.1.4-1.4.1">Claim Key: 1003 (suggested)<a href="#section-9.1.4-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.5">
+              <p id="section-9.1.4-1.5.1">Claim Value Type(s): text<a href="#section-9.1.4-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.6">
+              <p id="section-9.1.4-1.6.1">Change Controller: IESG<a href="#section-9.1.4-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.4-1.7">
+              <p id="section-9.1.4-1.7.1">Specification Document(s): <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.1</a> of RFCthis<a href="#section-9.1.4-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="verifier-software-identifier">
+<section id="section-9.1.5">
+          <h4 id="name-verifier-software-identifie">
+<a href="#section-9.1.5" class="section-number selfRef">9.1.5. </a><a href="#name-verifier-software-identifie" class="section-name selfRef">Verifier Software Identifier</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.5-1.1">
+              <p id="section-9.1.5-1.1.1">Claim Name: ear.verifier-id<a href="#section-9.1.5-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.2">
+              <p id="section-9.1.5-1.2.1">Claim Description: AR4SI Verifier Software Identifier<a href="#section-9.1.5-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.3">
+              <p id="section-9.1.5-1.3.1">JWT Claim Name: ear.verifier-id<a href="#section-9.1.5-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.4">
+              <p id="section-9.1.5-1.4.1">Claim Key: 1004 (suggested)<a href="#section-9.1.5-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.5">
+              <p id="section-9.1.5-1.5.1">Claim Value Type(s): map<a href="#section-9.1.5-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.6">
+              <p id="section-9.1.5-1.6.1">Change Controller: IESG<a href="#section-9.1.5-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.5-1.7">
+              <p id="section-9.1.5-1.7.1">Specification Document(s): <a href="#sec-ear" class="auto internal xref">Section 3</a> of RFCthis<a href="#section-9.1.5-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="ear-teep-claims">
+<section id="section-9.1.6">
+          <h4 id="name-ear-teep-claims">
+<a href="#section-9.1.6" class="section-number selfRef">9.1.6. </a><a href="#name-ear-teep-claims" class="section-name selfRef">EAR TEEP Claims</a>
+          </h4>
+<p id="section-9.1.6-1">TODO<a href="#section-9.1.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-10">
+      <h2 id="name-references">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-10.1">
+        <h3 id="name-normative-references">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-rats-ar4si">[I-D.ietf-rats-ar4si]</dt>
+        <dd>
+<span class="refAuthor">Voit, E.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Hardjono, T.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">V. Scarlata</span>, <span class="refTitle">"Attestation Results for Secure Interactions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-ar4si-08</span>, <time datetime="2025-02-06" class="refDate">6 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08">https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-rats-eat">[I-D.ietf-rats-eat]</dt>
+        <dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-31</span>, <time datetime="2024-09-06" class="refDate">6 September 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-rats-eat-media-type">[I-D.ietf-rats-eat-media-type]</dt>
+        <dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Birkholz, H.</span>, and <span class="refAuthor">T. Fossati</span>, <span class="refTitle">"EAT Media Types"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-media-type-12</span>, <time datetime="2024-11-03" class="refDate">3 November 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-media-type-12">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-media-type-12</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-teep-protocol">[I-D.ietf-teep-protocol]</dt>
+        <dd>
+<span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Pei, M.</span>, <span class="refAuthor">Wheeler, D. M.</span>, <span class="refAuthor">Thaler, D.</span>, and <span class="refAuthor">A. Tsukamoto</span>, <span class="refTitle">"Trusted Execution Environment Provisioning (TEEP) Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-teep-protocol-21</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-teep-protocol-21">https://datatracker.ietf.org/doc/html/draft-ietf-teep-protocol-21</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5280">[RFC5280]</dt>
+        <dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8392">[RFC8392]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8610">[RFC8610]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Vigano, C.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8610">https://www.rfc-editor.org/rfc/rfc8610</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STD94">[STD94]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8949">https://www.rfc-editor.org/rfc/rfc8949</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STD96">[STD96]</dt>
+      <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE): Structures and Process"</span>, <span class="seriesInfo">STD 96</span>, <span class="seriesInfo">RFC 9052</span>, <span class="seriesInfo">DOI 10.17487/RFC9052</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9052">https://www.rfc-editor.org/rfc/rfc9052</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-10.2">
+        <h3 id="name-informative-references">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="IANA.cwt">[IANA.cwt]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"CBOR Web Token (CWT) Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cwt">https://www.iana.org/assignments/cwt</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.jwt">[IANA.jwt]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span>&lt;<a href="https://www.iana.org/assignments/jwt">https://www.iana.org/assignments/jwt</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4151">[RFC4151]</dt>
+        <dd>
+<span class="refAuthor">Kindberg, T.</span> and <span class="refAuthor">S. Hawke</span>, <span class="refTitle">"The 'tag' URI Scheme"</span>, <span class="seriesInfo">RFC 4151</span>, <span class="seriesInfo">DOI 10.17487/RFC4151</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4151">https://www.rfc-editor.org/rfc/rfc4151</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7942">[RFC7942]</dt>
+        <dd>
+<span class="refAuthor">Sheffer, Y.</span> and <span class="refAuthor">A. Farrel</span>, <span class="refTitle">"Improving Awareness of Running Code: The Implementation Status Section"</span>, <span class="seriesInfo">BCP 205</span>, <span class="seriesInfo">RFC 7942</span>, <span class="seriesInfo">DOI 10.17487/RFC7942</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7942">https://www.rfc-editor.org/rfc/rfc7942</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9334">[RFC9334]</dt>
+      <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Thaler, D.</span>, <span class="refAuthor">Richardson, M.</span>, <span class="refAuthor">Smith, N.</span>, and <span class="refAuthor">W. Pan</span>, <span class="refTitle">"Remote ATtestation procedureS (RATS) Architecture"</span>, <span class="seriesInfo">RFC 9334</span>, <span class="seriesInfo">DOI 10.17487/RFC9334</span>, <time datetime="2023-01" class="refDate">January 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9334">https://www.rfc-editor.org/rfc/rfc9334</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="common-cddl-types">
+<section id="appendix-A">
+      <h2 id="name-common-cddl-types">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-common-cddl-types" class="section-name selfRef">Common CDDL Types</a>
+      </h2>
+<span class="break"></span><dl class="dlNewline" id="appendix-A-1">
+        <dt id="appendix-A-1.1"><code>non-empty</code></dt>
+        <dd style="margin-left: 1.5em" id="appendix-A-1.2">
+          <p id="appendix-A-1.2.1">A CDDL generic that can be used to ensure the presence of at least one item
+in an object with only optional fields.<a href="#appendix-A-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<div class="lang-cddl sourcecode" id="appendix-A-2">
+<pre>
+non-empty&lt;M&gt; = (M) .within ({ + any =&gt; any })
+</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="open-policy-agent-example">
+<section id="appendix-B">
+      <h2 id="name-open-policy-agent-example">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-open-policy-agent-example" class="section-name selfRef">Open Policy Agent Example</a>
+      </h2>
+<p id="appendix-B-1">Open Policy Agent <a href="https://www.openpolicyagent.org">OPA</a> is a popular and
+flexible policy engine that is used in a variety of contexts, from cloud to
+IoT.  OPA policies are written using a purpose-built, declarative programming
+language called
+<a href="https://www.openpolicyagent.org/docs/latest/policy-language/">Rego</a>.  Rego has
+been designed to handle JSON claim-sets and their JWT envelopes as first class
+objects, which makes it an excellent fit for dealing with JWT EARs.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">The following example illustrates an OPA policy that a Relying Party would use
+to make decisions based on a JWT EAR received from a trusted verifier.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
+<div class="lang-rego sourcecode" id="appendix-B-3">
+<pre>
+package ear
+
+ear_appraisal = {
+    "verified": signature_verified,
+    "appraisal-status": status,
+    "trustworthiness-vector": trust_vector,
+} {
+    # verify EAR signature is correct and from one of the known and
+    # trusted verifiers
+    signature_verified := io.jwt.verify_es256(
+        input.ear_token,
+        json.marshal(input.trusted_verifiers)
+    )
+
+    # extract the EAR claims-set
+    [_, payload, _] := io.jwt.decode(input.ear_token)
+
+    # access the attester-specific appraisal record
+    app_rec := payload.submods.PARSEC_TPM
+    status := app_rec["ear.status"] == "affirming"
+
+    # extract the trustworhiness vector for further inspection
+    trust_vector := app_rec["ear.trustworthiness-vector"]
+}
+
+# add further conditions on the trust_vector here
+# ...
+</pre><a href="#appendix-B-3" class="pilcrow">¶</a>
+</div>
+<p id="appendix-B-4">The result of the policy appraisal is the following JSON object:<a href="#appendix-B-4" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="appendix-B-5">
+<pre>
+{
+    "ear_appraisal": {
+        "appraisal-status": true,
+        "trustworthiness-vector": {
+            "executables": 2,
+            "hardware": 2,
+            "instance-identity": 2
+        },
+        "verified": true
+    }
+}
+</pre><a href="#appendix-B-5" class="pilcrow">¶</a>
+</div>
+<p id="appendix-B-6">For completeness, the trusted verifier public key and the EAR JWT used in the
+example are provided below.<a href="#appendix-B-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B-7">
+<pre>
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+{
+    "ear_token": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYXIucmF3L\
+WV2aWRlbmNlIjoiTnpRM01qWTVOek0yTlRZek56UUsiLCJlYXIudmVyaWZpZXItaWQiO\
+nsiYnVpbGQiOiJ2dHMgMC4wLjEiLCJkZXZlbG9wZXIiOiJodHRwczovL3ZlcmFpc29uL\
+XByb2plY3Qub3JnIn0sImVhdF9wcm9maWxlIjoidGFnOmdpdGh1Yi5jb20sMjAyMzp2Z\
+XJhaXNvbi9lYXIiLCJpYXQiOjEuNjY2NTI5MTg0ZSswOSwianRpIjoiNTViOGIzZmFkO\
+GRkMWQ4ZWFjNGU0OGYxMTdmZTUwOGIxMWY4NDRkOWYwMTg5YmZlZDliODc1MTVhNjc1N\
+DI2NCIsIm5iZiI6MTY3NzI0Nzg3OSwic3VibW9kcyI6eyJQQVJTRUNfVFBNIjp7ImVhc\
+i5hcHByYWlzYWwtcG9saWN5LWlkIjoiaHR0cHM6Ly92ZXJhaXNvbi5leGFtcGxlL3Bvb\
+GljeS8xLzYwYTAwNjhkIiwiZWFyLnN0YXR1cyI6ImFmZmlybWluZyIsImVhci50cnVzd\
+HdvcnRoaW5lc3MtdmVjdG9yIjp7ImV4ZWN1dGFibGVzIjoyLCJoYXJkd2FyZSI6Miwia\
+W5zdGFuY2UtaWRlbnRpdHkiOjJ9LCJlYXIudmVyYWlzb24ua2V5LWF0dGVzdGF0aW9uI\
+jp7ImFrcHViIjoiTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFY2pTc\
+DhfTVdNM2d5OFR1Z1dPMVRwUVNqX3ZJa3NMcEMtZzhsNVMzbHBHYjdQV1dHb0NBakVQO\
+F9BNTlWWndMWGd3b1p6TjBXeHVCUGpwYVdpV3NmQ1EifX19fQ.3Ym-f1LEgamxePUM7h\
+6Y2RJDGh9eeL0xKor0n1wE9jdAnLNwm3rTKFV2S2LbqVFoDtK9QGalT2t5RnUdfwZNmg\
+",
+    "trusted_verifiers": {
+        "keys": [
+            {
+                "alg": "ES256",
+                "crv": "P-256",
+                "kty": "EC",
+                "x": "usWxHK2PmfnHKwXPS54m0kTcGJ90UiglWiGahtagnv8",
+                "y": "IBOL-C3BttVivg-lSreASjpkttcsz-1rb7btKLv8EX4"
+            }
+        ]
+    }
+}
+</pre><a href="#appendix-B-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="open-issues">
+<section id="appendix-C">
+      <h2 id="name-open-issues">
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-open-issues" class="section-name selfRef">Open Issues</a>
+      </h2>
+<p id="appendix-C-1"><span class="cref">Note to RFC Editor: please remove before publication.</span><a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">The list of currently open issues for this documents can be found at
+<span><a href="https://github.com/thomas-fossati/draft-ear/issues">https://github.com/thomas-fossati/draft-ear/issues</a></span>.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="document-history">
+<section id="appendix-D">
+      <h2 id="name-document-history">
+<a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-document-history" class="section-name selfRef">Document History</a>
+      </h2>
+<p id="appendix-D-1"><span class="cref">Note to RFC Editor: please remove before publication.</span><a href="#appendix-D-1" class="pilcrow">¶</a></p>
+<div id="draft-fv-rats-ear-00">
+<section id="appendix-D.1">
+        <h3 id="name-draft-fv-rats-ear-00">
+<a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-draft-fv-rats-ear-00" class="section-name selfRef">draft-fv-rats-ear-00</a>
+        </h3>
+<p id="appendix-D.1-1">Initial release.<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="draft-fv-rats-ear-01">
+<section id="appendix-D.2">
+        <h3 id="name-draft-fv-rats-ear-01">
+<a href="#appendix-D.2" class="section-number selfRef">D.2. </a><a href="#name-draft-fv-rats-ear-01" class="section-name selfRef">draft-fv-rats-ear-01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-D.2-1.1">
+            <p id="appendix-D.2-1.1.1">privacy considerations<a href="#appendix-D.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.2-1.2">
+            <p id="appendix-D.2-1.2.1">OPA policy example<a href="#appendix-D.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.2-1.3">
+            <p id="appendix-D.2-1.3.1">add rust-ear crate to the implementation status section<a href="#appendix-D.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="draft-fv-rats-ear-02">
+<section id="appendix-D.3">
+        <h3 id="name-draft-fv-rats-ear-02">
+<a href="#appendix-D.3" class="section-number selfRef">D.3. </a><a href="#name-draft-fv-rats-ear-02" class="section-name selfRef">draft-fv-rats-ear-02</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-D.3-1.1">
+            <p id="appendix-D.3-1.1.1">align JWT and CWT representations of eat_nonce<a href="#appendix-D.3-1.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-E">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-E-1">Many thanks to
+Dave Thaler,
+Greg Kostal,
+Simon Frost,
+Yogesh Deshpande
+for helpful comments and discussions that have shaped this document.<a href="#appendix-E-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-F">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Thomas Fossati</span></div>
+<div dir="auto" class="left"><span class="org">Linaro</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:thomas.fossati@linaro.org" class="email">thomas.fossati@linaro.org</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Eric Voit</span></div>
+<div dir="auto" class="left"><span class="org">Cisco</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:evoit@cisco.com" class="email">evoit@cisco.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Sergei Trofimov</span></div>
+<div dir="auto" class="left"><span class="org">Arm Limited</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:sergei.trofimov@arm.com" class="email">sergei.trofimov@arm.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Henk Birkholz</span></div>
+<div dir="auto" class="left"><span class="org">Fraunhofer SIT</span></div>
+<div dir="auto" class="left"><span class="street-address">Rheinstrasse 75</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">64295</span> <span class="locality">Darmstadt</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:henk.birkholz@ietf.contact" class="email">henk.birkholz@ietf.contact</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
