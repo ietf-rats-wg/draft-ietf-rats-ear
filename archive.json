@@ -1,7 +1,7 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-21T01:20:33.025054+00:00",
-  "repo": "thomas-fossati/draft-ear",
+  "timestamp": "2025-04-08T00:49:57.985617+00:00",
+  "repo": "ietf-rats-wg/draft-ietf-rats-ear",
   "labels": [
     {
       "name": "bug",
@@ -59,10 +59,10 @@
       "number": 5,
       "id": "I_kwDOIe69Es5ZFnVK",
       "title": "environment identification",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/5",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/5",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "As discussed in today's (13/12/2022) Veraison meeting, we need to include claims to identify the verifier's execution environment, for example:\r\n* software release information (for Veraison it'd be core services and loaded plugins)\r\n* TEE identification (e.g., evidence)\r\n\r\nOne question we need to answer is where does it belong?  To the core claims-set or into an extension claim?",
@@ -72,7 +72,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Fixed in #12 with the introduction of the [verifier-id](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.1) claim.",
           "createdAt": "2023-02-08T16:26:57Z",
           "updatedAt": "2023-02-08T16:26:57Z"
@@ -83,10 +83,10 @@
       "number": 6,
       "id": "I_kwDOIe69Es5ZM1Im",
       "title": "Simon's review comments",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/6",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/6",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "1. `ear.raw-evidence` - perhaps worth noting that this may be more relevant for auditors than for further processing\r\n1. [Example in 3.3.1](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.3.1): could remove a few of the TV entries e.g/ Storage + Sourced data as another example of 'no claim made'\r\n1. Veraison processed evidence: perhaps worth adding something about the 'verified' status of members here? (relates to the 'unprocessed evidence' conversations)\r\n",
@@ -99,10 +99,10 @@
       "number": 9,
       "id": "I_kwDOIe69Es5bLyGe",
       "title": "add an optional nonce",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/9",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/9",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "To support cases where the request for evidence appraisal involves a challenge from the RP / Attester, we need to add an optional `eat_nonce` alongside the mandatory `iat`.",
@@ -112,7 +112,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Fixed by #12 ",
           "createdAt": "2023-02-08T15:13:46Z",
           "updatedAt": "2023-02-08T15:13:46Z"
@@ -123,10 +123,10 @@
       "number": 10,
       "id": "I_kwDOIe69Es5bPSaH",
       "title": "support for composite attesters",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/10",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/10",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "In a [composite device](https://www.ietf.org/archive/id/draft-ietf-rats-architecture-22.html#name-composite-device) evidence is assembled from multiple independent sources.\r\n\r\nAn example is the [Arm CCA attestation token](https://developer.arm.com/documentation/den0137/latest), which consists of separate (and separately signed) pieces of evidence glued together in an [EAT collection](https://datatracker.ietf.org/doc/draft-frost-rats-eat-collection/).\r\n\r\nA use case that we want to support is that of a verifier which will not be able to single-handedly appraise the whole thing and will instead carry out a partial appraisal and pass what it's done to the relying party with a clear indication of what remains to be done.  This is not unusual in confidential computing scenarios where the platform verifier can be separate from the workload verifier and they need to be part of a coordinated verification process.\r\n\r\nThe current structure does not cope well with that situation\r\n```\r\nEAR = {\r\n  ear.status => $ar4si.trust-tier\r\n  eat_profile => \"tag:github.com,2022:veraison/ear\"\r\n  ? ear.trustworthiness-vector => ar4si.trustworthiness-vector\r\n  ? ear.raw-evidence => ear-bytes\r\n  iat => int\r\n  ? ear.appraisal-policy-id => text\r\n  * $$ear-extension\r\n}\r\n```\r\nbecause there's only one \"global\" trustworthiness vector.\r\n\r\nOne way to address the issue is to split the EAR into two: a \"core\" object harbouring the trustworthiness vector associated to a specific piece of evidence (alongside other contextual stuff that makes sense on a per-evidence basis), and an outer container that will group the information with \"global\" scope:\r\n```\r\nEAR-core = {\r\n  ear.status => $ar4si.trust-tier\r\n  ? ear.trustworthiness-vector => ar4si.trustworthiness-vector\r\n  ? ear.appraisal-policy-id => text\r\n  * $$ear-core-extension\r\n}\r\n```\r\nand\r\n```\r\nEAR = {\r\n  eat_profile => \"tag:github.com,2022:veraison/ear\"\r\n  iat => int\r\n  ? eat_nonce = nonce-type\r\n  ear.verifier-id => ear-verifier-id\r\n  ? ear.raw-evidence => ear-bytes\r\n  submods-label => {\r\n    + text => EAR-core ; the submod name is an identifier for the portion of appraised evidence\r\n  }\r\n  * $$ear-extension\r\n}\r\n```\r\n\r\n--- \r\n* 01/12/2023 Edited as per https://github.com/thomas-fossati/draft-ear/issues/10#issuecomment-1380546331\r\n---\r\n\r\n\r\n\r\n",
@@ -143,7 +143,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> This is very much inline with what we discussed today (12/01). One thing though, I think, it still has value, if the in the outer EAR Wrapper we relay the complete raw evidence as is, in line with the current design of relaying the raw evidence.\r\n\r\nThanks for checking if my memory dump effectively matched the whiteboard :-)\r\n\r\nYou are right, raw-evidence pertains to the outer scope.  I'll update the data model sketch above.\r\n",
           "createdAt": "2023-01-12T17:48:08Z",
           "updatedAt": "2023-01-12T17:48:08Z"
@@ -161,7 +161,7 @@
       "number": 13,
       "id": "I_kwDOIe69Es5dkzOm",
       "title": "System-wide tag",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/13",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/13",
       "state": "OPEN",
       "author": "ericvoit",
       "authorAssociation": "COLLABORATOR",
@@ -176,7 +176,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "The \"multiple submods\" case materialises only when the appraisal is not complete.\r\n\r\nAn RP is not supposed to consume directly this kinds of EAR -- unless it's coupled with the Attester, which should be the exception in an AR4SI world.  In the \"uncoupled\" case, RP will need to forward this partial EAR to some other Verifier to complete the appraisal.\r\n\r\nA complete appraisal will typically only have one submod, which has system-wide scope.\r\n",
           "createdAt": "2023-03-01T11:08:41Z",
           "updatedAt": "2023-03-01T11:08:41Z"
@@ -194,10 +194,10 @@
       "number": 14,
       "id": "I_kwDOIe69Es5d9ny1",
       "title": "fix `base64-url-text` definition",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/14",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/14",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "As per https://github.com/ietf-rats-wg/eat/pull/364 this has been clarified to be \"without padding\".",
@@ -210,7 +210,7 @@
       "number": 16,
       "id": "I_kwDOIe69Es5eaLEg",
       "title": "Policy and evaluated claims",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/16",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/16",
       "state": "OPEN",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -225,7 +225,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> The assumption is that if RP is participating in an attestation scheme\r\n\r\nAR4SI allows, and promotes, full decoupling between Attesters and RPs, so this assumption should not hold in general.  (It could be for some deployments, though that should be the exception.)\r\n\r\n> a case can be made for providing a well-defined \"scheme description\", either as part of AR or, more likely, a separate channel that RP can process. However, tath woud be a bigger discussion that does not pertain to this Issue.)\r\n\r\nProviding an in-band, verifier-signed EAR signal that conveys this kind of information seems like a valuable addition in terms of improved transparency of the operations.\r\n\r\nWe should track this, as you suggest, in a separate issue.\r\n",
           "createdAt": "2023-03-01T11:20:33Z",
           "updatedAt": "2023-03-01T11:20:33Z"
@@ -243,10 +243,10 @@
       "number": 17,
       "id": "I_kwDOIe69Es5epqrR",
       "title": "raw-evidence per submod?",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/17",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/17",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "In a one-to-one conversation, @yogeshbdeshpande suggested that we add a \"per-component raw-evidence\" to each `EAR-appraisal` block.  Such _optional_ field would contain the raw evidence bytes that the specific submod is dealing with.  This allows a downstream Verifier to be agnostic of the top-level evidence format (i.e., `EAR.raw-evidence`) and only care about the Evidence of the sub-attester it has to process.",
@@ -267,10 +267,10 @@
       "number": 18,
       "id": "I_kwDOIe69Es5ept97",
       "title": "`Via` info",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/18",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/18",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "In a face to face discussion the case was brought up about (optionally) recording information regarding each individual verifier in a chained appraisal.  \r\n\r\nThis can be useful in debugging pathologies.  (And also as a signal to detect - and break - loops in the processing chain.)\r\n\r\nHTTP's `Via` field (https://www.rfc-editor.org/rfc/rfc9110.html#section-7.6.3) may be a good starting point.",
@@ -283,10 +283,10 @@
       "number": 19,
       "id": "I_kwDOIe69Es5fR46N",
       "title": "Veraison extension for key attestation",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/19",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/19",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "See https://github.com/CCC-Attestation/attested-tls-poc/issues/16",
@@ -299,10 +299,10 @@
       "number": 24,
       "id": "I_kwDOIe69Es5fzQ7F",
       "title": "use CMW for `raw-evidence`?",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/24",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/24",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "[Ned's suggestion](https://mailarchive.ietf.org/arch/msg/rats/B0UEwmLogoYZefkuV1CSX52Uu1c/):\r\n\r\n_\"Should `ear-bytes` be tagged in some way such as a `cmw` or CBOR tag that enables the downstream parser to determine which encoding schema to use to decode it?\"_",
@@ -312,7 +312,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "IIUC, the gist of Ned\u2019s suggestion is to reuse the cmw CDDL for `raw-evidence` rather than aliasing `ear-bytes` to cmw.\r\n ",
           "createdAt": "2023-03-02T18:40:54Z",
           "updatedAt": "2023-03-02T18:40:54Z"
@@ -323,15 +323,15 @@
       "number": 25,
       "id": "I_kwDOIe69Es5hhH6G",
       "title": "add an attester-id claim into the top-level EAR",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/25",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/25",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Reporting a conversation with Ned from the CoRIM interim.\r\n\r\nAdd a claim that identifies the attester in the top level EAR structure.",
       "createdAt": "2023-03-22T16:00:07Z",
-      "updatedAt": "2023-03-22T18:52:19Z",
+      "updatedAt": "2025-02-13T16:08:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -343,7 +343,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Which types would you expect for this claim?",
           "createdAt": "2023-03-22T18:38:20Z",
           "updatedAt": "2023-03-22T18:38:20Z"
@@ -351,9 +351,9 @@
         {
           "author": "nedmsmith",
           "authorAssociation": "NONE",
-          "body": "> Which types would you expect for this claim?\r\n\r\n`identity-triple-record` where the authenticated endpoint uses key identified by the triple and the accepted claims are inclusive of the `environment-map`. (Open: We may want to think about whether a `stateful-environment-record` might also make sense.)",
+          "body": "> Which types would you expect for this claim?\n\n`identity-triple-record` where the authenticated endpoint uses key identified by the triple and the accepted claims are inclusive of the `environment-map`. (Open: We may want to think about whether a `stateful-environment-record` might also make sense. Given the environment-map.instance-id is populated or in measurement-values-map where some form of instance measurement is populated.)",
           "createdAt": "2023-03-22T18:51:27Z",
-          "updatedAt": "2023-03-22T18:52:19Z"
+          "updatedAt": "2025-02-13T16:08:48Z"
         }
       ]
     },
@@ -361,7 +361,7 @@
       "number": 26,
       "id": "I_kwDOIe69Es5iMt9r",
       "title": "\"default\" (error) submod",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/26",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/26",
       "state": "OPEN",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -377,7 +377,7 @@
       "number": 27,
       "id": "I_kwDOIe69Es5i1C8-",
       "title": "ar4si suggests a different structure than current EAR",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/27",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/27",
       "state": "OPEN",
       "author": "nedmsmith",
       "authorAssociation": "NONE",
@@ -392,7 +392,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Hi Ned, thanks for the write up.\r\n\r\nI am not sure I understand in which way EAR would break the AR4SI model.\r\n\r\nCould you please point out exactly which design choices we made in EAR go counter the AR4SI philosophy?\r\n\r\nNote that EAR doesn't aim to fully address the AR-augmented evidence topic.  Our goal is to provide a wrapper around a \"trustworthiness-vector appraisal\" with enough contextual metadata to be useful as a general purpose AR format.  The idea is that if one wants to build some sort of AR-augmented evidence, they can use EAR in conjunction with other Evidence - e.g., using an EAT collection with a well defined binder.",
           "createdAt": "2023-04-18T15:58:48Z",
           "updatedAt": "2023-04-18T15:58:48Z"
@@ -406,7 +406,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> > Could you please point out exactly which design choices we made in EAR go counter the AR4SI philosophy?\r\n> \r\n> The `trustworthiness vector` is zero or more `trustworthiness claims`. A `trustworhiness tier` is associated with \"a specific Trusworthiness Claim\".\r\n> \r\n> This suggests the tier and claim are members of the same map. The EAR places the `trust-tier` along side the `ar4si.trustworniness-vector`. Since the vector is a list of thing, there should be a trust-tier for each possible thing.\r\n\r\nI think there's a bit of misunderstanding here.\r\n\r\nTrustworthiness (TW) claims are _\"Specific aspects for which a Verifier will assert trustworthiness [...]\"_\r\n\r\nThe specific TW claims are defined in [\u00a72.3.4](https://www.ietf.org/archive/id/draft-ietf-rats-ar4si-04.html#section-2.3.4), e.g., configuration, executables, etc.\r\n\r\nThese are the entries in the TW vector.  You can think of the TW vector as either a vector whose slot indexes have specific semantics (e.g., [0] is configuration, [1] is executables, etc.), like this:\r\n```\r\nTW-vector = [\r\n  configuration: -128..127\r\n  executables: -128..127\r\n  ; ...\r\n]\r\n```\r\nor an associative array (i.e., a map, like we do in [EAR](https://www.ietf.org/archive/id/draft-fv-rats-ear-00.html#section-3.2.1):\r\n```\r\nTW-vector = {\r\n  &(configuration: 0) => -128..127\r\n  &(executables: 1) => -128..127\r\n  ; ...\r\n}\r\n```\r\nBut that's just an implementation detail.\r\n\r\nEach TW claim is given a trust \"quantum\" in the -128..127 range with TW claim-specific semantics.  (Actually, some quanta 0, 1, and -1 have global semantics, but that's not important here.)\r\n\r\nThe -128..127 range is partitioned into 4 tiers - affirming, contraindicated, ... - and each tier is further subdivided into a standard and private space to allow deployment-specific extensions.  The tier partitioning is nice cos even if the RP doesn't know the exact semantics of a given value for a certain TW claim, it can always map it into one of the four broad categories and design the policy accordingly.\r\n",
           "createdAt": "2023-04-18T17:32:49Z",
           "updatedAt": "2023-04-18T18:16:39Z"
@@ -420,7 +420,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> `$ar4si.trustworthiness-claim` ought to be `$ar4si.trustworthiness-quantum` The \"claim\" is the tuple consisting of the claim type, e.g., \"configuration\" code point and the quantum value.\r\n\r\nSure, we can adjust that.\r\n\r\n> Given: \"Trustworthiness Tier: a categorization of the levels of trustworthiness which may be assigned by a Verifier to **a specific** Trustworthiness Claim.\" It seems the tier should apply to each claim in the TW-vector map. Namely:\r\n> \r\n> ```\r\n> TW-vector = {\r\n>      ? &(instance-identity: 0) => [ quantum: -128..127, tier: $trusworthiness-tier ]\r\n> ...\r\n>      * $$TW-vector-extension\r\n> }\r\n> ```\r\n\r\n`tier` is implicit in the `quantum` value.\r\n\r\n> The `TW-vector` above should be extensible IMO.\r\n> \r\n> As an aside, I don't agree with quantum=1 since an Attester can assert Claims that don't have corresponding Reference Values. Appraisal doesn't fail.\r\n\r\nSure, our initial thinking was that a different profile would be minted for a different/extended configuration of claims.\r\n\r\n",
           "createdAt": "2023-04-18T19:39:42Z",
           "updatedAt": "2023-04-18T19:39:42Z"
@@ -434,7 +434,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> > tier is implicit in the quantum value.\r\n> \r\n> I can see how some of the tier values can be implied given a quantum value, but not all of them.\r\n\r\nHmm, no, all of them fall into one and only tier - see [here](https://github.com/veraison/ear/blob/56656d34b587fa7dd1326309fd188e3b24e4910a/trustclaim.go#L459-L477) for the exact ranges.\r\n\r\n> I'm also concerned about combinatorics. For example, what does a tier of `contraindicated` mean in conjunction with a quantum of -1? Does it mean appraisal actually didn't malfunction? I would be more comfortable if these were mutually exclusive.\r\n\r\nI am not sure I follow, but if you are referring to `ear.status`, there's a rule to set it from the vector:\r\n\r\n_\"The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.\"_\r\n",
           "createdAt": "2023-04-18T20:00:51Z",
           "updatedAt": "2023-04-18T20:00:51Z"
@@ -448,7 +448,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> Since `ear.status` is common for all TW-vector claims, and claims don't have to have the same quantum, `ear.status` seems to require a function that aggregates the various tiers.\r\n\r\nexactly so, see [here](https://github.com/veraison/ear/blob/56656d34b587fa7dd1326309fd188e3b24e4910a/ear_appraisal.go#L28-L42)",
           "createdAt": "2023-04-18T21:28:47Z",
           "updatedAt": "2023-04-18T21:28:47Z"
@@ -476,7 +476,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> Some of our thinking indicates that there will be a few values (claims) that are unchanged from reference / endorsement to RP. The RP will be aware of which components are expected to have those values. This may be in addition to summary or aggregate claims that may be originated by a Verifier.\r\n\r\nwe have seen something similar in \"split verification\" scenarios - in our case it's platform vs workload verification.  Veraison uses an [`annotated-evidence` extension](https://www.ietf.org/archive/id/draft-fv-rats-ear-00.html#section-4.5) for doing that kind of verifier-to-verifier communication.",
           "createdAt": "2023-04-19T08:39:41Z",
           "updatedAt": "2023-04-19T08:39:41Z"
@@ -487,7 +487,7 @@
       "number": 28,
       "id": "I_kwDOIe69Es5mq7Hy",
       "title": "Using CoRIM as an EAR",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/28",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/28",
       "state": "OPEN",
       "author": "nedmsmith",
       "authorAssociation": "NONE",
@@ -500,7 +500,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Hi Ned, thanks for this and apologies for the delay coming back to you.\r\n\r\nI agree with you that CoRIM/CoMID provide an info model that is rich enough to model all that EAR already provides.  It's also got a few intriguing properties, especially in the intra-verifier use case where the chained verifiers are all CoRIM-based.\r\n\r\nThe thing is that EAR is (by declaration) an EAT-based serialisation, so I am not sure CoRIM is in scope here.  I.e., what you are describing above looks more like a CAR (CoRIM Attestation/AR4SI Results) than a EAR :-)\r\n\r\nRe: modelling the \"accepted claims\" construct.  The approach we are experimenting with Veraison (which is captured in the `annotated-evidence` and `policy-claims` extensions) re-uses the EAT `Claims-Set`, which augments evidence claims with endorsed values.\r\n",
           "createdAt": "2023-06-07T12:05:42Z",
           "updatedAt": "2023-06-07T12:05:42Z"
@@ -511,10 +511,10 @@
       "number": 32,
       "id": "I_kwDOIe69Es5pOkK1",
       "title": "Add an example OPA policy",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/32",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/32",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [
         "thomas-fossati"
       ],
@@ -529,10 +529,10 @@
       "number": 36,
       "id": "I_kwDOIe69Es5q4zzY",
       "title": "public keys as first class claims",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/36",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/36",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Especially when used as passport, a EAR may need to carry the public key of the attester as one of the claims.\r\n\r\nWe have experimented with this pattern in the [attested TLS PoC](https://github.com/CCC-Attestation/attested-tls-poc) where we minted the Veraison-specific `\"ear.veraison.key-attestation\"` extension (documented in -01).  However, this seems to be more generally applicable to any secure channel establishment (e.g., in confidential containers's [KBS](https://github.com/confidential-containers/kbs)).  It would therefore help promoting the claim to the `\"ear.\"` namespace.\r\n\r\n",
@@ -545,7 +545,7 @@
       "number": 38,
       "id": "I_kwDOIe69Es5zZSvS",
       "title": "Support for UCCS/UJCS?",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/38",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/38",
       "state": "OPEN",
       "author": "laurencelundblade",
       "authorAssociation": "NONE",
@@ -558,7 +558,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "hi Laurence!\r\n\r\n> As written, there's no option for this because CWT/JWT is a requirement.\r\n\r\nAlways signing the EAR was a conscious choice to link strongly an AR to the verifier that was responsible for the appraisal.  In cases where it is not necessary to carry the signature across (e.g., in multi-stage verification within the same trust boundary), it can be stripped away easily.",
           "createdAt": "2023-10-11T09:33:22Z",
           "updatedAt": "2023-10-11T09:33:22Z"
@@ -569,10 +569,10 @@
       "number": 39,
       "id": "I_kwDOIe69Es6SstG3",
       "title": "baseline profile and derived profiles",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/39",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/39",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "We have observed a recurring pattern emerging in PSA, Arm CCA, and now EAR - see: https://github.com/veraison/rust-ear/pull/16, of using the EAT profile as a baseline and extending it.\r\n\r\nThe \"extensibility\" section should describe the mechanics in terms of deltas over the baseline profile, including suggesting a scheme for how to mint the corresponding new profile identifier in terms of the baseline.\r\n\r\nE.g.: for a \"CoCo 1.0.0\" EAR, the associated EAT profile could be constructed using the fragment identifier as in `\"tag:github.com,2023:veraison/ear#coco-1.0.0\"`.",
@@ -585,7 +585,7 @@
       "number": 40,
       "id": "I_kwDOIe69Es6Ss_rI",
       "title": "Relax constraint that extensions must be maps",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/40",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/40",
       "state": "OPEN",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -601,10 +601,10 @@
       "number": 41,
       "id": "I_kwDOIe69Es6VNHcS",
       "title": "Support explicitly partial appraisals",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/41",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/41",
       "state": "OPEN",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Looking only at the `ear.status` claim, there is no way to tell an RP (or a downstream verifier) that the appraisal conducted by the verifier is incomplete.  For example, if some relevant reference values have not been provisioned.\r\n\r\nThis is the case for CCA realms when no RIM/REMs/RPV reference values are provided, but the identity of the realm world can still be appraised by checking the RAK signature over the realm token and the RAK attestation made by the platform.  In such case, the realm-specific appraisal submod will be populated with _some_ but not all of the TV claims, and the `ear.status` computed accordingly, maybe with an \"affirming\" (but partial!) score, if the RAK checks out.\r\n\r\nIn that scenario, it'd be helpful to a relying party that does not inspect the TV to know that the appraisal is incomplete. The risk otherwise is it'd be tricked into thinking that everything is good when only _something_ is good.\r\n\r\n\r\n\r\n",
@@ -621,7 +621,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "I don't really get what you are proposing.  We probably need a chat.\r\n\r\nNoting that we could just get rid of `ear.status` - which is a conceptually wrong object in AR4SI land - and be done with the problem described in this issue.",
           "createdAt": "2024-09-03T18:19:14Z",
           "updatedAt": "2024-09-03T18:19:14Z"
@@ -642,14 +642,14 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> I am ok, to get rid of tight coupling of status to [2.3.2. ](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#section-2.3.2)[Enumeration Encoding](https://ietf-rats-wg.github.io/draft-ietf-rats-ar4si/draft-ietf-rats-ar4si.html#name-enumeration-encoding) which is really for each trust vector like instance identity etc.\r\n\r\nThat's not what I was proposing.\r\n\r\n> If we get rid of status all together, means RP needs to inspect each of the Trust Vectors and make its own judgement, without any overall feedback from the Verifier, which is painful!\r\n\r\nThat's AR4SI -  which hopefully is not particularly painful (otherwise there would be little sense to use it in the first place.)\r\n\r\nThe conceptual problem with `ear.status` is it flattens 8 dimensions into 1.\r\nAnd in the process obviously lose vital information.\r\nThat's the main reason to avoid basing any decision on its value, and an excellent reason to get rid of it.",
           "createdAt": "2024-09-03T18:56:55Z",
           "updatedAt": "2024-09-03T19:01:43Z"
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> Option a) Possibly using status value : 1 to indicate the same ??\r\n\r\nWhat \"same\"?\r\nWhere is value \"1\" taken from?\r\n\r\n> Option b) Affirming has range 2 to 31, could we say for this Attester, 30 ==> \"Affirming with Partial Evaluation\"\r\n\r\naffirming is a string:\r\n\r\n```\r\nar4si.trust-tier-none = \"none\"\r\nar4si.trust-tier-affirming = \"affirming\"\r\nar4si.trust-tier-warning = \"warning\"\r\nar4si.trust-tier-contraindicated = \"contraindicated\"\r\n```",
           "createdAt": "2024-09-03T18:59:32Z",
           "updatedAt": "2024-09-03T18:59:32Z"
@@ -670,7 +670,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Not sure what the proposal is. If you look at the outer context of that sentence you'll notice that 1 is part of the `None` bucket.  So it's currently mapped to `ar4si.trust-tier-none = \"none\"`.",
           "createdAt": "2024-09-04T02:30:24Z",
           "updatedAt": "2024-09-04T02:30:24Z"
@@ -681,7 +681,7 @@
       "number": 42,
       "id": "I_kwDOIe69Es6clL8i",
       "title": "Add expiration to token",
-      "url": "https://github.com/thomas-fossati/draft-ear/issues/42",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/42",
       "state": "OPEN",
       "author": "fitzthum",
       "authorAssociation": "NONE",
@@ -699,7 +699,7 @@
       "number": 1,
       "id": "PR_kwDOIe69Es5FLdsG",
       "title": "Clarifying updates",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/1",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/1",
       "state": "MERGED",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -708,10 +708,10 @@
       "body": "- Specify that the ear.status tier must be no higher trust than what is\r\n  implied by the trust vector, but could be lower. This allows for the\r\n  possibility that the deployment-specific policy would evaluate the\r\n  evidence to be less trustworthy than the sum of its parts, without\r\n  necessarily overriding the trust level of any individual vector claim\r\n  (e.g. via a blacklist of specific devices).\r\n- Clarify that ear.raw-evidence should include the signature if present.\r\n- expand the meaning of \"iat\" claim name, as it is not immediately\r\n  obvious. It _is_ explained in the linked reference, but expanding it\r\n  here save the reader a click.\r\n- Change \"compute\" to \"evaluate\" in the ear.appraisal-policy-id, as\r\n  \"compute\" implies a higher level of rigidity than may be applied by\r\n  relying (or some other third) party-provided policies.",
       "createdAt": "2022-12-12T11:29:38Z",
       "updatedAt": "2022-12-12T12:39:42Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "d3ac6eea30bda67632ad8508d5d52f68a2904a6f",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "setrofim",
       "headRefOid": "ef581039081e239dc016284f2b60b6baf5e338cb",
       "closedAt": "2022-12-12T11:46:02Z",
@@ -736,7 +736,7 @@
             "abbreviatedOid": "ef58103"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "\ud83d\udc4d ",
           "createdAt": "2022-12-12T11:45:21Z",
@@ -749,19 +749,19 @@
       "number": 2,
       "id": "PR_kwDOIe69Es5FPmrq",
       "title": "extensibility considerations + barebones veraison",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/2",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/2",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Add \u00a74 about criteria for both application- and deployment-specific extensions\r\nAdd \u00a74.1 to document Veraison (deployment) extensions\r\n\r\nAlso reflow text to fit 79 columns.\r\n\r\nPreview at https://thomas-fossati.github.io/draft-ear/veraison/draft-fv-rats-ear.html\r\n\r\n",
       "createdAt": "2022-12-12T21:44:48Z",
       "updatedAt": "2022-12-13T14:18:32Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "veraison",
       "headRefOid": "e45a3f58938dc043249e093f5211f2cafd18afc2",
       "closedAt": "2022-12-13T14:18:32Z",
@@ -778,7 +778,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "subsumed by #3 ",
           "createdAt": "2022-12-13T14:18:32Z",
           "updatedAt": "2022-12-13T14:18:32Z"
@@ -824,19 +824,19 @@
       "number": 3,
       "id": "PR_kwDOIe69Es5FTe0z",
       "title": "add TEEP extension, media types and registrations",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/3",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/3",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "* Document the TEEP application extension (JSON only for now)\r\n* Provide media types definitions using the EAT media types framework\r\n* Add registrations for the core EAR claims and the TEEP extension\r\n\r\nThis PR builds on top of #2 \r\n\r\nRendered at https://thomas-fossati.github.io/draft-ear/teep/draft-fv-rats-ear.html",
       "createdAt": "2022-12-13T10:42:53Z",
       "updatedAt": "2022-12-13T12:51:35Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "teep",
       "headRefOid": "1bd58611268ac00adc8237b5a9f71be51d0d7f31",
       "closedAt": "2022-12-13T12:51:32Z",
@@ -866,7 +866,7 @@
       "number": 4,
       "id": "PR_kwDOIe69Es5FUi5I",
       "title": "Clarify the distinction between claim types",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/4",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/4",
       "state": "MERGED",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -875,10 +875,10 @@
       "body": "- Replace \"application\" and \"deployment\" claim terminology with \"registered\" and \"unregistered\", as the meaning and distinction of \"deployment\" w.r.t. \"application\" may be confusing.\r\n- Restructure the claims section into subsections describing the registered and unregistered claims, and offering guidance on when each should be used.\r\n\r\nSigned-off-by: setrofim <setrofim@gmail.com>",
       "createdAt": "2022-12-13T13:40:48Z",
       "updatedAt": "2022-12-13T14:20:13Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "7b0c645c053f6ac78b5db35449b71b6073e8e43a",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "setrofim",
       "headRefOid": "cbabe3d685ee9893d197740637c6a0dc6e3d2a87",
       "closedAt": "2022-12-13T14:20:09Z",
@@ -895,7 +895,7 @@
             "abbreviatedOid": "3ccd5ab"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "LGTM, thanks!\r\n\r\nI've left one suggested change on use of normative language.",
           "createdAt": "2022-12-13T14:02:46Z",
@@ -921,7 +921,7 @@
             "abbreviatedOid": "cbabe3d"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "\ud83d\udea2 it!",
           "createdAt": "2022-12-13T14:19:32Z",
@@ -934,19 +934,19 @@
       "number": 7,
       "id": "PR_kwDOIe69Es5F5H0N",
       "title": "status and trustworthiness vector semantics",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/7",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/7",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "An attempt at trying to tighten the semantics around status and trustworthiness vector claims.\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
       "createdAt": "2022-12-20T18:16:35Z",
       "updatedAt": "2022-12-21T18:05:01Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "3724351646946bb5f463568ae739b3fd4024a553",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "tighten-status-semantics",
       "headRefOid": "cf903e5372fd50205974c877e4c2ea29b4c55b64",
       "closedAt": "2022-12-21T18:04:58Z",
@@ -1002,19 +1002,19 @@
       "number": 8,
       "id": "PR_kwDOIe69Es5HAJYL",
       "title": "validate all CDDL (JSON and CBOR), included examples",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/8",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/8",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Signed-off-by: Thomas Fossati <thomas.fossati@arm.com>",
       "createdAt": "2023-01-09T18:09:50Z",
       "updatedAt": "2023-01-10T17:53:15Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "d871ee121f56fbed90bcd656ad7434423b821fec",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "validate",
       "headRefOid": "88d1c1440318474519261105532ee90618eeebfc",
       "closedAt": "2023-01-10T17:53:15Z",
@@ -1044,19 +1044,19 @@
       "number": 11,
       "id": "PR_kwDOIe69Es5I17I2",
       "title": "Redesign to support composite devices",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/11",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/11",
       "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #10\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
       "createdAt": "2023-01-30T18:22:02Z",
       "updatedAt": "2023-02-08T15:14:43Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "509365ff00ef1f0c73e47ff6bf8fe1e2945e5a4c",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "composite",
       "headRefOid": "e73df2ef8afe88ce35f8f07bf2f8dba3aaccef7d",
       "closedAt": "2023-02-08T15:14:42Z",
@@ -1066,7 +1066,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "The diff might be a bit of a handful.  Looking at the [rendered version](https://thomas-fossati.github.io/draft-ear/composite/draft-fv-rats-ear.html) may be simpler.",
           "createdAt": "2023-01-30T18:28:10Z",
           "updatedAt": "2023-01-30T18:28:10Z"
@@ -1080,7 +1080,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "Absorbed into #12 ",
           "createdAt": "2023-02-08T15:14:42Z",
           "updatedAt": "2023-02-08T15:14:42Z"
@@ -1106,19 +1106,19 @@
       "number": 12,
       "id": "PR_kwDOIe69Es5I7Zgu",
       "title": "Veraison and TEEP extensions",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/12",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/12",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This is on top of the open \"composite device\" branch.\r\n\r\nThe relevant commits are:\r\n* https://github.com/thomas-fossati/draft-ear/commit/e9148d51c0efddbcf618b965e05c8a29c5829617\r\n* https://github.com/thomas-fossati/draft-ear/commit/718aba57d4cde985116c26222d01e780658742ef\r\n* https://github.com/thomas-fossati/draft-ear/commit/162e0b3bfdeb474a7f460be49cbebcfbb48f4be4",
       "createdAt": "2023-01-31T15:53:48Z",
       "updatedAt": "2023-02-08T14:52:23Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "509365ff00ef1f0c73e47ff6bf8fe1e2945e5a4c",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "extns",
       "headRefOid": "20e09cd213a3f2f56e54d9b75f977c810134d169",
       "closedAt": "2023-02-08T14:52:18Z",
@@ -1148,19 +1148,19 @@
       "number": 15,
       "id": "PR_kwDOIe69Es5Jiz7Q",
       "title": "`base64-url-text` does not include padding",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/15",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/15",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #14\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
       "createdAt": "2023-02-08T16:52:04Z",
       "updatedAt": "2023-02-09T17:39:19Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "e6d84bb07cf5cfbc72e5aca188ceabe647620d0a",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "nopad",
       "headRefOid": "ef9d50ca5c0e4f439e20df64de7780b4998fc10a",
       "closedAt": "2023-02-09T17:39:14Z",
@@ -1190,19 +1190,19 @@
       "number": 20,
       "id": "PR_kwDOIe69Es5Kswzs",
       "title": "Add Veraison key attestation extension",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/20",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/20",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #19",
       "createdAt": "2023-02-24T13:14:14Z",
       "updatedAt": "2023-02-28T15:41:18Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "8923ba95121de283b74b2b6a8fd25f743c5620e7",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "key-attestation-ext",
       "headRefOid": "e1b90b683c25402ab481f631830fc2c1b712e8c3",
       "closedAt": "2023-02-28T15:41:14Z",
@@ -1214,7 +1214,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "cc @paulhowardarm",
           "createdAt": "2023-02-24T13:14:32Z",
           "updatedAt": "2023-02-24T13:14:32Z"
@@ -1260,7 +1260,7 @@
             "abbreviatedOid": "e1b90b6"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-02-28T12:43:44Z",
@@ -1300,7 +1300,7 @@
             "abbreviatedOid": "e1b90b6"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-02-28T13:53:01Z",
@@ -1333,19 +1333,19 @@
       "number": 21,
       "id": "PR_kwDOIe69Es5LA6j3",
       "title": "add c-ear to the \"implementation status\" section",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/21",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/21",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-03-01T09:58:22Z",
       "updatedAt": "2023-03-02T14:08:59Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "c-ear-impl",
       "headRefOid": "ebf46a7b8fc2a4b4f611df56a94474871a00380e",
       "closedAt": "2023-03-02T14:08:55Z",
@@ -1362,7 +1362,7 @@
             "abbreviatedOid": "d585188"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-03-01T11:26:08Z",
@@ -1382,7 +1382,7 @@
             "abbreviatedOid": "230e227"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-03-01T11:26:39Z",
@@ -1402,19 +1402,19 @@
       "number": 22,
       "id": "PR_kwDOIe69Es5LBKbd",
       "title": "raw-evidence uses",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/22",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/22",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #6",
       "createdAt": "2023-03-01T10:43:58Z",
       "updatedAt": "2023-03-02T11:31:36Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "raw-evidence-uses",
       "headRefOid": "120c7ab140c4444de372732ac944406d8ba12255",
       "closedAt": "2023-03-02T11:31:32Z",
@@ -1444,19 +1444,19 @@
       "number": 23,
       "id": "PR_kwDOIe69Es5LEP61",
       "title": "add open issues pointer",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/23",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/23",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "also add a document history appendix to track changes",
       "createdAt": "2023-03-01T20:33:23Z",
       "updatedAt": "2023-03-02T11:31:20Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "91de29aa54b7a64ec20135578df54cd0e1f84af8",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "issues",
       "headRefOid": "e793cea63b910aa06c3205a07ccd02693c49f27a",
       "closedAt": "2023-03-02T11:31:16Z",
@@ -1499,7 +1499,7 @@
       "number": 31,
       "id": "PR_kwDOIe69Es5TavtN",
       "title": "Add github.com/veraison/rust-ear section",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/31",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/31",
       "state": "MERGED",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -1508,10 +1508,10 @@
       "body": "Add a section for the Rust EAR implementation under Project Veraison.",
       "createdAt": "2023-06-20T09:26:57Z",
       "updatedAt": "2023-06-20T11:28:02Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "1ba81a1dfc5a044c024b16cec9f9dc47ae149b3b",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "rust",
       "headRefOid": "d70cb49757e67dc8a8957a81b771beee472cf8da",
       "closedAt": "2023-06-20T11:27:59Z",
@@ -1528,7 +1528,7 @@
             "abbreviatedOid": "a861f10"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-06-20T09:30:39Z",
@@ -1548,7 +1548,7 @@
             "abbreviatedOid": "248eb96"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "\ud83d\udc4d ",
           "createdAt": "2023-06-20T11:23:24Z",
@@ -1561,19 +1561,19 @@
       "number": 33,
       "id": "PR_kwDOIe69Es5TcK0d",
       "title": "Add OPA policy example in appendix",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/33",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/33",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #32",
       "createdAt": "2023-06-20T13:36:40Z",
       "updatedAt": "2023-06-20T20:30:45Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "d3a668e56e777ec1e74b1b3c21fa44234374b5fd",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "opa-policy",
       "headRefOid": "d0287c9dd958f2c758b86c6d8d9037fcf2180307",
       "closedAt": "2023-06-20T20:30:41Z",
@@ -1616,19 +1616,19 @@
       "number": 34,
       "id": "PR_kwDOIe69Es5UrxeR",
       "title": "add privacy considerations",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/34",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/34",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-07-05T09:40:45Z",
       "updatedAt": "2023-07-05T13:09:50Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "89b51e643b188f645fa2bc7ed1032c490dbd15fc",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "privacy-draft",
       "headRefOid": "472eb069b4f36d6e80259efef9a5d28f743861e5",
       "closedAt": "2023-07-05T12:23:00Z",
@@ -1666,19 +1666,19 @@
       "number": 35,
       "id": "PR_kwDOIe69Es5UtDlE",
       "title": "restrospectively add history log record for -01",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/35",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/35",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-07-05T13:21:25Z",
       "updatedAt": "2023-10-23T10:00:02Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "1c5296324a262082f8872adf3388ebb781efdd0d",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "history",
       "headRefOid": "b84e60185a43f8da9447231290269d89684ea626",
       "closedAt": "2023-10-23T09:59:58Z",
@@ -1708,7 +1708,7 @@
       "number": 37,
       "id": "PR_kwDOIe69Es5b8QKE",
       "title": "nonce: align JWT and CWT representations",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/37",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/37",
       "state": "MERGED",
       "author": "setrofim",
       "authorAssociation": "COLLABORATOR",
@@ -1717,10 +1717,10 @@
       "body": "EAT had separate nonce definitions for JSON and CBOR, defining as a UTF-8 string for the former, and arbitrary bytes for the latter, resulting in incompatible representations.\r\n\r\nFor the EAR profile, to ensure compatibility between JWT and CWT, and allow maximum flexibility for the user, specify the nonce to be arbitrary bytes, base64-encoded when written as JSON/JWT.\r\n\r\nSee also the discussion here: https://github.com/ietf-rats-wg/eat/pull/421",
       "createdAt": "2023-10-04T21:03:10Z",
       "updatedAt": "2023-10-10T19:00:11Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "1c5296324a262082f8872adf3388ebb781efdd0d",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "nonce",
       "headRefOid": "e46de9a30509198c9fc5dda48cd1d1a392e2fe7c",
       "closedAt": "2023-10-05T19:23:09Z",
@@ -1732,7 +1732,7 @@
       "comments": [
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "In this patch we also need to align the CDDL, which at the moment has, for the JSON serialisation:\r\n\r\n```\r\neat.nonce-type = text .size (10..74)\r\n```\r\n\r\nI wonder whether we should use `base64-url-text` like we do with all other \"opaque bytes\" types?",
           "createdAt": "2023-10-05T09:50:44Z",
           "updatedAt": "2023-10-05T09:50:44Z"
@@ -1746,7 +1746,7 @@
         },
         {
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "body": "> It seems like you have a choice to require the b64 encoding of the nonce either in EAR or in Veraison. EAR will have use beyond Veraison, right? I think, not all EAR use cases will require translatability between CBOR and JSON.\r\n> \r\n> So, the nonce in EAR could be the same as the nonce in EAT (and OpenID) -- no requirement for b64. Then the restriction to b64'd nonces goes in Verasion. This gives more alignment with EAT.\r\n\r\nWe are already fully aligned with EAT, I think \ud83d\ude05 \r\n\r\nEAR is an EAT profile that - among other things - constrains `eat_nonce`'s JSON type range.  And that's a proper profiling action, AFAICT.\r\n\r\n> You can specify the nonce in EAR is fully translatable between CBOR and JSON. That's kind of what this PR does. But it should probably go further to specify the EAR nonce the way EAT specifies byte strings like UEID making use of the the JC<> construct and such.\r\n\r\nWe haven't used `JC<>` in EAR.\r\n\r\nInstead we have abstract, \"info-model\" [labels](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3-2) for keys and their types that get instantiated into the [JSON](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.3) and [CBOR](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.4) data-models.\r\n\r\n> Probably say that the comparison of the nonce in JSON is only after b64 encoding is removed.\r\n\r\nIf the nonce has gone through a translation, yes.  That looks like a clarification we should add.\r\n\r\n\r\n\r\n",
           "createdAt": "2023-10-05T20:07:12Z",
           "updatedAt": "2023-10-05T20:15:19Z"
@@ -1766,7 +1766,7 @@
             "abbreviatedOid": "099233e"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "LGTM, thanks!  One small correction inline: we need to use a normative (BCP14) \"must\" because the constraint we are establishing affects interop.",
           "createdAt": "2023-10-05T09:41:23Z",
@@ -1786,7 +1786,7 @@
             "abbreviatedOid": "e46de9a"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "awesome, thanks!",
           "createdAt": "2023-10-05T19:22:59Z",
@@ -1799,19 +1799,19 @@
       "number": 43,
       "id": "PR_kwDOIe69Es6Bojw2",
       "title": "Add Henk",
-      "url": "https://github.com/thomas-fossati/draft-ear/pull/43",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/43",
       "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "OWNER",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-11-12T13:25:07Z",
       "updatedAt": "2024-11-19T18:06:43Z",
-      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "baseRefName": "main",
       "baseRefOid": "8210750d345e746889409e081980198a52ebc910",
-      "headRepository": "thomas-fossati/draft-ear",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
       "headRefName": "add-henk",
       "headRefOid": "863ad632201ba223c1db3f55813009525d98b7d1",
       "closedAt": "2024-11-19T18:06:40Z",
@@ -1828,7 +1828,7 @@
             "abbreviatedOid": "23a5b98"
           },
           "author": "henkbirkholz",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "MEMBER",
           "state": "CHANGES_REQUESTED",
           "body": "",
           "createdAt": "2024-11-12T13:50:37Z",
@@ -1848,7 +1848,7 @@
             "abbreviatedOid": "4ff86ba"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "OWNER",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-11-12T14:10:38Z",
@@ -1868,7 +1868,7 @@
             "abbreviatedOid": "1d9d9ac"
           },
           "author": "henkbirkholz",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "MEMBER",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2024-11-12T15:36:21Z",
@@ -1881,7 +1881,7 @@
             "abbreviatedOid": "1d9d9ac"
           },
           "author": "henkbirkholz",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "MEMBER",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2024-11-19T15:30:06Z",
@@ -1899,6 +1899,322 @@
           "body": "",
           "createdAt": "2024-11-19T15:48:27Z",
           "updatedAt": "2024-11-19T15:48:27Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "id": "PR_kwDOIe69Es6KQaP3",
+      "title": "Import `ar4si`-specific types",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/44",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Imports AR4SI-specific types from AR4SI.\r\n\r\nSee companion https://github.com/ietf-rats-wg/draft-ietf-rats-ar4si/pull/29",
+      "createdAt": "2025-02-06T10:27:19Z",
+      "updatedAt": "2025-02-06T13:27:16Z",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
+      "baseRefName": "main",
+      "baseRefOid": "f74603a1a3d16a74bd08213ed73a5656def57bbc",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
+      "headRefName": "outsource-ar4si-cddl",
+      "headRefOid": "3441d9d505ff54896358444b2bee2ccd32337afe",
+      "closedAt": "2025-02-06T13:27:13Z",
+      "mergedAt": "2025-02-06T13:27:13Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "22ef7d3238bb893356ff2c099f7d567b11305754"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es6a4gFu",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:15:06Z",
+          "updatedAt": "2025-02-06T12:21:09Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "Should  `trustworthiness-claim` be here as well?",
+              "createdAt": "2025-02-06T12:15:06Z",
+              "updatedAt": "2025-02-06T12:21:09Z"
+            },
+            {
+              "originalPosition": 25,
+              "body": "Should this `trustworthiness-tier` to align with the other types (or maybe change the other types to use `trust` rather than `trustworthiness`)?",
+              "createdAt": "2025-02-06T12:16:38Z",
+              "updatedAt": "2025-02-06T12:21:09Z"
+            },
+            {
+              "originalPosition": 15,
+              "body": "Why use `eat.JC<>` here but `.feature \"json\"` and `.feature \"cbor\"` above?",
+              "createdAt": "2025-02-06T12:19:22Z",
+              "updatedAt": "2025-02-06T12:21:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4mAL",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:25:54Z",
+          "updatedAt": "2025-02-06T12:25:54Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "yes.  However, this needs fixing in [upstream AR4SI](https://github.com/ietf-rats-wg/draft-ietf-rats-ar4si/blob/main/cddl/start.cddl) and then re-import.",
+              "createdAt": "2025-02-06T12:25:54Z",
+              "updatedAt": "2025-02-06T12:25:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4nSB",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:28:02Z",
+          "updatedAt": "2025-02-06T12:28:02Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "makes sense, but again, it needs fixing in [upstream AR4SI](https://github.com/ietf-rats-wg/draft-ietf-rats-ar4si/blob/main/cddl/trust-tier.cddl) and then re-import.",
+              "createdAt": "2025-02-06T12:28:02Z",
+              "updatedAt": "2025-02-06T12:28:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4oSh",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:29:57Z",
+          "updatedAt": "2025-02-06T12:29:57Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "The above is the result of `cddlc` automatically expanding the JC macro.\r\nWe could tell upstream not to expand.\r\n",
+              "createdAt": "2025-02-06T12:29:57Z",
+              "updatedAt": "2025-02-06T12:29:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4wRU",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:44:45Z",
+          "updatedAt": "2025-02-06T12:44:45Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "see https://github.com/ietf-rats-wg/draft-ietf-rats-ar4si/pull/32",
+              "createdAt": "2025-02-06T12:44:45Z",
+              "updatedAt": "2025-02-06T12:44:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4wc0",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:45:05Z",
+          "updatedAt": "2025-02-06T12:45:06Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "ditto (link to the relevant AR4SI PR)",
+              "createdAt": "2025-02-06T12:45:05Z",
+              "updatedAt": "2025-02-06T12:45:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4wgZ",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:45:12Z",
+          "updatedAt": "2025-02-06T12:45:12Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Ah ok, makes sense.",
+              "createdAt": "2025-02-06T12:45:12Z",
+              "updatedAt": "2025-02-06T12:45:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a4xEU",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T12:46:15Z",
+          "updatedAt": "2025-02-06T12:46:15Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "The `ar4si-autogen.cddl` in the `small-edits` branch on AR4SI does not expand anymore.",
+              "createdAt": "2025-02-06T12:46:15Z",
+              "updatedAt": "2025-02-06T12:46:15Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a48nX",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T13:06:51Z",
+          "updatedAt": "2025-02-06T13:06:51Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Addressed in [c454333](https://github.com/thomas-fossati/draft-ear/pull/44/commits/c454333b27d927cb81b7f6868f97cb30cd01e991)",
+              "createdAt": "2025-02-06T13:06:51Z",
+              "updatedAt": "2025-02-06T13:06:52Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a48os",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T13:06:54Z",
+          "updatedAt": "2025-02-06T13:06:54Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Addressed in [c454333](https://github.com/thomas-fossati/draft-ear/pull/44/commits/c454333b27d927cb81b7f6868f97cb30cd01e991)",
+              "createdAt": "2025-02-06T13:06:54Z",
+              "updatedAt": "2025-02-06T13:06:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a48pn",
+          "commit": {
+            "abbreviatedOid": "9258f65"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-06T13:06:55Z",
+          "updatedAt": "2025-02-06T13:06:56Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "Addressed in [c454333](https://github.com/thomas-fossati/draft-ear/pull/44/commits/c454333b27d927cb81b7f6868f97cb30cd01e991)",
+              "createdAt": "2025-02-06T13:06:56Z",
+              "updatedAt": "2025-02-06T13:06:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es6a5D2w",
+          "commit": {
+            "abbreviatedOid": "3441d9d"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2025-02-06T13:17:43Z",
+          "updatedAt": "2025-02-06T13:17:43Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "id": "PR_kwDOIe69Es6RmWIZ",
+      "title": "rename and update files",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/pull/45",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-07T09:29:39Z",
+      "updatedAt": "2025-04-07T09:34:50Z",
+      "baseRepository": "ietf-rats-wg/draft-ietf-rats-ear",
+      "baseRefName": "main",
+      "baseRefOid": "51c1291feddf865800575992ae8134df5ba6e9ec",
+      "headRepository": "ietf-rats-wg/draft-ietf-rats-ear",
+      "headRefName": "rename",
+      "headRefOid": "48216f0259e41664ec09f1de49ac7a5c9879eb3f",
+      "closedAt": "2025-04-07T09:34:47Z",
+      "mergedAt": "2025-04-07T09:34:47Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "316902091588583c4900a9631c3d543b2bc03e0e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es6jr1mM",
+          "commit": {
+            "abbreviatedOid": "48216f0"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM!",
+          "createdAt": "2025-04-07T09:34:19Z",
+          "updatedAt": "2025-04-07T09:34:19Z",
           "comments": []
         }
       ]
