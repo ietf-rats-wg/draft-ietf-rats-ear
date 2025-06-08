@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-08T00:49:57.985617+00:00",
+  "timestamp": "2025-06-08T00:59:51.289971+00:00",
   "repo": "ietf-rats-wg/draft-ietf-rats-ear",
   "labels": [
     {
@@ -690,6 +690,22 @@
       "body": "The EAR has an `iat` field and can contain a nonce. This captures some sense of whether the token is new and an opinionated relying party could use this information to determine decide whether a token is fresh.\r\n\r\nThat said, there is no way for the verifier to report what the life of the token is (without using an extension). To me it seems like designating how long the results are valid should be a core functionality.\r\n\r\nWhile some parts of the token might be derived from the hardware evidence, which may or may not have a concept of expiration, other parts of the token follow from the configuration/policy of the verifier. Adding an expiration to the token can help capture that these verifier configurations can change, or that the evidence itself has some bounds. Generally it just seems prudent to have the token expire.",
       "createdAt": "2024-10-31T14:24:00Z",
       "updatedAt": "2024-10-31T15:31:07Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 46,
+      "id": "I_kwDOIe69Es66M9Bk",
+      "title": "make `appraisal-policy-id` an array to support cascading policies",
+      "url": "https://github.com/ietf-rats-wg/draft-ietf-rats-ear/issues/46",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The point that a single appraisal may utilise multiple cascading policies has been raised in both the Veraison and CoCo/Trustee contexts. \n\nCurrently, the appraisal policy identifier field only supports one text string; therefore, to convey multiple policies, it is necessary to devise a convention for encoding them in a single string.  (See, for example, https://github.com/veraison/services/blob/main/policy/README.md#cascading-policies)\n\nThe proposal is to make `appraisal-policy-id` an array.\n\n\n",
+      "createdAt": "2025-06-06T07:52:54Z",
+      "updatedAt": "2025-06-06T07:52:54Z",
       "closedAt": null,
       "comments": []
     }
