@@ -26,25 +26,25 @@ separately examined.
 EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT or JWT. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="EAT" name="keyword">
 <meta content="attestation result" name="keyword">
 <meta content="attestation verifier" name="keyword">
 <meta content="AR4SI" name="keyword">
 <meta content="draft-ietf-rats-ear-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.9
+  xml2rfc 3.29.0
+    Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
-    platformdirs 4.3.7
+    lxml 5.3.1
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.3
-    setuptools 70.3.0
+    requests 2.32.4
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-rats-ear.xml" rel="alternate" type="application/rfc+xml">
@@ -1064,11 +1064,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">EAR</td>
-<td class="right">April 2025</td>
+<td class="right">July 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 9 October 2025</td>
+<td class="center">Expires 11 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1081,12 +1081,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-07" class="published">7 April 2025</time>
+<time datetime="2025-07-10" class="published">10 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-09">9 October 2025</time></dd>
+<dd class="expires"><time datetime="2026-01-11">11 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1162,7 +1162,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1410,7 +1410,7 @@ appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶<
 ;# import ar4si as ar4si
 
 EAR = {
-  eat.profile-label =&gt; "tag:github.com,2023:veraison/ear"
+  eat.profile-label =&gt; "tag:ietf.org,2025-07:ear"
   eat.iat-claim-label =&gt; int
   verifier-id-label =&gt; ar4si.verifier-id
   ? raw-evidence-label =&gt; eat.binary-data
@@ -1436,7 +1436,7 @@ verifier-id-label = eat.JC&lt;"ear.verifier-id", 1004&gt;
           <p id="section-3-5.2.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set
 and encodings defined by this document.
 It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>)
-<code>tag:github.com,2023:veraison/ear</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
+<code>tag:ietf.org,2025-07:ear</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.3">
@@ -1594,7 +1594,7 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
             <div class="lang-cbor-diag sourcecode" id="section-3.2.1-2.1">
 <pre>
 {
-  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "eat_profile": "tag:ietf.org,2025-07:ear",
   "iat": 1666529184,
   "ear.verifier-id": {
     "developer": "https://veraison-project.org",
@@ -1664,7 +1664,7 @@ to complete the partial appraisal.<a href="#section-3.2.1-5" class="pilcrow">¶<
             <div class="lang-cbor-diag sourcecode" id="section-3.2.1-6.1">
 <pre>
 {
-  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "eat_profile": "tag:ietf.org,2025-07:ear",
   "iat": 1666529300,
   "ear.verifier-id": {
     "developer": "https://veraison-project.org",
@@ -1720,7 +1720,7 @@ more compact CBOR serialization of the EAR claims-set.<a href="#section-3.3.1-1"
             <div class="lang-cbor-diag sourcecode" id="section-3.3.1-2.1">
 <pre>
 {
-  265: "tag:github.com,2023:veraison/ear",
+  265: "tag:ietf.org,2025-07:ear",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -1863,7 +1863,7 @@ ear.teep-claims-label = eat.JC&lt;"ear.teep-claims", 65000&gt;
 <div class="lang-cddl sourcecode" id="section-4.4.1-1">
 <pre>
 {
-  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "eat_profile": "tag:ietf.org,2025-07:ear",
   "iat": 1666529184,
   "ear.verifier-id": {
     "developer": "https://veraison-project.org",
@@ -1902,7 +1902,7 @@ ear.teep-claims-label = eat.JC&lt;"ear.teep-claims", 65000&gt;
 <div class="lang-cddl sourcecode" id="section-4.4.2-1">
 <pre>
 {
-  265: "tag:github.com,2023:veraison/ear",
+  265: "tag:ietf.org,2025-07:ear",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -2010,7 +2010,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
 <div class="breakable lang-cbor-diag sourcecode" id="section-4.5.1-1">
 <pre>
 {
-  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "eat_profile": "tag:ietf.org,2025-07:ear",
   "iat": 1666529184,
   "ear.verifier-id": {
     "developer": "https://veraison-project.org",
@@ -2074,7 +2074,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
 <div class="lang-cbor-diag sourcecode" id="section-4.5.1-2">
 <pre>
 {
-  "eat_profile": "tag:github.com,2023:veraison/ear",
+  "eat_profile": "tag:ietf.org,2025-07:ear",
   "iat": 1666529184,
   "ear.verifier-id": {
     "developer": "https://veraison-project.org",
@@ -2110,7 +2110,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
 <div class="breakable lang-cbor-diag sourcecode" id="section-4.5.2-1">
 <pre>
 {
-  265: "tag:github.com,2023:veraison/ear",
+  265: "tag:ietf.org,2025-07:ear",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -2187,13 +2187,13 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
 <p id="section-5-2">For example, a JWT serialization would use:<a href="#section-5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-3">
 <pre>
-application/eat-jwt; eat_profile="tag:github.com,2023:veraison/ear"
+application/eat-jwt; eat_profile="tag:ietf.org,2025-07:ear"
 </pre><a href="#section-5-3" class="pilcrow">¶</a>
 </div>
 <p id="section-5-4">A CWT serialization would instead use:<a href="#section-5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-5">
 <pre>
-application/eat-cwt; eat_profile="tag:github.com,2023:veraison/ear"
+application/eat-cwt; eat_profile="tag:ietf.org,2025-07:ear"
 </pre><a href="#section-5-5" class="pilcrow">¶</a>
 </div>
 </section>
