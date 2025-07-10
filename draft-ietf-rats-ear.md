@@ -137,7 +137,7 @@ Where:
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
-`tag:github.com,2023:veraison/ear`.
+`tag:ietf.org,2025-07:ear`.
 
 `iat` (mandatory)
 : "Issued At" claim -- the time at which the EAR is issued.
@@ -416,13 +416,13 @@ Media types for EAR are automatically derived from the base EAT media type
 For example, a JWT serialization would use:
 
 ~~~
-application/eat-jwt; eat_profile="tag:github.com,2023:veraison/ear"
+application/eat-jwt; eat_profile="tag:ietf.org,2025-07:ear"
 ~~~
 
 A CWT serialization would instead use:
 
 ~~~
-application/eat-cwt; eat_profile="tag:github.com,2023:veraison/ear"
+application/eat-cwt; eat_profile="tag:ietf.org,2025-07:ear"
 ~~~
 
 # Implementation Status

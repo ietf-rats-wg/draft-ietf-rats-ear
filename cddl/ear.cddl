@@ -2,7 +2,7 @@
 ;# import ar4si as ar4si
 
 EAR = {
-  eat.profile-label => "tag:github.com,2023:veraison/ear"
+  eat.profile-label => "tag:ietf.org,2025-07:ear"
   eat.iat-claim-label => int
   verifier-id-label => ar4si.verifier-id
   ? raw-evidence-label => eat.binary-data
