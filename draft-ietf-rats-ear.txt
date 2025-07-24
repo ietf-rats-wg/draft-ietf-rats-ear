@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 9 October 2025                                            Cisco
+Expires: 25 January 2026                                           Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                            7 April 2025
+                                                            24 July 2025
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 October 2025.
+   This Internet-Draft will expire on 25 January 2026.
 
 Copyright Notice
 
@@ -178,7 +178,7 @@ Table of Contents
    ;# import ar4si as ar4si
 
    EAR = {
-     eat.profile-label => "tag:github.com,2023:veraison/ear"
+     eat.profile-label => "tag:ietf.org,2025-07:ear"
      eat.iat-claim-label => int
      verifier-id-label => ar4si.verifier-id
      ? raw-evidence-label => eat.binary-data
@@ -198,7 +198,7 @@ Table of Contents
    eat_profile (mandatory)  The EAT profile (Section 6 of
       [I-D.ietf-rats-eat]) associated with the EAR claims-set and
       encodings defined by this document.  It MUST be the following tag
-      URI ([RFC4151]) tag:github.com,2023:veraison/ear.
+      URI ([RFC4151]) tag:ietf.org,2025-07:ear.
 
    iat (mandatory)  "Issued At" claim -- the time at which the EAR is
       issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
@@ -294,7 +294,7 @@ Table of Contents
    ambiguity.
 
    {
-     "eat_profile": "tag:github.com,2023:veraison/ear",
+     "eat_profile": "tag:ietf.org,2025-07:ear",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -349,7 +349,7 @@ Table of Contents
    (typically, the relying party) to complete the partial appraisal.
 
    {
-     "eat_profile": "tag:github.com,2023:veraison/ear",
+     "eat_profile": "tag:ietf.org,2025-07:ear",
      "iat": 1666529300,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -389,7 +389,7 @@ Table of Contents
    more compact CBOR serialization of the EAR claims-set.
 
    {
-     265: "tag:github.com,2023:veraison/ear",
+     265: "tag:ietf.org,2025-07:ear",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -512,7 +512,7 @@ Table of Contents
 4.4.1.  JSON Serialization Example
 
    {
-     "eat_profile": "tag:github.com,2023:veraison/ear",
+     "eat_profile": "tag:ietf.org,2025-07:ear",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -543,7 +543,7 @@ Table of Contents
 4.4.2.  CBOR Serialization Example
 
    {
-     265: "tag:github.com,2023:veraison/ear",
+     265: "tag:ietf.org,2025-07:ear",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -625,7 +625,7 @@ Table of Contents
 4.5.1.  JSON Serialization Examples
 
    {
-     "eat_profile": "tag:github.com,2023:veraison/ear",
+     "eat_profile": "tag:ietf.org,2025-07:ear",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -686,7 +686,7 @@ Table of Contents
    }
 
    {
-     "eat_profile": "tag:github.com,2023:veraison/ear",
+     "eat_profile": "tag:ietf.org,2025-07:ear",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -714,7 +714,7 @@ Table of Contents
 4.5.2.  CBOR Serialization Example
 
    {
-     265: "tag:github.com,2023:veraison/ear",
+     265: "tag:ietf.org,2025-07:ear",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -782,11 +782,11 @@ Table of Contents
 
    For example, a JWT serialization would use:
 
-   application/eat-jwt; eat_profile="tag:github.com,2023:veraison/ear"
+   application/eat-jwt; eat_profile="tag:ietf.org,2025-07:ear"
 
    A CWT serialization would instead use:
 
-   application/eat-cwt; eat_profile="tag:github.com,2023:veraison/ear"
+   application/eat-cwt; eat_profile="tag:ietf.org,2025-07:ear"
 
 6.  Implementation Status
 
