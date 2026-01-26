@@ -55,9 +55,9 @@ normative:
     -: cose
     =: RFC9052
   I-D.ietf-rats-ar4si: ar4si
-  I-D.ietf-rats-eat: eat
+  RFC9711: eat
   I-D.ietf-teep-protocol: teep
-  I-D.ietf-rats-eat-media-type: eat-media-type
+  RFC9782: eat-media-type
 
 informative:
   RFC9334: rats-arch
