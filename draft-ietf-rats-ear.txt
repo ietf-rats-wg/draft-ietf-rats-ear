@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 25 January 2026                                           Cisco
+Expires: 31 July 2026                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                            24 July 2025
+                                                         27 January 2026
 
 
                         EAT Attestation Results
@@ -67,11 +67,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 January 2026.
+   This Internet-Draft will expire on 31 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -134,8 +134,8 @@ Table of Contents
 
 1.  Introduction
 
-   This document defines the EAT [I-D.ietf-rats-eat] Attestation Result
-   (EAR) message format.
+   This document defines the EAT [RFC9711] Attestation Result (EAR)
+   message format.
 
    EAR is used by a verifier to encode the result of the appraisal over
    an attester's evidence.  It embeds an AR4SI's "trustworthiness
@@ -195,15 +195,15 @@ Table of Contents
 
    Where:
 
-   eat_profile (mandatory)  The EAT profile (Section 6 of
-      [I-D.ietf-rats-eat]) associated with the EAR claims-set and
-      encodings defined by this document.  It MUST be the following tag
-      URI ([RFC4151]) tag:ietf.org,2025-07:ear.
+   eat_profile (mandatory)  The EAT profile (Section 6 of [RFC9711])
+      associated with the EAR claims-set and encodings defined by this
+      document.  It MUST be the following tag URI ([RFC4151])
+      tag:ietf.org,2025-07:ear.
 
    iat (mandatory)  "Issued At" claim -- the time at which the EAR is
       issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
-      [I-D.ietf-rats-eat] for the EAT-specific encoding restrictions
-      (i.e., disallowing the floating point representation).
+      [RFC9711] for the EAT-specific encoding restrictions (i.e.,
+      disallowing the floating point representation).
 
    ear.verifier-id (mandatory)  Identifying information about the
       appraising verifier.  See Section 3.3 of [I-D.ietf-rats-ar4si] for
@@ -215,22 +215,22 @@ Table of Contents
       scenarios or by auditors.  There are privacy considerations
       associated with this claim.  See Section 8.
 
-   submods (mandatory)  A submodule map (Section 4.2.18 of
-      [I-D.ietf-rats-eat]) holding one EAR-appraisal for each separately
-      appraised attester.  The map MUST contain at least one entry.  For
-      each appraised attester the verifier chooses a unique label.  For
-      example, when evidence is in EAT format, the label could be
-      constructed from the associated EAT profile.  A verifier SHOULD
-      publicly and permanently document its labelling scheme for each
-      supported evidence type, unless EAR payloads are produced and
-      consumed entirely within a private deployment.  See Section 3.1
-      for the details about the contents of an EAR-appraisal.
+   submods (mandatory)  A submodule map (Section 4.2.18 of [RFC9711])
+      holding one EAR-appraisal for each separately appraised attester.
+      The map MUST contain at least one entry.  For each appraised
+      attester the verifier chooses a unique label.  For example, when
+      evidence is in EAT format, the label could be constructed from the
+      associated EAT profile.  A verifier SHOULD publicly and
+      permanently document its labelling scheme for each supported
+      evidence type, unless EAR payloads are produced and consumed
+      entirely within a private deployment.  See Section 3.1 for the
+      details about the contents of an EAR-appraisal.
 
    eat_nonce (optional)  A user supplied nonce that is echoed by the
       verifier to provide freshness.  The nonce is a sequence of bytes
       between 8 and 64 bytes long.  When serialized as JWT, the nonce
       MUST be base64 encoded, resulting in a string between 12 and 88
-      bytes long.  See Section 4.1 of [I-D.ietf-rats-eat].
+      bytes long.  See Section 4.1 of [RFC9711].
 
    $$ear-extension (optional)  Any registered or unregistered extension.
       An EAR extension MUST be a map.  See Section 4 for further
@@ -777,8 +777,7 @@ Table of Contents
 5.  Media Types
 
    Media types for EAR are automatically derived from the base EAT media
-   type [I-D.ietf-rats-eat-media-type] using the profile string defined
-   in Section 3.
+   type [RFC9782] using the profile string defined in Section 3.
 
    For example, a JWT serialization would use:
 
@@ -875,7 +874,7 @@ Table of Contents
       of specific claims from the ear.veraison.annotated-evidence object
 
    EAR is an EAT, therefore the privacy considerations in Section 8 of
-   [I-D.ietf-rats-eat] apply.
+   [RFC9711] apply.
 
 9.  IANA Considerations
 
@@ -986,23 +985,9 @@ Table of Contents
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              08, 6 February 2025,
+              09, 15 August 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              ar4si-08>.
-
-   [I-D.ietf-rats-eat]
-              Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
-              Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-31, 6
-              September 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-eat-31>.
-
-   [I-D.ietf-rats-eat-media-type]
-              Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
-              Types", Work in Progress, Internet-Draft, draft-ietf-rats-
-              eat-media-type-12, 3 November 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-media-type-12>.
+              ar4si-09>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
@@ -1040,6 +1025,16 @@ Table of Contents
               Express Concise Binary Object Representation (CBOR) and
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
               June 2019, <https://www.rfc-editor.org/rfc/rfc8610>.
+
+   [RFC9711]  Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
+              Wallace, "The Entity Attestation Token (EAT)", RFC 9711,
+              DOI 10.17487/RFC9711, April 2025,
+              <https://www.rfc-editor.org/rfc/rfc9711>.
+
+   [RFC9782]  Lundblade, L., Birkholz, H., and T. Fossati, "Entity
+              Attestation Token (EAT) Media Types", RFC 9782,
+              DOI 10.17487/RFC9782, May 2025,
+              <https://www.rfc-editor.org/rfc/rfc9782>.
 
    [STD94]    Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,

@@ -26,26 +26,25 @@ separately examined.
 EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT or JWT. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="EAT" name="keyword">
 <meta content="attestation result" name="keyword">
 <meta content="attestation verifier" name="keyword">
 <meta content="AR4SI" name="keyword">
 <meta content="draft-ietf-rats-ear-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.3.8
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-rats-ear.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -586,6 +585,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -656,7 +656,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1064,11 +1064,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">EAR</td>
-<td class="right">July 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 25 January 2026</td>
+<td class="center">Expires 31 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1081,12 +1081,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-24" class="published">24 July 2025</time>
+<time datetime="2026-01-27" class="published">27 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-25">25 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-31">31 July 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1162,7 +1162,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1171,7 +1171,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1362,7 +1362,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">This document defines the EAT <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> Attestation Result (EAR) message format.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">This document defines the EAT <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> Attestation Result (EAR) message format.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">EAR is used by a verifier to encode the result of the appraisal over an
 attester's evidence.
 It embeds an AR4SI's "trustworthiness vector" <span>[<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> to present a
@@ -1433,7 +1433,7 @@ verifier-id-label = eat.JC&lt;"ear.verifier-id", 1004&gt;
         <dt id="section-3-5.1">
 <code>eat_profile</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.2">
-          <p id="section-3-5.2.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set
+          <p id="section-3-5.2.1">The EAT profile (<span><a href="https://rfc-editor.org/rfc/rfc9711#section-6" class="relref">Section 6</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>) associated with the EAR claims-set
 and encodings defined by this document.
 It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>)
 <code>tag:ietf.org,2025-07:ear</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
@@ -1443,7 +1443,7 @@ It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RF
 <code>iat</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.4">
           <p id="section-3-5.4.1">"Issued At" claim -- the time at which the EAR is issued.
-See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for the
+See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> for the
 EAT-specific encoding restrictions (i.e., disallowing the floating point
 representation).<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1452,7 +1452,7 @@ representation).<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
 <code>ear.verifier-id</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.6">
           <p id="section-3-5.6.1">Identifying information about the appraising verifier.
-See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for further details on its structure and serialization.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for further details on its structure and serialization.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.7">
@@ -1469,7 +1469,7 @@ There are privacy considerations associated with this claim.  See
 <dt id="section-3-5.9">
 <code>submods</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.10">
-          <p id="section-3-5.10.1">A submodule map (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.2.18" class="relref">Section 4.2.18</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) holding one <code>EAR-appraisal</code> for
+          <p id="section-3-5.10.1">A submodule map (<span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.2.18" class="relref">Section 4.2.18</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>) holding one <code>EAR-appraisal</code> for
 each separately appraised attester.
 The map <span class="bcp14">MUST</span> contain at least one entry.
 For each appraised attester the verifier chooses a unique label.
@@ -1489,7 +1489,7 @@ See <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.1</a> for 
 The nonce is a sequence of bytes between 8 and 64 bytes long. When serialized
 as JWT, the nonce <span class="bcp14">MUST</span> be base64 encoded, resulting in a string between 12 and
 88 bytes long.
-See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>.<a href="#section-3-5.12.1" class="pilcrow">¶</a></p>
+See <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>.<a href="#section-3-5.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.13">
@@ -1533,7 +1533,7 @@ appraisal-policy-id-label = eat.JC&lt;"ear.appraisal-policy-id", 1003&gt;
 <code>ear.status</code> (mandatory)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.2">
             <p id="section-3.1-2.2.1">The overall appraisal status for this attester represented as one of the four
-trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
+trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
 The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier
 corresponding to the worst trustworthiness claim across the entire
 trustworthiness vector.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
@@ -1544,7 +1544,7 @@ trustworthiness vector.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
           <dd style="margin-left: 1.5em" id="section-3.1-2.4">
             <p id="section-3.1-2.4.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
-See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08#section-3.1" class="relref">Section 3.1</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.1" class="relref">Section 3.1</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.
 This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
@@ -2183,7 +2183,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-media-types" class="section-name selfRef">Media Types</a>
       </h2>
 <p id="section-5-1">Media types for EAR are automatically derived from the base EAT media type
-<span>[<a href="#I-D.ietf-rats-eat-media-type" class="cite xref">I-D.ietf-rats-eat-media-type</a>]</span> using the profile string defined in <a href="#sec-ear" class="auto internal xref">Section 3</a>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<span>[<a href="#RFC9782" class="cite xref">RFC9782</a>]</span> using the profile string defined in <a href="#sec-ear" class="auto internal xref">Section 3</a>.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">For example, a JWT serialization would use:<a href="#section-5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-3">
 <pre>
@@ -2314,7 +2314,7 @@ claim<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
 specific claims from the <code>ear.veraison.annotated-evidence</code> object<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-8-3">EAR is an EAT, therefore the privacy considerations in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>
+<p id="section-8-3">EAR is an EAT, therefore the privacy considerations in <span><a href="https://rfc-editor.org/rfc/rfc9711#section-8" class="relref">Section 8</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>
 apply.<a href="#section-8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2511,15 +2511,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <dl class="references">
 <dt id="I-D.ietf-rats-ar4si">[I-D.ietf-rats-ar4si]</dt>
         <dd>
-<span class="refAuthor">Voit, E.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Hardjono, T.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">V. Scarlata</span>, <span class="refTitle">"Attestation Results for Secure Interactions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-ar4si-08</span>, <time datetime="2025-02-06" class="refDate">6 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08">https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-08</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-rats-eat">[I-D.ietf-rats-eat]</dt>
-        <dd>
-<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-31</span>, <time datetime="2024-09-06" class="refDate">6 September 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-31</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-rats-eat-media-type">[I-D.ietf-rats-eat-media-type]</dt>
-        <dd>
-<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Birkholz, H.</span>, and <span class="refAuthor">T. Fossati</span>, <span class="refTitle">"EAT Media Types"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-media-type-12</span>, <time datetime="2024-11-03" class="refDate">3 November 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-media-type-12">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-media-type-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Voit, E.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Hardjono, T.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">V. Scarlata</span>, <span class="refTitle">"Attestation Results for Secure Interactions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-ar4si-09</span>, <time datetime="2025-08-15" class="refDate">15 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09">https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-teep-protocol">[I-D.ietf-teep-protocol]</dt>
         <dd>
@@ -2548,6 +2540,14 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
 <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Vigano, C.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8610">https://www.rfc-editor.org/rfc/rfc8610</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9711">[RFC9711]</dt>
+        <dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="seriesInfo">RFC 9711</span>, <span class="seriesInfo">DOI 10.17487/RFC9711</span>, <time datetime="2025-04" class="refDate">April 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9711">https://www.rfc-editor.org/rfc/rfc9711</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9782">[RFC9782]</dt>
+        <dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Birkholz, H.</span>, and <span class="refAuthor">T. Fossati</span>, <span class="refTitle">"Entity Attestation Token (EAT) Media Types"</span>, <span class="seriesInfo">RFC 9782</span>, <span class="seriesInfo">DOI 10.17487/RFC9782</span>, <time datetime="2025-05" class="refDate">May 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9782">https://www.rfc-editor.org/rfc/rfc9782</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="STD94">[STD94]</dt>
         <dd>
