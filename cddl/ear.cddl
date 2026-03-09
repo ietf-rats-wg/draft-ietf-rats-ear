@@ -3,6 +3,7 @@
 
 EAR = {
   eat.profile-label => "tag:ietf.org,2025-07:ear"
+  ? status-label => ar4si.trustworthiness-tier
   eat.iat-claim-label => ~eat.time-int
   ? eat.exp-claim-label => ~eat.time-int
   verifier-id-label => ar4si.verifier-id
@@ -12,6 +13,6 @@ EAR = {
   * $$ear-extension
 }
 
-; EAR-specific claims
+status-label = eat.JC<"ear.status", 1000>
 raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
 verifier-id-label = eat.JC<"ear.verifier-id", 1004>
