@@ -190,6 +190,11 @@ See {{sec-extensions}} for further details.
 {: #fig-cddl-ear-appraisal title="EAR Appraisal Claims (CDDL Definition)" }
 
 {:vspace}
+`eat_profile` (optional)
+: The EAT profile ({{Section 6 of -eat}}) associated with the `EAR-appraisal` claims-set.
+Note that if multiple `EAR-appraisal` submods exist within the same `EAR` token, they may all have different values for this claim.
+If the `EAR-appraisal` contains extensions, this claim SHOULD be present unless the profile can be implied by other means (e.g., via the application context or outer protocol elements).
+
 `ear.status` (mandatory)
 : The overall appraisal status for this attester represented as one of the four
 trustworthiness tiers ({{Section 3.2 of -ar4si}}).
