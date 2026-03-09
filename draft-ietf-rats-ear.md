@@ -211,6 +211,11 @@ resulting loss of quality of the appraisal result.
 : An unique identifier of the appraisal policy used to evaluate the attestation
 result.
 
+`eat_nonce` (optional)
+: The nonce extracted from Evidence corresponding to this appraisal record.
+This is useful when the Relying Party is the challenger in the remote attestation protocol and cannot communicate the nonce it used to the verifier, meaning it needs to check the match itself.
+See also {{Section 4.1 of -eat}}.
+
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 An EAR appraisal extension MUST be a map.
