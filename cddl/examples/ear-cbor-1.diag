@@ -14,7 +14,7 @@
         2: 96,
         4: 2
       },
-      1003: "https://veraison.example/policy/1/60a0068d"
+      1003: [ "https://veraison.example/policy/1/60a0068d" ]
     }
   }
 }
