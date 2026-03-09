@@ -1,22 +1,22 @@
 {
   "eat_profile": "tag:ietf.org,2026:rats/ear#03",
   "iat": 1666529184,
-  "ear.verifier-id": {
+  "ear_verifier_id": {
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
   "submods": {
     "PSA_IOT": {
-      "ear.status": "contraindicated",
-      "ear.trustworthiness-vector": {
+      "ear_status": "contraindicated",
+      "ear_trustworthiness_vector": {
         "instance-identity": 2,
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-ids":
+      "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
-      "ear.veraison.annotated-evidence": {
+      "ear_veraison_annotated_evidence": {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
         "psa-security-lifecycle": 12288,
@@ -42,7 +42,7 @@
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      "ear.veraison.policy-claims": {
+      "ear_veraison_policy_claims": {
         "psa-certified": {
           "certificate-number": "1234567890123-12345",
           "date-of-issue": "23/06/2022",
