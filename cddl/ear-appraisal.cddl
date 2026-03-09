@@ -1,6 +1,8 @@
 ;# import ar4si as ar4si
+;# import rfc9711 as eat
 
 EAR-appraisal = {
+  ? eat.profile-label => eat.general-uri / eat.general-oid
   status-label => ar4si.trustworthiness-tier
   ? trustworthiness-vector-label => ar4si.trustworthiness-vector
   ? appraisal-policy-id-label => text
