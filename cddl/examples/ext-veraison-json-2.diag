@@ -14,8 +14,8 @@
         "executables": 2,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d",
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ],
       "ear.veraison.key-attestation": {
         "akpub":
           "MFkwEwYHKoZIzj0CAQYIKoZIz___"

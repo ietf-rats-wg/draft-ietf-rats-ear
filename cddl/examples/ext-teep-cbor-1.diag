@@ -15,7 +15,7 @@
         2: 2,
         4: 2
       },
-      1003: "https://veraison.example/policy/1/60a0068d",
+      1003: [ "https://veraison.example/policy/1/60a0068d" ],
       65000: {
         10: h'948f8860d13a463e',
         256: h'0198f50a4ff6c05861c8860d13a638ea',

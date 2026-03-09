@@ -216,9 +216,10 @@ arrangement.  Such consumer would therefore rely entirely on the semantics of
 the `ear.status` claim.  This behaviour is NOT RECOMMENDED because of the
 resulting loss of quality of the appraisal result.
 
-`ear.appraisal-policy-id` (optional)
-: An unique identifier of the appraisal policy used to evaluate the attestation
-result.
+`ear.appraisal-policy-ids` (optional)
+: A list of one or more unique identifiers for appraisal policies used to evaluate the attestation results.
+The order of the identifiers in the list represents the order in which the policies are applied, with those appearing earlier being applied first.
+The list MUST NOT be empty.
 
 `eat_nonce` (optional)
 : The nonce extracted from Evidence corresponding to this appraisal record.
@@ -578,11 +579,11 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### EAR Appraisal Policy Identifier
 
-* Claim Name: ear.appraisal-policy-id
-* Claim Description: EAR Appraisal Policy Identifier
-* JWT Claim Name: ear.appraisal-policy-id
+* Claim Name: ear.appraisal-policy-ids
+* Claim Description: EAR Appraisal Policy Identifiers
+* JWT Claim Name: ear.appraisal-policy-ids
 * Claim Key: 1003 (suggested)
-* Claim Value Type(s): text
+* Claim Value Type(s): array
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 

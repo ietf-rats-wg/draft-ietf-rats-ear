@@ -5,11 +5,11 @@ EAR-appraisal = {
   ? eat.profile-label => eat.general-uri / eat.general-oid
   status-label => ar4si.trustworthiness-tier
   ? trustworthiness-vector-label => ar4si.trustworthiness-vector
-  ? appraisal-policy-id-label => text
+  ? appraisal-policy-ids-label => [ + text ]
   ? eat.nonce-label => eat.nonce-type
   * $$ear-appraisal-extension
 }
 
 status-label = eat.JC<"ear.status", 1000>
 trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
-appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
+appraisal-policy-ids-label = eat.JC<"ear.appraisal-policy-ids", 1003>
