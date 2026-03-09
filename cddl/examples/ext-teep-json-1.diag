@@ -1,22 +1,22 @@
 {
   "eat_profile": "tag:ietf.org,2026:rats/ear#03",
   "iat": 1666529184,
-  "ear.verifier-id": {
+  "ear_verifier_id": {
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
   "submods": {
     "PSA": {
-      "ear.status": "contraindicated",
-      "ear.trustworthiness-vector": {
+      "ear_status": "contraindicated",
+      "ear_trustworthiness_vector": {
         "instance-identity": 2,
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-ids":
+      "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
-      "ear.teep-claims": {
+      "ear_teep_claims": {
         "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
         "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "oemid": "Av8B",

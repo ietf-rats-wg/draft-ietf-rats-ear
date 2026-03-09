@@ -14,4 +14,4 @@ ear-teep-claims = non-empty<{
   ? eat.manifests-label => eat.manifests-type
 }>
 
-ear.teep-claims-label = eat.JC<"ear.teep-claims", 65000>
+ear.teep-claims-label = eat.JC<"ear_teep_claims", 65000>

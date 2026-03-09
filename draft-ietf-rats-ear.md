@@ -154,11 +154,11 @@ See {{Section 4.1.4 of -jwt}}.
 Similar to `iat`, an EAR token MUST NOT contain an `exp` claim in floating-point format.
 Any recipient of a token with a floating-point format `exp` claim MUST consider it an error.
 
-`ear.verifier-id` (mandatory)
+`ear_verifier_id` (mandatory)
 : Identifying information about the appraising verifier.
 See {{Section 3.3 of -ar4si}} for further details on its structure and serialization.
 
-`ear.raw-evidence` (optional)
+`ear_raw_evidence` (optional)
 : The unabridged evidence submitted for appraisal, including any signed
 container/envelope.
 This field may be consumed by other Verifiers in multi-stage verification
@@ -204,24 +204,24 @@ See {{sec-extensions}} for further details.
 Note that if multiple `EAR-appraisal` submods exist within the same `EAR` token, they may all have different values for this claim.
 If the `EAR-appraisal` contains extensions, this claim SHOULD be present unless the profile can be implied by other means (e.g., via the application context or outer protocol elements).
 
-`ear.status` (mandatory)
+`ear_status` (mandatory)
 : The overall appraisal status for this attester represented as one of the four
 trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The value of this claim MUST be set to a tier of no higher trust than the tier
 corresponding to the worst trustworthiness claim across the entire
 trustworthiness vector.
 
-`ear.trustworthiness-vector` (optional)
+`ear_trustworthiness_vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
 See {{Section 3.1 of -ar4si}} for the details.
 This claim MUST be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
-the `ear.status` claim.  This behaviour is NOT RECOMMENDED because of the
+the `ear_status` claim.  This behaviour is NOT RECOMMENDED because of the
 resulting loss of quality of the appraisal result.
 
-`ear.appraisal-policy-ids` (optional)
+`ear_appraisal_policy_ids` (optional)
 : A list of one or more unique identifiers for appraisal policies used to evaluate the attestation results.
 The order of the identifiers in the list represents the order in which the policies are applied, with those appearing earlier being applied first.
 The list MUST NOT be empty.
@@ -396,16 +396,16 @@ The Project Veraison verifier defines three private, application-specific
 extensions:
 
 {:vspace}
-`ear.veraison.annotated-evidence`
+`ear_veraison_annotated_evidence`
 : JSON representation of the evidence claims-set, including any annotations
 provided by the Project Veraison verifier.
 There are privacy considerations associated with this claim.  See
 {{sec-priv-cons}}.
 
-`ear.veraison.policy-claims`
+`ear_veraison_policy_claims`
 : any extra claims added by the policy engine in the Project Veraison verifier.
 
-`ear.veraison.key-attestation`
+`ear_veraison_key_attestation`
 : contains the public key part of a successfully verified attested key.
 The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
 4.1.2.7 of -pkix}}).
@@ -527,12 +527,12 @@ to those claims, for example allowing their redaction, anonymisation or
 outright removal.
 Specifically:
 
-* It SHOULD be possible to disable inclusion of the optional `ear.raw-evidence`
+* It SHOULD be possible to disable inclusion of the optional `ear_raw_evidence`
   claim
 * It SHOULD be possible to disable inclusion of the optional
-  `ear.veraison.annotated-evidence` claim
+  `ear_veraison_annotated_evidence` claim
 * It SHOULD be possible to allow redaction, anonymisation or removal of
-  specific claims from the `ear.veraison.annotated-evidence` object
+  specific claims from the `ear_veraison_annotated_evidence` object
 
 EAR is an EAT, therefore the privacy considerations in {{Section 8 of -eat}}
 apply.
@@ -554,9 +554,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### EAR Status
 
-* Claim Name: ear.status
+* Claim Name: ear_status
 * Claim Description: EAR Status
-* JWT Claim Name: ear.status
+* JWT Claim Name: ear_status
 * Claim Key: 1000 (suggested)
 * Claim Value Type(s): unsigned integer (0, 2, 32, 96)
 * Change Controller: IESG
@@ -564,9 +564,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### Trustworthiness Vector
 
-* Claim Name: ear.trustworthiness-vector
+* Claim Name: ear_trustworthiness_vector
 * Claim Description: EAR Trustworthiness Vector
-* JWT Claim Name: ear.trustworthiness-vector
+* JWT Claim Name: ear_trustworthiness_vector
 * Claim Key: 1001 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
@@ -574,9 +574,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### EAR Raw Evidence
 
-* Claim Name: ear.raw-evidence
+* Claim Name: ear_raw_evidence
 * Claim Description: EAR Raw Evidence
-* JWT Claim Name: ear.raw-evidence
+* JWT Claim Name: ear_raw_evidence
 * Claim Key: 1002 (suggested)
 * Claim Value Type(s): bytes
 * Change Controller: IESG
@@ -584,9 +584,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### EAR Appraisal Policy Identifier
 
-* Claim Name: ear.appraisal-policy-ids
+* Claim Name: ear_appraisal_policy_ids
 * Claim Description: EAR Appraisal Policy Identifiers
-* JWT Claim Name: ear.appraisal-policy-ids
+* JWT Claim Name: ear_appraisal_policy_ids
 * Claim Key: 1003 (suggested)
 * Claim Value Type(s): array
 * Change Controller: IESG
@@ -594,9 +594,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### Verifier Software Identifier
 
-* Claim Name: ear.verifier-id
+* Claim Name: ear_verifier_id
 * Claim Description: AR4SI Verifier Software Identifier
-* JWT Claim Name: ear.verifier-id
+* JWT Claim Name: ear_verifier_id
 * Claim Key: 1004 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
@@ -652,10 +652,10 @@ ear_appraisal = {
 
     # access the attester-specific appraisal record
     app_rec := payload.submods.PARSEC_TPM
-    status := app_rec["ear.status"] == "affirming"
+    status := app_rec["ear_status"] == "affirming"
 
     # extract the trustworhiness vector for further inspection
-    trust_vector := app_rec["ear.trustworthiness-vector"]
+    trust_vector := app_rec["ear_trustworthiness_vector"]
 }
 
 # add further conditions on the trust_vector here

@@ -13,6 +13,6 @@ EAR = {
   * $$ear-extension
 }
 
-status-label = eat.JC<"ear.status", 1000>
-raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
-verifier-id-label = eat.JC<"ear.verifier-id", 1004>
+; EAR-specific claims
+raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
+verifier-id-label = eat.JC<"ear_verifier_id", 1004>

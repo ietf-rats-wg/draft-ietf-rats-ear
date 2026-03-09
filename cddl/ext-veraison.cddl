@@ -24,6 +24,6 @@ ear-veraison-key-attestation = {
   "akpub" => eat.binary-data
 }
 
-ear.veraison.annotated-evidence-label = eat.JC<"ear.veraison.annotated-evidence", -70000>
-ear.veraison.policy-claims-label = eat.JC<"ear.veraison.policy-claims", -70001>
-ear.veraison.key-attestation-label = eat.JC<"ear.veraison.key-attestation", -70002>
+ear.veraison.annotated-evidence-label = eat.JC<"ear_veraison_annotated_evidence", -70000>
+ear.veraison.policy-claims-label = eat.JC<"ear_veraison_policy_claims", -70001>
+ear.veraison.key-attestation-label = eat.JC<"ear_veraison_key_attestation", -70002>

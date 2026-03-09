@@ -10,6 +10,6 @@ EAR-appraisal = {
   * $$ear-appraisal-extension
 }
 
-status-label = eat.JC<"ear.status", 1000>
-trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
-appraisal-policy-ids-label = eat.JC<"ear.appraisal-policy-ids", 1003>
+status-label = eat.JC<"ear_status", 1000>
+trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", 1001>
+appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
