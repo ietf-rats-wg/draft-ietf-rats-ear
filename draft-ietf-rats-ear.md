@@ -141,9 +141,13 @@ It MUST be the following tag URI ({{-tag-uri}})
 
 `iat` (mandatory)
 : "Issued At" claim -- the time at which the EAR is issued.
-See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the
-EAT-specific encoding restrictions (i.e., disallowing the floating point
-representation).
+See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).
+
+`exp` (optional)
+: "Expiration Time" claim -- the time at which the EAR expires and MUST NOT be accepted for processing.
+See {{Section 4.1.4 of -jwt}}.
+Similar to `iat`, an EAR token MUST NOT contain an `exp` claim in floating-point format.
+Any recipient of a token with a floating-point format `exp` claim MUST consider it an error.
 
 `ear.verifier-id` (mandatory)
 : Identifying information about the appraising verifier.

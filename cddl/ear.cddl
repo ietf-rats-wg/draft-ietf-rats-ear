@@ -3,7 +3,8 @@
 
 EAR = {
   eat.profile-label => "tag:ietf.org,2025-07:ear"
-  eat.iat-claim-label => int
+  eat.iat-claim-label => ~eat.time-int
+  ? eat.exp-claim-label => ~eat.time-int
   verifier-id-label => ar4si.verifier-id
   ? raw-evidence-label => eat.binary-data
   eat.submods-label => { + text => EAR-appraisal }
