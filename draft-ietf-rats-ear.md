@@ -139,6 +139,11 @@ and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
 `tag:ietf.org,2025-07:ear`.
 
+`ear.status` (optional)
+: The overall appraisal status for the (composite) attester represented as one of the four trustworthiness tiers ({{Section 3.2 of -ar4si}}).
+The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status claim across all EAR appraisal submods.
+This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
+
 `iat` (mandatory)
 : "Issued At" claim -- the time at which the EAR is issued.
 See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).
