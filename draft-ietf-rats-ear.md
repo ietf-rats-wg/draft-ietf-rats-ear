@@ -222,7 +222,10 @@ result.
 
 `eat_nonce` (optional)
 : The nonce extracted from Evidence corresponding to this appraisal record.
-This is useful when the Relying Party is the challenger in the remote attestation protocol and cannot communicate the nonce it used to the verifier, meaning it needs to check the match itself.
+Note that this is entirely distinct from the nonce in {{sec-ear}}.
+It reflects evidence freshness rather than attestation results freshness.
+Specifically, it reflects the freshness of the evidence whose attestation results are contained in this appraisal record.
+This is useful when the relying party is the challenger in the remote attestation protocol and needs to verify that the nonce in the supplied evidence matches, without having to parse the evidence format.
 See also {{Section 4.1 of -eat}}.
 
 `$$ear-appraisal-extension` (optional)
