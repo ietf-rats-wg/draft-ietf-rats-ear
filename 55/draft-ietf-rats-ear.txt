@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 10 September 2026                                         Cisco
+Expires: 11 September 2026                                         Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                            9 March 2026
+                                                           10 March 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 September 2026.
+   This Internet-Draft will expire on 11 September 2026.
 
 Copyright Notice
 
@@ -278,10 +278,14 @@ Table of Contents
 
    eat_nonce (optional)
       The nonce extracted from Evidence corresponding to this appraisal
-      record.  This is useful when the Relying Party is the challenger
-      in the remote attestation protocol and cannot communicate the
-      nonce it used to the verifier, meaning it needs to check the match
-      itself.  See also Section 4.1 of [RFC9711].
+      record.  Note that this is entirely distinct from the nonce in
+      Section 3.  It reflects evidence freshness rather than attestation
+      results freshness.  Specifically, it reflects the freshness of the
+      evidence whose attestation results are contained in this appraisal
+      record.  This is useful when the relying party is the challenger
+      in the remote attestation protocol and needs to verify that the
+      nonce in the supplied evidence matches, without having to parse
+      the evidence format.  See also Section 4.1 of [RFC9711].
 
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  An EAR appraisal
