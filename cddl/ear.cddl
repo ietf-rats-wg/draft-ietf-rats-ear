@@ -2,7 +2,7 @@
 ;# import ar4si as ar4si
 
 EAR = {
-  eat.profile-label => "tag:ietf.org,2025-07:ear"
+  eat.profile-label => "tag:ietf.org,2026:rats/ear#03"
   ? status-label => ar4si.trustworthiness-tier
   eat.iat-claim-label => ~eat.time-int
   ? eat.exp-claim-label => ~eat.time-int
