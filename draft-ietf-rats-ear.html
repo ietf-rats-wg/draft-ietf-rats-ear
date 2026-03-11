@@ -1526,14 +1526,14 @@ EAR-appraisal = {
   ? eat.profile-label =&gt; eat.general-uri / eat.general-oid
   status-label =&gt; ar4si.trustworthiness-tier
   ? trustworthiness-vector-label =&gt; ar4si.trustworthiness-vector
-  ? appraisal-policy-id-label =&gt; text
+  ? appraisal-policy-ids-label =&gt; [ + text ]
   ? eat.nonce-label =&gt; eat.nonce-type
   * $$ear-appraisal-extension
 }
 
 status-label = eat.JC&lt;"ear.status", 1000&gt;
 trustworthiness-vector-label = eat.JC&lt;"ear.trustworthiness-vector", 1001&gt;
-appraisal-policy-id-label = eat.JC&lt;"ear.appraisal-policy-id", 1003&gt;
+appraisal-policy-ids-label = eat.JC&lt;"ear.appraisal-policy-ids", 1003&gt;
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1573,10 +1573,11 @@ resulting loss of quality of the appraisal result.<a href="#section-3.1-2.6.1" c
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.7">
-<code>ear.appraisal-policy-id</code> (optional)</dt>
+<code>ear.appraisal-policy-ids</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.8">
-            <p id="section-3.1-2.8.1">An unique identifier of the appraisal policy used to evaluate the attestation
-result.<a href="#section-3.1-2.8.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.8.1">A list of one or more unique identifiers for appraisal policies used to evaluate the attestation results.
+The order of the identifiers in the list represents the order in which the policies are applied, with those appearing earlier being applied first.
+The list <span class="bcp14">MUST NOT</span> be empty.<a href="#section-3.1-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.9">
@@ -1640,8 +1641,8 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d"
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ]
     }
   }
 }
@@ -1710,16 +1711,16 @@ to complete the partial appraisal.<a href="#section-3.2.1-5" class="pilcrow">¶<
         "executables": 2,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d"
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ]
     },
     "CCA Realm": {
       "ear.status": "affirming",
       "ear.trustworthiness-vector": {
         "instance-identity": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d"
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/af29900a" ]
     }
   }
 }
@@ -1766,7 +1767,7 @@ more compact CBOR serialization of the EAR claims-set.<a href="#section-3.3.1-1"
         2: 96,
         4: 2
       },
-      1003: "https://veraison.example/policy/1/60a0068d"
+      1003: [ "https://veraison.example/policy/1/60a0068d" ]
     }
   }
 }
@@ -1909,8 +1910,8 @@ ear.teep-claims-label = eat.JC&lt;"ear.teep-claims", 65000&gt;
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d",
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ],
       "ear.teep-claims": {
         "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
         "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
@@ -1949,7 +1950,7 @@ ear.teep-claims-label = eat.JC&lt;"ear.teep-claims", 65000&gt;
         2: 2,
         4: 2
       },
-      1003: "https://veraison.example/policy/1/60a0068d",
+      1003: [ "https://veraison.example/policy/1/60a0068d" ],
       65000: {
         10: h'948f8860d13a463e',
         256: h'0198f50a4ff6c05861c8860d13a638ea',
@@ -2056,8 +2057,8 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
         "executables": 96,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d",
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ],
       "ear.veraison.annotated-evidence": {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
@@ -2120,8 +2121,8 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
         "executables": 2,
         "hardware": 2
       },
-      "ear.appraisal-policy-id":
-        "https://veraison.example/policy/1/60a0068d",
+      "ear.appraisal-policy-ids":
+        [ "https://veraison.example/policy/1/60a0068d" ],
       "ear.veraison.key-attestation": {
         "akpub":
           "MFkwEwYHKoZIzj0CAQYIKoZIz___"
@@ -2157,7 +2158,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear.veraison.key-attestation", -
         2: 2,
         4: 2
       },
-      1003: "https://veraison.example/policy/1/60a0068d",
+      1003: [ "https://veraison.example/policy/1/60a0068d" ],
       -70000: {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
@@ -2464,19 +2465,19 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
           </h4>
 <ul class="normal">
 <li class="normal" id="section-9.1.4-1.1">
-              <p id="section-9.1.4-1.1.1">Claim Name: ear.appraisal-policy-id<a href="#section-9.1.4-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.4-1.1.1">Claim Name: ear.appraisal-policy-ids<a href="#section-9.1.4-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.4-1.2">
-              <p id="section-9.1.4-1.2.1">Claim Description: EAR Appraisal Policy Identifier<a href="#section-9.1.4-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.4-1.2.1">Claim Description: EAR Appraisal Policy Identifiers<a href="#section-9.1.4-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.4-1.3">
-              <p id="section-9.1.4-1.3.1">JWT Claim Name: ear.appraisal-policy-id<a href="#section-9.1.4-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.4-1.3.1">JWT Claim Name: ear.appraisal-policy-ids<a href="#section-9.1.4-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.4-1.4">
               <p id="section-9.1.4-1.4.1">Claim Key: 1003 (suggested)<a href="#section-9.1.4-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.4-1.5">
-              <p id="section-9.1.4-1.5.1">Claim Value Type(s): text<a href="#section-9.1.4-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.4-1.5.1">Claim Value Type(s): array<a href="#section-9.1.4-1.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.4-1.6">
               <p id="section-9.1.4-1.6.1">Change Controller: IESG<a href="#section-9.1.4-1.6.1" class="pilcrow">¶</a></p>

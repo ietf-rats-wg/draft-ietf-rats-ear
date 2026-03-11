@@ -253,14 +253,14 @@ Table of Contents
      ? eat.profile-label => eat.general-uri / eat.general-oid
      status-label => ar4si.trustworthiness-tier
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector
-     ? appraisal-policy-id-label => text
+     ? appraisal-policy-ids-label => [ + text ]
      ? eat.nonce-label => eat.nonce-type
      * $$ear-appraisal-extension
    }
 
    status-label = eat.JC<"ear.status", 1000>
    trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
-   appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
+   appraisal-policy-ids-label = eat.JC<"ear.appraisal-policy-ids", 1003>
 
               Figure 2: EAR Appraisal Claims (CDDL Definition)
 
@@ -291,9 +291,12 @@ Table of Contents
       RECOMMENDED because of the resulting loss of quality of the
       appraisal result.
 
-   ear.appraisal-policy-id (optional)
-      An unique identifier of the appraisal policy used to evaluate the
-      attestation result.
+   ear.appraisal-policy-ids (optional)
+      A list of one or more unique identifiers for appraisal policies
+      used to evaluate the attestation results.  The order of the
+      identifiers in the list represents the order in which the policies
+      are applied, with those appearing earlier being applied first.
+      The list MUST NOT be empty.
 
    eat_nonce (optional)
       The nonce extracted from Evidence corresponding to this appraisal
@@ -340,8 +343,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
    }
@@ -395,16 +398,16 @@ Table of Contents
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ]
        },
        "CCA Realm": {
          "ear.status": "affirming",
          "ear.trustworthiness-vector": {
            "instance-identity": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/af29900a" ]
        }
      }
    }
@@ -435,7 +438,7 @@ Table of Contents
            2: 96,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d"
+         1003: [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
    }
@@ -558,8 +561,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.teep-claims": {
            "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
            "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
@@ -590,7 +593,7 @@ Table of Contents
            2: 2,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d",
+         1003: [ "https://veraison.example/policy/1/60a0068d" ],
          65000: {
            10: h'948f8860d13a463e',
            256: h'0198f50a4ff6c05861c8860d13a638ea',
@@ -671,8 +674,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.veraison.annotated-evidence": {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
@@ -732,8 +735,8 @@ Table of Contents
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.veraison.key-attestation": {
            "akpub":
              "MFkwEwYHKoZIzj0CAQYIKoZIz___"
@@ -761,7 +764,7 @@ Table of Contents
            2: 2,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d",
+         1003: [ "https://veraison.example/policy/1/60a0068d" ],
          -70000: {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
@@ -974,15 +977,15 @@ Table of Contents
 
 9.1.4.  EAR Appraisal Policy Identifier
 
-   *  Claim Name: ear.appraisal-policy-id
+   *  Claim Name: ear.appraisal-policy-ids
 
-   *  Claim Description: EAR Appraisal Policy Identifier
+   *  Claim Description: EAR Appraisal Policy Identifiers
 
-   *  JWT Claim Name: ear.appraisal-policy-id
+   *  JWT Claim Name: ear.appraisal-policy-ids
 
    *  Claim Key: 1003 (suggested)
 
-   *  Claim Value Type(s): text
+   *  Claim Value Type(s): array
 
    *  Change Controller: IESG
 
