@@ -179,6 +179,7 @@ Table of Contents
 
    EAR = {
      eat.profile-label => "tag:ietf.org,2025-07:ear"
+     ? status-label => ar4si.trustworthiness-tier
      eat.iat-claim-label => ~eat.time-int
      ? eat.exp-claim-label => ~eat.time-int
      verifier-id-label => ar4si.verifier-id
@@ -188,7 +189,7 @@ Table of Contents
      * $$ear-extension
    }
 
-   ; EAR-specific claims
+   status-label = eat.JC<"ear.status", 1000>
    raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
    verifier-id-label = eat.JC<"ear.verifier-id", 1004>
 
@@ -200,6 +201,15 @@ Table of Contents
       associated with the EAR claims-set and encodings defined by this
       document.  It MUST be the following tag URI ([RFC4151])
       tag:ietf.org,2025-07:ear.
+
+   ear.status (optional)  The overall appraisal status for the
+      (composite) attester represented as one of the four
+      trustworthiness tiers (Section 3.2 of [I-D.ietf-rats-ar4si]).  The
+      value of this claim MUST be set to a tier of no higher trust than
+      the tier corresponding to the worst status claim across all EAR
+      appraisal submods.  This claim exists to help Relying Parties
+      easily determine the overall status of the appraisal without
+      having to inspect each submod.
 
    iat (mandatory)  "Issued At" claim -- the time at which the EAR is
       issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
