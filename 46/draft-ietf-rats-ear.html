@@ -1592,11 +1592,22 @@ See also <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.1" class="r
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.11">
-<code>$$ear-appraisal-extension</code> (optional)</dt>
+<code>eat_nonce</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.12">
-            <p id="section-3.1-2.12.1">Any registered or unregistered extension.
+            <p id="section-3.1-2.12.1">The nonce extracted from Evidence corresponding to this appraisal record.
+Note that this is entirely distinct from the nonce in <a href="#sec-ear" class="auto internal xref">Section 3</a>.
+It reflects evidence freshness rather than attestation results freshness.
+Specifically, it reflects the freshness of the evidence whose attestation results are contained in this appraisal record.
+This is useful when the relying party is the challenger in the remote attestation protocol and needs to verify that the nonce in the supplied evidence matches, without having to parse the evidence format.
+See also <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>.<a href="#section-3.1-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.13">
+<code>$$ear-appraisal-extension</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.14">
+            <p id="section-3.1-2.14.1">Any registered or unregistered extension.
 An EAR appraisal extension <span class="bcp14">MUST</span> be a map.
-See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.1-2.12.1" class="pilcrow">¶</a></p>
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.1-2.14.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
