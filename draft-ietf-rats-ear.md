@@ -744,7 +744,12 @@ Initial release.
 
 Many thanks to
 Dave Thaler,
+Dhawal Kumar,
+Ding Ma,
 Greg Kostal,
+Jerry Yu,
+Raghuram Yeluri,
 Simon Frost,
+Tobin Feldman-Fitzthum,
 Yogesh Deshpande
 for helpful comments and discussions that have shaped this document.
