@@ -309,17 +309,6 @@ Table of Contents
       nonce in the supplied evidence matches, without having to parse
       the evidence format.  See also Section 4.1 of [RFC9711].
 
-   eat_nonce (optional)
-      The nonce extracted from Evidence corresponding to this appraisal
-      record.  Note that this is entirely distinct from the nonce in
-      Section 3.  It reflects evidence freshness rather than attestation
-      results freshness.  Specifically, it reflects the freshness of the
-      evidence whose attestation results are contained in this appraisal
-      record.  This is useful when the relying party is the challenger
-      in the remote attestation protocol and needs to verify that the
-      nonce in the supplied evidence matches, without having to parse
-      the evidence format.  See also Section 4.1 of [RFC9711].
-
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  An EAR appraisal
       extension MUST be a map.  See Section 4 for further details.
