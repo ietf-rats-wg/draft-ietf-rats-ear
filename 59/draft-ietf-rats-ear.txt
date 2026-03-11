@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 10 September 2026                                         Cisco
+Expires: 12 September 2026                                         Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                            9 March 2026
+                                                           11 March 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 September 2026.
+   This Internet-Draft will expire on 12 September 2026.
 
 Copyright Notice
 
@@ -180,7 +180,8 @@ Table of Contents
    EAR = {
      eat.profile-label => "tag:ietf.org,2025-07:ear"
      ? status-label => ar4si.trustworthiness-tier
-     eat.iat-claim-label => int
+     eat.iat-claim-label => ~eat.time-int
+     ? eat.exp-claim-label => ~eat.time-int
      verifier-id-label => ar4si.verifier-id
      ? raw-evidence-label => eat.binary-data
      eat.submods-label => { + text => EAR-appraisal }
@@ -214,6 +215,13 @@ Table of Contents
       issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
       [RFC9711] for the EAT-specific encoding restrictions (i.e.,
       disallowing the floating point representation).
+
+   exp (optional)  "Expiration Time" claim -- the time at which the EAR
+      expires and MUST NOT be accepted for processing.  See
+      Section 4.1.4 of [RFC7519].  Similar to iat, an EAR token MUST NOT
+      contain an exp claim in floating-point format.  Any recipient of a
+      token with a floating-point format exp claim MUST consider it an
+      error.
 
    ear.verifier-id (mandatory)  Identifying information about the
       appraising verifier.  See Section 3.3 of [I-D.ietf-rats-ar4si] for
@@ -249,19 +257,31 @@ Table of Contents
 3.1.  EAR Appraisal Claims
 
    ;# import ar4si as ar4si
+   ;# import rfc9711 as eat
 
    EAR-appraisal = {
+     ? eat.profile-label => eat.general-uri / eat.general-oid
      status-label => ar4si.trustworthiness-tier
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector
-     ? appraisal-policy-id-label => text
+     ? appraisal-policy-ids-label => [ + text ]
+     ? eat.nonce-label => eat.nonce-type
      * $$ear-appraisal-extension
    }
 
    status-label = eat.JC<"ear.status", 1000>
    trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
-   appraisal-policy-id-label = eat.JC<"ear.appraisal-policy-id", 1003>
+   appraisal-policy-ids-label = eat.JC<"ear.appraisal-policy-ids", 1003>
 
               Figure 2: EAR Appraisal Claims (CDDL Definition)
+
+   eat_profile (optional)
+      The EAT profile (Section 6 of [RFC9711]) associated with the EAR-
+      appraisal claims-set.  Note that if multiple EAR-appraisal submods
+      exist within the same EAR token, they may all have different
+      values for this claim.  If the EAR-appraisal contains extensions,
+      this claim SHOULD be present unless the profile can be implied by
+      other means (e.g., via the application context or outer protocol
+      elements).
 
    ear.status (mandatory)
       The overall appraisal status for this attester represented as one
@@ -281,9 +301,23 @@ Table of Contents
       RECOMMENDED because of the resulting loss of quality of the
       appraisal result.
 
-   ear.appraisal-policy-id (optional)
-      An unique identifier of the appraisal policy used to evaluate the
-      attestation result.
+   ear.appraisal-policy-ids (optional)
+      A list of one or more unique identifiers for appraisal policies
+      used to evaluate the attestation results.  The order of the
+      identifiers in the list represents the order in which the policies
+      are applied, with those appearing earlier being applied first.
+      The list MUST NOT be empty.
+
+   eat_nonce (optional)
+      The nonce extracted from Evidence corresponding to this appraisal
+      record.  Note that this is entirely distinct from the nonce in
+      Section 3.  It reflects evidence freshness rather than attestation
+      results freshness.  Specifically, it reflects the freshness of the
+      evidence whose attestation results are contained in this appraisal
+      record.  This is useful when the relying party is the challenger
+      in the remote attestation protocol and needs to verify that the
+      nonce in the supplied evidence matches, without having to parse
+      the evidence format.  See also Section 4.1 of [RFC9711].
 
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  An EAR appraisal
@@ -319,8 +353,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
    }
@@ -374,16 +408,16 @@ Table of Contents
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ]
        },
        "CCA Realm": {
          "ear.status": "affirming",
          "ear.trustworthiness-vector": {
            "instance-identity": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d"
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/af29900a" ]
        }
      }
    }
@@ -414,7 +448,7 @@ Table of Contents
            2: 96,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d"
+         1003: [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
    }
@@ -537,8 +571,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.teep-claims": {
            "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
            "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
@@ -569,7 +603,7 @@ Table of Contents
            2: 2,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d",
+         1003: [ "https://veraison.example/policy/1/60a0068d" ],
          65000: {
            10: h'948f8860d13a463e',
            256: h'0198f50a4ff6c05861c8860d13a638ea',
@@ -650,8 +684,8 @@ Table of Contents
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.veraison.annotated-evidence": {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
@@ -711,8 +745,8 @@ Table of Contents
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-id":
-           "https://veraison.example/policy/1/60a0068d",
+         "ear.appraisal-policy-ids":
+           [ "https://veraison.example/policy/1/60a0068d" ],
          "ear.veraison.key-attestation": {
            "akpub":
              "MFkwEwYHKoZIzj0CAQYIKoZIz___"
@@ -740,7 +774,7 @@ Table of Contents
            2: 2,
            4: 2
          },
-         1003: "https://veraison.example/policy/1/60a0068d",
+         1003: [ "https://veraison.example/policy/1/60a0068d" ],
          -70000: {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
@@ -953,15 +987,15 @@ Table of Contents
 
 9.1.4.  EAR Appraisal Policy Identifier
 
-   *  Claim Name: ear.appraisal-policy-id
+   *  Claim Name: ear.appraisal-policy-ids
 
-   *  Claim Description: EAR Appraisal Policy Identifier
+   *  Claim Description: EAR Appraisal Policy Identifiers
 
-   *  JWT Claim Name: ear.appraisal-policy-id
+   *  JWT Claim Name: ear.appraisal-policy-ids
 
    *  Claim Key: 1003 (suggested)
 
-   *  Claim Value Type(s): text
+   *  Claim Value Type(s): array
 
    *  Change Controller: IESG
 
