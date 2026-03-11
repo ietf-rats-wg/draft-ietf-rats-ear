@@ -254,6 +254,7 @@ Table of Contents
      status-label => ar4si.trustworthiness-tier
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector
      ? appraisal-policy-id-label => text
+     ? eat.nonce-label => eat.nonce-type
      * $$ear-appraisal-extension
    }
 
@@ -293,6 +294,17 @@ Table of Contents
    ear.appraisal-policy-id (optional)
       An unique identifier of the appraisal policy used to evaluate the
       attestation result.
+
+   eat_nonce (optional)
+      The nonce extracted from Evidence corresponding to this appraisal
+      record.  Note that this is entirely distinct from the nonce in
+      Section 3.  It reflects evidence freshness rather than attestation
+      results freshness.  Specifically, it reflects the freshness of the
+      evidence whose attestation results are contained in this appraisal
+      record.  This is useful when the relying party is the challenger
+      in the remote attestation protocol and needs to verify that the
+      nonce in the supplied evidence matches, without having to parse
+      the evidence format.  See also Section 4.1 of [RFC9711].
 
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  An EAR appraisal
