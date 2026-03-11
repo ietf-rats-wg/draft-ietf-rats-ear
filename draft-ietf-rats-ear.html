@@ -1520,8 +1520,10 @@ See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for furth
           <div class="lang-cddl sourcecode" id="section-3.1-1.1">
 <pre>
 ;# import ar4si as ar4si
+;# import rfc9711 as eat
 
 EAR-appraisal = {
+  ? eat.profile-label =&gt; eat.general-uri / eat.general-oid
   status-label =&gt; ar4si.trustworthiness-tier
   ? trustworthiness-vector-label =&gt; ar4si.trustworthiness-vector
   ? appraisal-policy-id-label =&gt; text
@@ -1539,41 +1541,49 @@ appraisal-policy-id-label = eat.JC&lt;"ear.appraisal-policy-id", 1003&gt;
 </div>
 <span class="break"></span><dl class="dlNewline" id="section-3.1-2">
           <dt id="section-3.1-2.1">
-<code>ear.status</code> (mandatory)</dt>
+<code>eat_profile</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.2">
-            <p id="section-3.1-2.2.1">The overall appraisal status for this attester represented as one of the four
-trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
-The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier
-corresponding to the worst trustworthiness claim across the entire
-trustworthiness vector.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.2.1">The EAT profile (<span><a href="https://rfc-editor.org/rfc/rfc9711#section-6" class="relref">Section 6</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>) associated with the <code>EAR-appraisal</code> claims-set.
+Note that if multiple <code>EAR-appraisal</code> submods exist within the same <code>EAR</code> token, they may all have different values for this claim.
+If the <code>EAR-appraisal</code> contains extensions, this claim <span class="bcp14">SHOULD</span> be present unless the profile can be implied by other means (e.g., via the application context or outer protocol elements).<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.3">
-<code>ear.trustworthiness-vector</code> (optional)</dt>
+<code>ear.status</code> (mandatory)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.4">
-            <p id="section-3.1-2.4.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal for
+            <p id="section-3.1-2.4.1">The overall appraisal status for this attester represented as one of the four
+trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
+The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier
+corresponding to the worst trustworthiness claim across the entire
+trustworthiness vector.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.5">
+<code>ear.trustworthiness-vector</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.6">
+            <p id="section-3.1-2.6.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
 See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-09#section-3.1" class="relref">Section 3.1</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.
 This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
 the <code>ear.status</code> claim.  This behaviour is <span class="bcp14">NOT RECOMMENDED</span> because of the
-resulting loss of quality of the appraisal result.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-3.1-2.5">
-<code>ear.appraisal-policy-id</code> (optional)</dt>
-          <dd style="margin-left: 1.5em" id="section-3.1-2.6">
-            <p id="section-3.1-2.6.1">An unique identifier of the appraisal policy used to evaluate the attestation
-result.<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
+resulting loss of quality of the appraisal result.<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.7">
-<code>$$ear-appraisal-extension</code> (optional)</dt>
+<code>ear.appraisal-policy-id</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.8">
-            <p id="section-3.1-2.8.1">Any registered or unregistered extension.
+            <p id="section-3.1-2.8.1">An unique identifier of the appraisal policy used to evaluate the attestation
+result.<a href="#section-3.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.9">
+<code>$$ear-appraisal-extension</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.10">
+            <p id="section-3.1-2.10.1">Any registered or unregistered extension.
 An EAR appraisal extension <span class="bcp14">MUST</span> be a map.
-See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.1-2.8.1" class="pilcrow">¶</a></p>
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.1-2.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
