@@ -189,9 +189,9 @@ Table of Contents
      * $$ear-extension
    }
 
-   status-label = eat.JC<"ear.status", 1000>
-   raw-evidence-label = eat.JC<"ear.raw-evidence", 1002>
-   verifier-id-label = eat.JC<"ear.verifier-id", 1004>
+   ; EAR-specific claims
+   raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
+   verifier-id-label = eat.JC<"ear_verifier_id", 1004>
 
                       Figure 1: EAR (CDDL Definition)
 
@@ -223,11 +223,11 @@ Table of Contents
       token with a floating-point format exp claim MUST consider it an
       error.
 
-   ear.verifier-id (mandatory)  Identifying information about the
+   ear_verifier_id (mandatory)  Identifying information about the
       appraising verifier.  See Section 3.3 of [I-D.ietf-rats-ar4si] for
       further details on its structure and serialization.
 
-   ear.raw-evidence (optional)  The unabridged evidence submitted for
+   ear_raw_evidence (optional)  The unabridged evidence submitted for
       appraisal, including any signed container/envelope.  This field
       may be consumed by other Verifiers in multi-stage verification
       scenarios or by auditors.  There are privacy considerations
@@ -268,9 +268,9 @@ Table of Contents
      * $$ear-appraisal-extension
    }
 
-   status-label = eat.JC<"ear.status", 1000>
-   trustworthiness-vector-label = eat.JC<"ear.trustworthiness-vector", 1001>
-   appraisal-policy-ids-label = eat.JC<"ear.appraisal-policy-ids", 1003>
+   status-label = eat.JC<"ear_status", 1000>
+   trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", 1001>
+   appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
 
               Figure 2: EAR Appraisal Claims (CDDL Definition)
 
@@ -283,25 +283,25 @@ Table of Contents
       other means (e.g., via the application context or outer protocol
       elements).
 
-   ear.status (mandatory)
+   ear_status (mandatory)
       The overall appraisal status for this attester represented as one
       of the four trustworthiness tiers (Section 3.2 of
       [I-D.ietf-rats-ar4si]).  The value of this claim MUST be set to a
       tier of no higher trust than the tier corresponding to the worst
       trustworthiness claim across the entire trustworthiness vector.
 
-   ear.trustworthiness-vector (optional)
+   ear_trustworthiness_vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
       appraisal for this attester.  See Section 3.1 of
       [I-D.ietf-rats-ar4si] for the details.  This claim MUST be present
       unless the party requesting Evidence appraisal explicitly asks for
       it to be dropped, e.g., via an API parameter or similar
       arrangement.  Such consumer would therefore rely entirely on the
-      semantics of the ear.status claim.  This behaviour is NOT
+      semantics of the ear_status claim.  This behaviour is NOT
       RECOMMENDED because of the resulting loss of quality of the
       appraisal result.
 
-   ear.appraisal-policy-ids (optional)
+   ear_appraisal_policy_ids (optional)
       A list of one or more unique identifiers for appraisal policies
       used to evaluate the attestation results.  The order of the
       identifiers in the list represents the order in which the policies
@@ -340,20 +340,20 @@ Table of Contents
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
-     "ear.verifier-id": {
+     "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
      "submods": {
        "PSA": {
-         "ear.status": "contraindicated",
-         "ear.trustworthiness-vector": {
+         "ear_status": "contraindicated",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-ids":
+         "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
@@ -395,29 +395,29 @@ Table of Contents
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529300,
-     "ear.verifier-id": {
+     "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
      "submods": {
        "CCA Platform": {
-         "ear.status": "affirming",
-         "ear.trustworthiness-vector": {
+         "ear_status": "affirming",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-ids":
+         "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ]
        },
        "CCA Realm": {
-         "ear.status": "affirming",
-         "ear.trustworthiness-vector": {
+         "ear_status": "affirming",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2
          },
-         "ear.appraisal-policy-ids":
-           [ "https://veraison.example/policy/1/af29900a" ]
+         "ear_appraisal_policy_ids":
+           [ "https://veraison.example/policy/1/60a0068d" ]
        }
      }
    }
@@ -549,7 +549,7 @@ Table of Contents
      ? eat.manifests-label => eat.manifests-type
    }>
 
-   ear.teep-claims-label = eat.JC<"ear.teep-claims", 65000>
+   ear.teep-claims-label = eat.JC<"ear_teep_claims", 65000>
 
                  Figure 6: TEEP Extension (CDDL Definition)
 
@@ -558,22 +558,22 @@ Table of Contents
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
-     "ear.verifier-id": {
+     "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
      "submods": {
        "PSA": {
-         "ear.status": "contraindicated",
-         "ear.trustworthiness-vector": {
+         "ear_status": "contraindicated",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-ids":
+         "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear.teep-claims": {
+         "ear_teep_claims": {
            "eat_nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
            "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "oemid": "Av8B",
@@ -620,16 +620,16 @@ Table of Contents
    The Project Veraison verifier defines three private, application-
    specific extensions:
 
-   ear.veraison.annotated-evidence
+   ear_veraison_annotated_evidence
       JSON representation of the evidence claims-set, including any
       annotations provided by the Project Veraison verifier.  There are
       privacy considerations associated with this claim.  See Section 8.
 
-   ear.veraison.policy-claims
+   ear_veraison_policy_claims
       any extra claims added by the policy engine in the Project
       Veraison verifier.
 
-   ear.veraison.key-attestation
+   ear_veraison_key_attestation
       contains the public key part of a successfully verified attested
       key.  The key is a DER encoded ASN.1 SubjectPublicKeyInfo
       structure (Section 4.1.2.7 of [RFC5280]).
@@ -660,9 +660,9 @@ Table of Contents
      "akpub" => eat.binary-data
    }
 
-   ear.veraison.annotated-evidence-label = eat.JC<"ear.veraison.annotated-evidence", -70000>
-   ear.veraison.policy-claims-label = eat.JC<"ear.veraison.policy-claims", -70001>
-   ear.veraison.key-attestation-label = eat.JC<"ear.veraison.key-attestation", -70002>
+   ear.veraison.annotated-evidence-label = eat.JC<"ear_veraison_annotated_evidence", -70000>
+   ear.veraison.policy-claims-label = eat.JC<"ear_veraison_policy_claims", -70001>
+   ear.veraison.key-attestation-label = eat.JC<"ear_veraison_key_attestation", -70002>
 
           Figure 7: Project Veraison Extensions (CDDL Definition)
 
@@ -671,22 +671,22 @@ Table of Contents
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
-     "ear.verifier-id": {
+     "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
      "submods": {
        "PSA_IOT": {
-         "ear.status": "contraindicated",
-         "ear.trustworthiness-vector": {
+         "ear_status": "contraindicated",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 96,
            "hardware": 2
          },
-         "ear.appraisal-policy-ids":
+         "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear.veraison.annotated-evidence": {
+         "ear_veraison_annotated_evidence": {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
            "psa-security-lifecycle": 12288,
@@ -712,7 +712,7 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         "ear.veraison.policy-claims": {
+         "ear_veraison_policy_claims": {
            "psa-certified": {
              "certificate-number": "1234567890123-12345",
              "date-of-issue": "23/06/2022",
@@ -732,22 +732,22 @@ Table of Contents
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
-     "ear.verifier-id": {
+     "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
      "submods": {
        "PARSEC_TPM": {
-         "ear.status": "affirming",
-         "ear.trustworthiness-vector": {
+         "ear_status": "affirming",
+         "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 2,
            "hardware": 2
          },
-         "ear.appraisal-policy-ids":
+         "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear.veraison.key-attestation": {
+         "ear_veraison_key_attestation": {
            "akpub":
              "MFkwEwYHKoZIzj0CAQYIKoZIz___"
          }
@@ -909,13 +909,13 @@ Table of Contents
    Specifically:
 
    *  It SHOULD be possible to disable inclusion of the optional
-      ear.raw-evidence claim
+      ear_raw_evidence claim
 
    *  It SHOULD be possible to disable inclusion of the optional
-      ear.veraison.annotated-evidence claim
+      ear_veraison_annotated_evidence claim
 
    *  It SHOULD be possible to allow redaction, anonymisation or removal
-      of specific claims from the ear.veraison.annotated-evidence object
+      of specific claims from the ear_veraison_annotated_evidence object
 
    EAR is an EAT, therefore the privacy considerations in Section 8 of
    [RFC9711] apply.
@@ -939,11 +939,11 @@ Table of Contents
 
 9.1.1.  EAR Status
 
-   *  Claim Name: ear.status
+   *  Claim Name: ear_status
 
    *  Claim Description: EAR Status
 
-   *  JWT Claim Name: ear.status
+   *  JWT Claim Name: ear_status
 
    *  Claim Key: 1000 (suggested)
 
@@ -955,11 +955,11 @@ Table of Contents
 
 9.1.2.  Trustworthiness Vector
 
-   *  Claim Name: ear.trustworthiness-vector
+   *  Claim Name: ear_trustworthiness_vector
 
    *  Claim Description: EAR Trustworthiness Vector
 
-   *  JWT Claim Name: ear.trustworthiness-vector
+   *  JWT Claim Name: ear_trustworthiness_vector
 
    *  Claim Key: 1001 (suggested)
 
@@ -971,11 +971,11 @@ Table of Contents
 
 9.1.3.  EAR Raw Evidence
 
-   *  Claim Name: ear.raw-evidence
+   *  Claim Name: ear_raw_evidence
 
    *  Claim Description: EAR Raw Evidence
 
-   *  JWT Claim Name: ear.raw-evidence
+   *  JWT Claim Name: ear_raw_evidence
 
    *  Claim Key: 1002 (suggested)
 
@@ -987,11 +987,11 @@ Table of Contents
 
 9.1.4.  EAR Appraisal Policy Identifier
 
-   *  Claim Name: ear.appraisal-policy-ids
+   *  Claim Name: ear_appraisal_policy_ids
 
    *  Claim Description: EAR Appraisal Policy Identifiers
 
-   *  JWT Claim Name: ear.appraisal-policy-ids
+   *  JWT Claim Name: ear_appraisal_policy_ids
 
    *  Claim Key: 1003 (suggested)
 
@@ -1003,11 +1003,11 @@ Table of Contents
 
 9.1.5.  Verifier Software Identifier
 
-   *  Claim Name: ear.verifier-id
+   *  Claim Name: ear_verifier_id
 
    *  Claim Description: AR4SI Verifier Software Identifier
 
-   *  JWT Claim Name: ear.verifier-id
+   *  JWT Claim Name: ear_verifier_id
 
    *  Claim Key: 1004 (suggested)
 
@@ -1154,10 +1154,10 @@ Appendix B.  Open Policy Agent Example
 
        # access the attester-specific appraisal record
        app_rec := payload.submods.PARSEC_TPM
-       status := app_rec["ear.status"] == "affirming"
+       status := app_rec["ear_status"] == "affirming"
 
        # extract the trustworhiness vector for further inspection
-       trust_vector := app_rec["ear.trustworthiness-vector"]
+       trust_vector := app_rec["ear_trustworthiness_vector"]
    }
 
    # add further conditions on the trust_vector here
