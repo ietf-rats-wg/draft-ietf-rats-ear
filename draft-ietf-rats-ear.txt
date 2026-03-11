@@ -178,7 +178,7 @@ Table of Contents
    ;# import ar4si as ar4si
 
    EAR = {
-     eat.profile-label => "tag:ietf.org,2025-07:ear"
+     eat.profile-label => "tag:ietf.org,2026:rats/ear#03"
      ? status-label => ar4si.trustworthiness-tier
      eat.iat-claim-label => ~eat.time-int
      ? eat.exp-claim-label => ~eat.time-int
@@ -200,7 +200,7 @@ Table of Contents
    eat_profile (mandatory)  The EAT profile (Section 6 of [RFC9711])
       associated with the EAR claims-set and encodings defined by this
       document.  It MUST be the following tag URI ([RFC4151])
-      tag:ietf.org,2025-07:ear.
+      tag:ietf.org,2026:rats/ear#03.
 
    ear.status (optional)  The overall appraisal status for the
       (composite) attester represented as one of the four
@@ -338,7 +338,7 @@ Table of Contents
    ambiguity.
 
    {
-     "eat_profile": "tag:ietf.org,2025-07:ear",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -393,7 +393,7 @@ Table of Contents
    (typically, the relying party) to complete the partial appraisal.
 
    {
-     "eat_profile": "tag:ietf.org,2025-07:ear",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529300,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -433,7 +433,7 @@ Table of Contents
    more compact CBOR serialization of the EAR claims-set.
 
    {
-     265: "tag:ietf.org,2025-07:ear",
+     265: "tag:ietf.org,2026:rats/ear#03",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -556,7 +556,7 @@ Table of Contents
 4.4.1.  JSON Serialization Example
 
    {
-     "eat_profile": "tag:ietf.org,2025-07:ear",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -587,7 +587,7 @@ Table of Contents
 4.4.2.  CBOR Serialization Example
 
    {
-     265: "tag:ietf.org,2025-07:ear",
+     265: "tag:ietf.org,2026:rats/ear#03",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -669,7 +669,7 @@ Table of Contents
 4.5.1.  JSON Serialization Examples
 
    {
-     "eat_profile": "tag:ietf.org,2025-07:ear",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -730,7 +730,7 @@ Table of Contents
    }
 
    {
-     "eat_profile": "tag:ietf.org,2025-07:ear",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
      "iat": 1666529184,
      "ear.verifier-id": {
        "developer": "https://veraison-project.org",
@@ -758,7 +758,7 @@ Table of Contents
 4.5.2.  CBOR Serialization Example
 
    {
-     265: "tag:ietf.org,2025-07:ear",
+     265: "tag:ietf.org,2026:rats/ear#03",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -825,11 +825,11 @@ Table of Contents
 
    For example, a JWT serialization would use:
 
-   application/eat-jwt; eat_profile="tag:ietf.org,2025-07:ear"
+   application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
 
    A CWT serialization would instead use:
 
-   application/eat-cwt; eat_profile="tag:ietf.org,2025-07:ear"
+   application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
 
 6.  Implementation Status
 
