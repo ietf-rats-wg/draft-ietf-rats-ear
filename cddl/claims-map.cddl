@@ -1,0 +1,9 @@
+claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
+
+claims-map-type-json = {
+  + text => any
+}
+
+claims-map-type-cbor = {
+  + (text / int) => any
+}
