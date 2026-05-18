@@ -139,7 +139,7 @@ and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
 `tag:ietf.org,2026:rats/ear#03`.
 
-`ear.status` (optional)
+`ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the four trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status claim across all EAR appraisal submods.
 This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
@@ -233,6 +233,12 @@ It reflects evidence freshness rather than attestation results freshness.
 Specifically, it reflects the freshness of the evidence whose attestation results are contained in this appraisal record.
 This is useful when the relying party is the challenger in the remote attestation protocol and needs to verify that the nonce in the supplied evidence matches, without having to parse the evidence format.
 See also {{Section 4.1 of -eat}}.
+
+`ear_attester_claims` (optional)
+: A map containing claims with Attester authority, i.e., claims extracted from the appraised Evidence.
+
+`ear_verifier_claims` (optional)
+: A map containing claims with Verifier authority, i.e., claims added by the Verifier during appraisal and derived from evaluating the Appraisal Policy for Evidence.
 
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
@@ -396,14 +402,16 @@ The Project Veraison verifier defines three private, application-specific
 extensions:
 
 {:vspace}
-`ear_veraison_annotated_evidence`
+`ear_veraison_annotated_evidence` (**DEPRECATED**)
 : JSON representation of the evidence claims-set, including any annotations
 provided by the Project Veraison verifier.
 There are privacy considerations associated with this claim.  See
 {{sec-priv-cons}}.
+Note: this claim is deprecated, `ear_attester_claims` should be used instead.
 
-`ear_veraison_policy_claims`
+`ear_veraison_policy_claims` (**DEPRECATED**)
 : any extra claims added by the policy engine in the Project Veraison verifier.
+Note: this claim is deprecated, `ear_verifier_claims` should be used instead.
 
 `ear_veraison_key_attestation`
 : contains the public key part of a successfully verified attested key.

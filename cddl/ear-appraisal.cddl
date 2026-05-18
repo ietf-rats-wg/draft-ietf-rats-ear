@@ -7,9 +7,13 @@ EAR-appraisal = {
   ? trustworthiness-vector-label => ar4si.trustworthiness-vector
   ? appraisal-policy-ids-label => [ + text ]
   ? eat.nonce-label => eat.nonce-type
+  ? attester-claims-label => claims-map-type
+  ? verifier-claims-label => claims-map-type
   * $$ear-appraisal-extension
 }
 
 status-label = eat.JC<"ear_status", 1000>
 trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", 1001>
 appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
+attester-claims-label = eat.JC<"ear_attester_claims", 1005>
+verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
