@@ -1069,7 +1069,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 19 November 2026</td>
+<td class="center">Expires 20 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1082,12 +1082,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-18" class="published">18 May 2026</time>
+<time datetime="2026-05-19" class="published">19 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-19">19 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-20">20 November 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1163,7 +1163,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1411,7 +1411,7 @@ appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶<
 ;# import ar4si as ar4si
 
 EAR = {
-  eat.profile-label =&gt; "tag:ietf.org,2026:rats/ear#03"
+  eat.profile-label =&gt; "tag:ietf.org,2026:rats/ear#04"
   ? status-label =&gt; ar4si.trustworthiness-tier
   eat.iat-claim-label =&gt; ~eat.time-int
   ? eat.exp-claim-label =&gt; ~eat.time-int
@@ -1439,7 +1439,7 @@ verifier-id-label = eat.JC&lt;"ear_verifier_id", 1004&gt;
           <p id="section-3-5.2.1">The EAT profile (<span><a href="https://rfc-editor.org/rfc/rfc9711#section-6" class="relref">Section 6</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>) associated with the EAR claims-set
 and encodings defined by this document.
 It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>)
-<code>tag:ietf.org,2026:rats/ear#03</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
+<code>tag:ietf.org,2026:rats/ear#04</code>.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.3">
@@ -1651,7 +1651,7 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
             <div class="lang-cbor-diag sourcecode" id="section-3.2.1-2.1">
 <pre>
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529184,
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
@@ -1721,7 +1721,7 @@ to complete the partial appraisal.<a href="#section-3.2.1-5" class="pilcrow">¶<
             <div class="lang-cbor-diag sourcecode" id="section-3.2.1-6.1">
 <pre>
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529300,
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
@@ -1777,7 +1777,7 @@ more compact CBOR serialization of the EAR claims-set.<a href="#section-3.3.1-1"
             <div class="lang-cbor-diag sourcecode" id="section-3.3.1-2.1">
 <pre>
 {
-  265: "tag:ietf.org,2026:rats/ear#03",
+  265: "tag:ietf.org,2026:rats/ear#04",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -1920,7 +1920,7 @@ ear.teep-claims-label = eat.JC&lt;"ear_teep_claims", 65000&gt;
 <div class="lang-cddl sourcecode" id="section-4.4.1-1">
 <pre>
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529184,
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
@@ -1959,7 +1959,7 @@ ear.teep-claims-label = eat.JC&lt;"ear_teep_claims", 65000&gt;
 <div class="lang-cddl sourcecode" id="section-4.4.2-1">
 <pre>
 {
-  265: "tag:ietf.org,2026:rats/ear#03",
+  265: "tag:ietf.org,2026:rats/ear#04",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -1997,54 +1997,21 @@ ear.teep-claims-label = eat.JC&lt;"ear_teep_claims", 65000&gt;
         <h3 id="name-project-veraison-extensions">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-project-veraison-extensions" class="section-name selfRef">Project Veraison Extensions</a>
         </h3>
-<p id="section-4.5-1">The Project Veraison verifier defines three private, application-specific
-extensions:<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-1">The Project Veraison verifier defines a private, application-specific
+extension:<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlNewline" id="section-4.5-2">
-          <dt id="section-4.5-2.1">
-<code>ear_veraison_annotated_evidence</code> (<strong>DEPRECATED</strong>)</dt>
+          <dt id="section-4.5-2.1"><code>ear_veraison_key_attestation</code></dt>
           <dd style="margin-left: 1.5em" id="section-4.5-2.2">
-            <p id="section-4.5-2.2.1">JSON representation of the evidence claims-set, including any annotations
-provided by the Project Veraison verifier.
-There are privacy considerations associated with this claim.  See
-<a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.
-Note: this claim is deprecated, <code>ear_attester_claims</code> should be used instead.<a href="#section-4.5-2.2.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-4.5-2.3">
-<code>ear_veraison_policy_claims</code> (<strong>DEPRECATED</strong>)</dt>
-          <dd style="margin-left: 1.5em" id="section-4.5-2.4">
-            <p id="section-4.5-2.4.1">any extra claims added by the policy engine in the Project Veraison verifier.
-Note: this claim is deprecated, <code>ear_verifier_claims</code> should be used instead.<a href="#section-4.5-2.4.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-4.5-2.5"><code>ear_veraison_key_attestation</code></dt>
-          <dd style="margin-left: 1.5em" id="section-4.5-2.6">
-            <p id="section-4.5-2.6.1">contains the public key part of a successfully verified attested key.
-The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure (<span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.1.2.7" class="relref">Section 4.1.2.7</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>).<a href="#section-4.5-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-4.5-2.2.1">contains the public key part of a successfully verified attested key.
+The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure (<span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.1.2.7" class="relref">Section 4.1.2.7</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>).<a href="#section-4.5-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<span id="name-project-veraison-extensions-"></span><div id="fig-cddl-veraison">
+<span id="name-project-veraison-extension-"></span><div id="fig-cddl-veraison">
 <figure id="figure-7">
           <div class="lang-cddl sourcecode" id="section-4.5-3.1">
 <pre>
 ;# import rfc9711 as eat
-
-$$ear-appraisal-extension //= (
-  ear.veraison.annotated-evidence-label =&gt; ear-veraison-annotated-evidence
-)
-
-ear-veraison-annotated-evidence = {
-  + text =&gt; any
-}
-
-$$ear-appraisal-extension //= (
-  ear.veraison.policy-claims-label =&gt; ear-veraison-policy-claims
-)
-
-ear-veraison-policy-claims = {
-  + text =&gt; any
-}
 
 $$ear-appraisal-extension //= (
   ear.veraison.key-attestation-label =&gt; ear-veraison-key-attestation
@@ -2054,13 +2021,11 @@ ear-veraison-key-attestation = {
   "akpub" =&gt; eat.binary-data
 }
 
-ear.veraison.annotated-evidence-label = eat.JC&lt;"ear_veraison_annotated_evidence", -70000&gt;
-ear.veraison.policy-claims-label = eat.JC&lt;"ear_veraison_policy_claims", -70001&gt;
 ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -70002&gt;
 </pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-project-veraison-extensions-" class="selfRef">Project Veraison Extensions (CDDL Definition)</a>
+<a href="#name-project-veraison-extension-" class="selfRef">Project Veraison Extension (CDDL Definition)</a>
           </figcaption></figure>
 </div>
 <div id="json-serialization-examples">
@@ -2071,7 +2036,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
 <div class="breakable lang-cbor-diag sourcecode" id="section-4.5.1-1">
 <pre>
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529184,
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
@@ -2088,7 +2053,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
       },
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
-      "ear_veraison_annotated_evidence": {
+      "ear_attester_claims": {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
         "psa-security-lifecycle": 12288,
@@ -2114,7 +2079,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      "ear_veraison_policy_claims": {
+      "ear_verifier_claims": {
         "psa-certified": {
           "certificate-number": "1234567890123-12345",
           "date-of-issue": "23/06/2022",
@@ -2135,7 +2100,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
 <div class="lang-cbor-diag sourcecode" id="section-4.5.1-2">
 <pre>
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529184,
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
@@ -2171,7 +2136,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
 <div class="breakable lang-cbor-diag sourcecode" id="section-4.5.2-1">
 <pre>
 {
-  265: "tag:ietf.org,2026:rats/ear#03",
+  265: "tag:ietf.org,2026:rats/ear#04",
   6: 1666529184,
   1004: {
     0: "https://veraison-project.org",
@@ -2188,7 +2153,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
         4: 2
       },
       1003: [ "https://veraison.example/policy/1/60a0068d" ],
-      -70000: {
+      1005: {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
         "psa-security-lifecycle": 12288,
@@ -2214,7 +2179,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      -70001: {
+      1006: {
         "psa-certified": {
           "certificate-number": "1234567890123-12345",
           "date-of-issue": "23/06/2022",
@@ -2248,13 +2213,13 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
 <p id="section-5-2">For example, a JWT serialization would use:<a href="#section-5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-3">
 <pre>
-application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 </pre><a href="#section-5-3" class="pilcrow">¶</a>
 </div>
 <p id="section-5-4">A CWT serialization would instead use:<a href="#section-5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-5">
 <pre>
-application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 </pre><a href="#section-5-5" class="pilcrow">¶</a>
 </div>
 </section>
