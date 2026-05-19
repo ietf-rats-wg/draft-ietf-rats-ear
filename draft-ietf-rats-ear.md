@@ -137,7 +137,7 @@ Where:
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
-`tag:ietf.org,2026:rats/ear#03`.
+`tag:ietf.org,2026:rats/ear#04`.
 
 `ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the four trustworthiness tiers ({{Section 3.2 of -ar4si}}).
@@ -436,13 +436,13 @@ Media types for EAR are automatically derived from the base EAT media type
 For example, a JWT serialization would use:
 
 ~~~
-application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 ~~~
 
 A CWT serialization would instead use:
 
 ~~~
-application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 ~~~
 
 # Implementation Status
