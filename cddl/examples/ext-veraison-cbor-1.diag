@@ -16,7 +16,7 @@
         4: 2
       },
       1003: [ "https://veraison.example/policy/1/60a0068d" ],
-      -70000: {
+      1005: {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
         "psa-security-lifecycle": 12288,
@@ -42,7 +42,7 @@
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      -70001: {
+      1006: {
         "psa-certified": {
           "certificate-number": "1234567890123-12345",
           "date-of-issue": "23/06/2022",

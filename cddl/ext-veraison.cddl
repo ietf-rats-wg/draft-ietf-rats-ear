@@ -1,22 +1,6 @@
 ;# import rfc9711 as eat
 
 $$ear-appraisal-extension //= (
-  ear.veraison.annotated-evidence-label => ear-veraison-annotated-evidence
-)
-
-ear-veraison-annotated-evidence = {
-  + text => any
-}
-
-$$ear-appraisal-extension //= (
-  ear.veraison.policy-claims-label => ear-veraison-policy-claims
-)
-
-ear-veraison-policy-claims = {
-  + text => any
-}
-
-$$ear-appraisal-extension //= (
   ear.veraison.key-attestation-label => ear-veraison-key-attestation
 )
 
@@ -24,6 +8,4 @@ ear-veraison-key-attestation = {
   "akpub" => eat.binary-data
 }
 
-ear.veraison.annotated-evidence-label = eat.JC<"ear_veraison_annotated_evidence", -70000>
-ear.veraison.policy-claims-label = eat.JC<"ear_veraison_policy_claims", -70001>
 ear.veraison.key-attestation-label = eat.JC<"ear_veraison_key_attestation", -70002>

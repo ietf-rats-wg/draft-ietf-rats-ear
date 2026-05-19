@@ -398,21 +398,10 @@ EAR defines a TEEP application extension for the purpose of conveying such claim
 
 ## Project Veraison Extensions {#sec-extensions-veraison}
 
-The Project Veraison verifier defines three private, application-specific
-extensions:
+The Project Veraison verifier defines a private, application-specific
+extension:
 
 {:vspace}
-`ear_veraison_annotated_evidence` (**DEPRECATED**)
-: JSON representation of the evidence claims-set, including any annotations
-provided by the Project Veraison verifier.
-There are privacy considerations associated with this claim.  See
-{{sec-priv-cons}}.
-Note: this claim is deprecated, `ear_attester_claims` should be used instead.
-
-`ear_veraison_policy_claims` (**DEPRECATED**)
-: any extra claims added by the policy engine in the Project Veraison verifier.
-Note: this claim is deprecated, `ear_verifier_claims` should be used instead.
-
 `ear_veraison_key_attestation`
 : contains the public key part of a successfully verified attested key.
 The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
@@ -421,7 +410,7 @@ The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
 ~~~cddl
 {::include cddl/ext-veraison.cddl}
 ~~~
-{: #fig-cddl-veraison title="Project Veraison Extensions (CDDL Definition)" }
+{: #fig-cddl-veraison title="Project Veraison Extension (CDDL Definition)" }
 
 ### JSON Serialization Examples
 

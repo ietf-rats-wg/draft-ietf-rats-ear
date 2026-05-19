@@ -16,7 +16,7 @@
       },
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
-      "ear_veraison_annotated_evidence": {
+      "ear_attester_claims": {
         "eat-profile": "http://arm.com/psa/2.0.0",
         "psa-client-id": 1,
         "psa-security-lifecycle": 12288,
@@ -42,7 +42,7 @@
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      "ear_veraison_policy_claims": {
+      "ear_verifier_claims": {
         "psa-certified": {
           "certificate-number": "1234567890123-12345",
           "date-of-issue": "23/06/2022",
