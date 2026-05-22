@@ -5,7 +5,10 @@
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "CCA Platform": {
       "ear_status": "affirming",

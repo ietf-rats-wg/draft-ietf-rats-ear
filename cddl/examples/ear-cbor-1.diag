@@ -5,7 +5,10 @@
     0: "https://veraison-project.org",
     1: "vts 0.0.1"
   },
-  1002: h'6C696665626F61746D616E',
+  1002: [
+    "application/vnd.evidence",
+    h'6C696665626F61746D616E'
+  ],
   266: {
     "PSA": {
       1000: 96,

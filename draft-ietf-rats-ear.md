@@ -58,6 +58,7 @@ normative:
   RFC9711: eat
   I-D.ietf-teep-protocol: teep
   RFC9782: eat-media-type
+  I-D.ietf-rats-msg-wrap: cmw
 
 informative:
   RFC9334: rats-arch
@@ -160,7 +161,7 @@ See {{Section 3.3 of -ar4si}} for further details on its structure and serializa
 
 `ear_raw_evidence` (optional)
 : The unabridged evidence submitted for appraisal, including any signed
-container/envelope.
+container/envelope, wrapped in a Record CMW (see {{Section 3.1 of -cmw}}).
 This field may be consumed by other Verifiers in multi-stage verification
 scenarios or by auditors.
 There are privacy considerations associated with this claim.  See
@@ -572,10 +573,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 ### EAR Raw Evidence
 
 * Claim Name: ear_raw_evidence
-* Claim Description: EAR Raw Evidence
+* Claim Description: EAR Raw Evidence as CMW
 * JWT Claim Name: ear_raw_evidence
 * Claim Key: 1002 (suggested)
-* Claim Value Type(s): bytes
+* Claim Value Type(s): array
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
 

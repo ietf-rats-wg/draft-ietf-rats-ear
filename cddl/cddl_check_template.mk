@@ -13,7 +13,7 @@ check-$(1): $(1)-autogen.cddl
 .PHONY: check-$(1)
 
 $(1)-autogen.cddl: $(2)
-	$(cddlc) -u -2 -t cddl -i untagged-coswid -i rfc9393 -i rfc9711 $$^ > $$@
+	$(cddlc) -u -2 -t cddl -i untagged-coswid -i rfc9393 -i rfc9711 -i cmw $$^ > $$@
 
 CLEANFILES += $(1)-autogen.cddl
 
