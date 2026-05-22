@@ -11,6 +11,7 @@ EAR = {
   ? raw-evidence-label => cmw-record
   eat.submods-label => { + text => EAR-appraisal }
   ? eat.nonce-label => eat.nonce-type
+  ? topology-label => topology-type
   * $$ear-extension
 }
 
@@ -19,3 +20,4 @@ cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
 ; EAR-specific claims
 raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
 verifier-id-label = eat.JC<"ear_verifier_id", 1004>
+topology-label = eat.JC<"ear_device_topology", 1007>

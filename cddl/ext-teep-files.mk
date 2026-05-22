@@ -1,6 +1,7 @@
 EAR_EXT_TEEP_FRAGS += ear.cddl
 EAR_EXT_TEEP_FRAGS += ear-appraisal.cddl
 EAR_EXT_TEEP_FRAGS += claims-map.cddl
+EAR_EXT_TEEP_FRAGS += topology.cddl
 EAR_EXT_TEEP_FRAGS += ext-teep.cddl
 EAR_EXT_TEEP_FRAGS += generic-non-empty.cddl
 EAR_EXT_TEEP_FRAGS += untagged-coswid.cddl

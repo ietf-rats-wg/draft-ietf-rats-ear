@@ -187,6 +187,12 @@ as JWT, the nonce MUST be base64 encoded, resulting in a string between 12 and
 88 bytes long.
 See {{Section 4.1 of -eat}}.
 
+`ear_device_topology` (optional)
+: A map that describes the device attester graph using adjacency lists.
+Attesters are represented by their corresponding labels in the `submods` claim.
+Each map key represents an attester in the graph, and the associated map value is an array of labels representing the list of sub-attesters for that attester.
+If the claim is present, the map MUST contain at least one element.
+
 `$$ear-extension` (optional)
 : Any registered or unregistered extension.
 An EAR extension MUST be a map.
@@ -600,21 +606,26 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
 
+### Device Topology
+
+* Claim Name: ear_device_topology
+* Claim Description: Device Attesters Arrangement
+* JWT Claim Name: ear_device_topology
+* Claim Key: 1007 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} of {{&SELF}}
+
 ### EAR TEEP Claims
 
 TODO
 
 --- back
 
-# Common CDDL Types {#common-cddl-types}
+# Collated CDDL
 
-{:vspace}
-`non-empty`
-: A CDDL generic that can be used to ensure the presence of at least one item
-in an object with only optional fields.
-
-~~~cddl
-{::include cddl/generic-non-empty.cddl}
+~~~
+{::include-fold cddl/ear-base-autogen.cddl}
 ~~~
 
 # Open Policy Agent Example
