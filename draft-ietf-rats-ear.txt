@@ -176,6 +176,7 @@ Table of Contents
 
    ;# import rfc9711 as eat
    ;# import ar4si as ar4si
+   ;# import cmw as cmw
 
    EAR = {
      eat.profile-label => "tag:ietf.org,2026:rats/ear#04"
@@ -183,11 +184,13 @@ Table of Contents
      eat.iat-claim-label => ~eat.time-int
      ? eat.exp-claim-label => ~eat.time-int
      verifier-id-label => ar4si.verifier-id
-     ? raw-evidence-label => eat.binary-data
+     ? raw-evidence-label => cmw-record
      eat.submods-label => { + text => EAR-appraisal }
      ? eat.nonce-label => eat.nonce-type
      * $$ear-extension
    }
+
+   cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
 
    ; EAR-specific claims
    raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
@@ -228,10 +231,11 @@ Table of Contents
       further details on its structure and serialization.
 
    ear_raw_evidence (optional)  The unabridged evidence submitted for
-      appraisal, including any signed container/envelope.  This field
-      may be consumed by other Verifiers in multi-stage verification
-      scenarios or by auditors.  There are privacy considerations
-      associated with this claim.  See Section 8.
+      appraisal, including any signed container/envelope, wrapped in a
+      Record CMW (see Section 3.1 of [I-D.ietf-rats-msg-wrap]).  This
+      field may be consumed by other Verifiers in multi-stage
+      verification scenarios or by auditors.  There are privacy
+      considerations associated with this claim.  See Section 8.
 
    submods (mandatory)  A submodule map (Section 4.2.18 of [RFC9711])
       holding one EAR-appraisal for each separately appraised attester.
@@ -357,7 +361,10 @@ Table of Contents
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": [
+       "application/vnd.evidence",
+       "NzQ3MjY5NzM2NTYzNzQK"
+     ],
      "submods": {
        "PSA": {
          "ear_status": "contraindicated",
@@ -412,7 +419,10 @@ Table of Contents
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": [
+       "application/vnd.evidence",
+       "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK"
+     ],
      "submods": {
        "CCA Platform": {
          "ear_status": "affirming",
@@ -452,7 +462,10 @@ Table of Contents
        0: "https://veraison-project.org",
        1: "vts 0.0.1"
      },
-     1002: h'6C696665626F61746D616E',
+     1002: [
+       "application/vnd.evidence",
+       h'6C696665626F61746D616E'
+     ],
      266: {
        "PSA": {
          1000: 96,
@@ -575,7 +588,10 @@ Table of Contents
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": [
+       "application/vnd.evidence",
+       "NzQ3MjY5NzM2NTYzNzQK"
+     ],
      "submods": {
        "PSA": {
          "ear_status": "contraindicated",
@@ -606,7 +622,10 @@ Table of Contents
        0: "https://veraison-project.org",
        1: "vts 0.0.1"
      },
-     1002: h'6C696665626F61746D616E',
+     1002: [
+       "application/vnd.evidence",
+       h'6C696665626F61746D616E'
+     ],
      266: {
        "PSA": {
          1000: 0,
@@ -661,7 +680,10 @@ Table of Contents
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": [
+       "application/vnd.evidence",
+       "NzQ3MjY5NzM2NTYzNzQK"
+     ],
      "submods": {
        "PSA_IOT": {
          "ear_status": "contraindicated",
@@ -722,7 +744,10 @@ Table of Contents
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
      },
-     "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear_raw_evidence": [
+       "application/vnd.evidence",
+       "NzQ3MjY5NzM2NTYzNzQK"
+     ],
      "submods": {
        "PARSEC_TPM": {
          "ear_status": "affirming",
@@ -750,7 +775,10 @@ Table of Contents
        0: "https://veraison-project.org",
        1: "vts 0.0.1"
      },
-     1002: h'6C696665626F61746D616E',
+     1002: [
+       "application/vnd.evidence",
+       h'6C696665626F61746D616E'
+     ],
      266: {
        "PSA_IOT": {
          1000: 0,
@@ -959,13 +987,13 @@ Table of Contents
 
    *  Claim Name: ear_raw_evidence
 
-   *  Claim Description: EAR Raw Evidence
+   *  Claim Description: EAR Raw Evidence as CMW
 
    *  JWT Claim Name: ear_raw_evidence
 
    *  Claim Key: 1002 (suggested)
 
-   *  Claim Value Type(s): bytes
+   *  Claim Value Type(s): array
 
    *  Change Controller: IESG
 
@@ -1017,6 +1045,13 @@ Table of Contents
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
               10, 18 May 2026, <https://datatracker.ietf.org/doc/html/
               draft-ietf-rats-ar4si-10>.
+
+   [I-D.ietf-rats-msg-wrap]
+              Birkholz, H., Smith, N., Fossati, T., Tschofenig, H., and
+              D. Glaze, "RATS Conceptual Messages Wrapper (CMW)", Work
+              in Progress, Internet-Draft, draft-ietf-rats-msg-wrap-23,
+              11 December 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-rats-msg-wrap-23>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and

@@ -1407,6 +1407,7 @@ appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶<
 <pre>
 ;# import rfc9711 as eat
 ;# import ar4si as ar4si
+;# import cmw as cmw
 
 EAR = {
   eat.profile-label =&gt; "tag:ietf.org,2026:rats/ear#04"
@@ -1414,11 +1415,13 @@ EAR = {
   eat.iat-claim-label =&gt; ~eat.time-int
   ? eat.exp-claim-label =&gt; ~eat.time-int
   verifier-id-label =&gt; ar4si.verifier-id
-  ? raw-evidence-label =&gt; eat.binary-data
+  ? raw-evidence-label =&gt; cmw-record
   eat.submods-label =&gt; { + text =&gt; EAR-appraisal }
   ? eat.nonce-label =&gt; eat.nonce-type
   * $$ear-extension
 }
+
+cmw-record = eat.JC&lt;cmw.json-record, cmw.cbor-record&gt;
 
 ; EAR-specific claims
 raw-evidence-label = eat.JC&lt;"ear_raw_evidence", 1002&gt;
@@ -1475,7 +1478,7 @@ See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-1
 <code>ear_raw_evidence</code> (optional)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.12">
           <p id="section-3-5.12.1">The unabridged evidence submitted for appraisal, including any signed
-container/envelope.
+container/envelope, wrapped in a Record CMW (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-msg-wrap-23#section-3.1" class="relref">Section 3.1</a> of [<a href="#I-D.ietf-rats-msg-wrap" class="cite xref">I-D.ietf-rats-msg-wrap</a>]</span>).
 This field may be consumed by other Verifiers in multi-stage verification
 scenarios or by auditors.
 There are privacy considerations associated with this claim.  See
@@ -1655,7 +1658,10 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "PSA": {
       "ear_status": "contraindicated",
@@ -1725,7 +1731,10 @@ to complete the partial appraisal.<a href="#section-3.2.1-5" class="pilcrow">¶<
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQKNzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "CCA Platform": {
       "ear_status": "affirming",
@@ -1781,7 +1790,10 @@ more compact CBOR serialization of the EAR claims-set.<a href="#section-3.3.1-1"
     0: "https://veraison-project.org",
     1: "vts 0.0.1"
   },
-  1002: h'6C696665626F61746D616E',
+  1002: [
+    "application/vnd.evidence",
+    h'6C696665626F61746D616E'
+  ],
   266: {
     "PSA": {
       1000: 96,
@@ -1924,7 +1936,10 @@ ear.teep-claims-label = eat.JC&lt;"ear_teep_claims", 65000&gt;
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "PSA": {
       "ear_status": "contraindicated",
@@ -1963,7 +1978,10 @@ ear.teep-claims-label = eat.JC&lt;"ear_teep_claims", 65000&gt;
     0: "https://veraison-project.org",
     1: "vts 0.0.1"
   },
-  1002: h'6C696665626F61746D616E',
+  1002: [
+    "application/vnd.evidence",
+    h'6C696665626F61746D616E'
+  ],
   266: {
     "PSA": {
       1000: 0,
@@ -2040,7 +2058,10 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "PSA_IOT": {
       "ear_status": "contraindicated",
@@ -2104,7 +2125,10 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
   },
-  "ear_raw_evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear_raw_evidence": [
+    "application/vnd.evidence",
+    "NzQ3MjY5NzM2NTYzNzQK"
+  ],
   "submods": {
     "PARSEC_TPM": {
       "ear_status": "affirming",
@@ -2140,7 +2164,10 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
     0: "https://veraison-project.org",
     1: "vts 0.0.1"
   },
-  1002: h'6C696665626F61746D616E',
+  1002: [
+    "application/vnd.evidence",
+    h'6C696665626F61746D616E'
+  ],
   266: {
     "PSA_IOT": {
       1000: 0,
@@ -2430,7 +2457,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.3-1.1.1">Claim Name: ear_raw_evidence<a href="#section-9.1.3-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.2">
-              <p id="section-9.1.3-1.2.1">Claim Description: EAR Raw Evidence<a href="#section-9.1.3-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.3-1.2.1">Claim Description: EAR Raw Evidence as CMW<a href="#section-9.1.3-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.3">
               <p id="section-9.1.3-1.3.1">JWT Claim Name: ear_raw_evidence<a href="#section-9.1.3-1.3.1" class="pilcrow">¶</a></p>
@@ -2439,7 +2466,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.3-1.4.1">Claim Key: 1002 (suggested)<a href="#section-9.1.3-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.5">
-              <p id="section-9.1.3-1.5.1">Claim Value Type(s): bytes<a href="#section-9.1.3-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.3-1.5.1">Claim Value Type(s): array<a href="#section-9.1.3-1.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.6">
               <p id="section-9.1.3-1.6.1">Change Controller: IESG<a href="#section-9.1.3-1.6.1" class="pilcrow">¶</a></p>
@@ -2536,6 +2563,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <dt id="I-D.ietf-rats-ar4si">[I-D.ietf-rats-ar4si]</dt>
         <dd>
 <span class="refAuthor">Voit, E.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Hardjono, T.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">V. Scarlata</span>, <span class="refTitle">"Attestation Results for Secure Interactions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-ar4si-10</span>, <time datetime="2026-05-18" class="refDate">18 May 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-10">https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-10</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-rats-msg-wrap">[I-D.ietf-rats-msg-wrap]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Smith, N.</span>, <span class="refAuthor">Fossati, T.</span>, <span class="refAuthor">Tschofenig, H.</span>, and <span class="refAuthor">D. Glaze</span>, <span class="refTitle">"RATS Conceptual Messages Wrapper (CMW)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-msg-wrap-23</span>, <time datetime="2025-12-11" class="refDate">11 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-msg-wrap-23">https://datatracker.ietf.org/doc/html/draft-ietf-rats-msg-wrap-23</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-teep-protocol">[I-D.ietf-teep-protocol]</dt>
         <dd>
