@@ -178,7 +178,7 @@ Table of Contents
    ;# import ar4si as ar4si
 
    EAR = {
-     eat.profile-label => "tag:ietf.org,2026:rats/ear#03"
+     eat.profile-label => "tag:ietf.org,2026:rats/ear#04"
      ? status-label => ar4si.trustworthiness-tier
      eat.iat-claim-label => ~eat.time-int
      ? eat.exp-claim-label => ~eat.time-int
@@ -200,9 +200,9 @@ Table of Contents
    eat_profile (mandatory)  The EAT profile (Section 6 of [RFC9711])
       associated with the EAR claims-set and encodings defined by this
       document.  It MUST be the following tag URI ([RFC4151])
-      tag:ietf.org,2026:rats/ear#03.
+      tag:ietf.org,2026:rats/ear#04.
 
-   ear.status (optional)  The overall appraisal status for the
+   ear_status (optional)  The overall appraisal status for the
       (composite) attester represented as one of the four
       trustworthiness tiers (Section 3.2 of [I-D.ietf-rats-ar4si]).  The
       value of this claim MUST be set to a tier of no higher trust than
@@ -265,12 +265,16 @@ Table of Contents
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector
      ? appraisal-policy-ids-label => [ + text ]
      ? eat.nonce-label => eat.nonce-type
+     ? attester-claims-label => claims-map-type
+     ? verifier-claims-label => claims-map-type
      * $$ear-appraisal-extension
    }
 
    status-label = eat.JC<"ear_status", 1000>
    trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", 1001>
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
+   attester-claims-label = eat.JC<"ear_attester_claims", 1005>
+   verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
 
               Figure 2: EAR Appraisal Claims (CDDL Definition)
 
@@ -319,6 +323,15 @@ Table of Contents
       nonce in the supplied evidence matches, without having to parse
       the evidence format.  See also Section 4.1 of [RFC9711].
 
+   ear_attester_claims (optional)
+      A map containing claims with Attester authority, i.e., claims
+      extracted from the appraised Evidence.
+
+   ear_verifier_claims (optional)
+      A map containing claims with Verifier authority, i.e., claims
+      added by the Verifier during appraisal and derived from evaluating
+      the Appraisal Policy for Evidence.
+
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  An EAR appraisal
       extension MUST be a map.  See Section 4 for further details.
@@ -338,7 +351,7 @@ Table of Contents
    ambiguity.
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#04",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -393,7 +406,7 @@ Table of Contents
    (typically, the relying party) to complete the partial appraisal.
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#04",
      "iat": 1666529300,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -433,7 +446,7 @@ Table of Contents
    more compact CBOR serialization of the EAR claims-set.
 
    {
-     265: "tag:ietf.org,2026:rats/ear#03",
+     265: "tag:ietf.org,2026:rats/ear#04",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -556,7 +569,7 @@ Table of Contents
 4.4.1.  JSON Serialization Example
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#04",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -587,7 +600,7 @@ Table of Contents
 4.4.2.  CBOR Serialization Example
 
    {
-     265: "tag:ietf.org,2026:rats/ear#03",
+     265: "tag:ietf.org,2026:rats/ear#04",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -617,17 +630,8 @@ Table of Contents
 
 4.5.  Project Veraison Extensions
 
-   The Project Veraison verifier defines three private, application-
-   specific extensions:
-
-   ear_veraison_annotated_evidence
-      JSON representation of the evidence claims-set, including any
-      annotations provided by the Project Veraison verifier.  There are
-      privacy considerations associated with this claim.  See Section 8.
-
-   ear_veraison_policy_claims
-      any extra claims added by the policy engine in the Project
-      Veraison verifier.
+   The Project Veraison verifier defines a private, application-specific
+   extension:
 
    ear_veraison_key_attestation
       contains the public key part of a successfully verified attested
@@ -637,22 +641,6 @@ Table of Contents
    ;# import rfc9711 as eat
 
    $$ear-appraisal-extension //= (
-     ear.veraison.annotated-evidence-label => ear-veraison-annotated-evidence
-   )
-
-   ear-veraison-annotated-evidence = {
-     + text => any
-   }
-
-   $$ear-appraisal-extension //= (
-     ear.veraison.policy-claims-label => ear-veraison-policy-claims
-   )
-
-   ear-veraison-policy-claims = {
-     + text => any
-   }
-
-   $$ear-appraisal-extension //= (
      ear.veraison.key-attestation-label => ear-veraison-key-attestation
    )
 
@@ -660,16 +648,14 @@ Table of Contents
      "akpub" => eat.binary-data
    }
 
-   ear.veraison.annotated-evidence-label = eat.JC<"ear_veraison_annotated_evidence", -70000>
-   ear.veraison.policy-claims-label = eat.JC<"ear_veraison_policy_claims", -70001>
    ear.veraison.key-attestation-label = eat.JC<"ear_veraison_key_attestation", -70002>
 
-          Figure 7: Project Veraison Extensions (CDDL Definition)
+           Figure 7: Project Veraison Extension (CDDL Definition)
 
 4.5.1.  JSON Serialization Examples
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#04",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -686,7 +672,7 @@ Table of Contents
          },
          "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear_veraison_annotated_evidence": {
+         "ear_attester_claims": {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
            "psa-security-lifecycle": 12288,
@@ -712,7 +698,7 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         "ear_veraison_policy_claims": {
+         "ear_verifier_claims": {
            "psa-certified": {
              "certificate-number": "1234567890123-12345",
              "date-of-issue": "23/06/2022",
@@ -730,7 +716,7 @@ Table of Contents
    }
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#03",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#04",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -758,7 +744,7 @@ Table of Contents
 4.5.2.  CBOR Serialization Example
 
    {
-     265: "tag:ietf.org,2026:rats/ear#03",
+     265: "tag:ietf.org,2026:rats/ear#04",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -775,7 +761,7 @@ Table of Contents
            4: 2
          },
          1003: [ "https://veraison.example/policy/1/60a0068d" ],
-         -70000: {
+         1005: {
            "eat-profile": "http://arm.com/psa/2.0.0",
            "psa-client-id": 1,
            "psa-security-lifecycle": 12288,
@@ -801,7 +787,7 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         -70001: {
+         1006: {
            "psa-certified": {
              "certificate-number": "1234567890123-12345",
              "date-of-issue": "23/06/2022",
@@ -825,11 +811,11 @@ Table of Contents
 
    For example, a JWT serialization would use:
 
-   application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+   application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 
    A CWT serialization would instead use:
 
-   application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#03"
+   application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
 
 6.  Implementation Status
 
