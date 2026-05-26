@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 12 September 2026                                         Cisco
+Expires: 27 November 2026                                          Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                           11 March 2026
+                                                             26 May 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 September 2026.
+   This Internet-Draft will expire on 27 November 2026.
 
 Copyright Notice
 
@@ -1029,9 +1029,8 @@ Table of Contents
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              09, 15 August 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              ar4si-09>.
+              10, 18 May 2026, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-rats-ar4si-10>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
@@ -1242,7 +1241,8 @@ D.3.  draft-fv-rats-ear-02
 
 Acknowledgments
 
-   Many thanks to Dave Thaler, Greg Kostal, Simon Frost, Yogesh
+   Many thanks to Dave Thaler, Dhawal Kumar, Ding Ma, Greg Kostal, Jerry
+   Yu, Raghuram Yeluri, Simon Frost, Tobin Feldman-Fitzthum, Yogesh
    Deshpande for helpful comments and discussions that have shaped this
    document.
 
