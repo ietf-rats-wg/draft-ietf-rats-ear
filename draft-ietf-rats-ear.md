@@ -606,6 +606,26 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
 
+### Attester Claims
+
+* Claim Name: ear_attester_claims
+* Claim Description: Attester Claims
+* JWT Claim Name: ear_attester_claims
+* Claim Key: 1005 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
+### Verifier Claims
+
+* Claim Name: ear_verifier_claims
+* Claim Description: Verifier Claims
+* JWT Claim Name: ear_verifier_claims
+* Claim Key: 1006 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
 ### Device Topology
 
 * Claim Name: ear_device_topology
