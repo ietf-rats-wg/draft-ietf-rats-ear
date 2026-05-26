@@ -727,26 +727,8 @@ F9BNTlWWndMWGd3b1p6TjBXeHVCUGpwYVdpV3NmQ1EifX19fQ.3Ym-f1LEgamxePUM7h\
 
 <cref>Note to RFC Editor: please remove before publication.</cref>
 
-The list of currently open issues for this documents can be found at
+The list of currently open issues for this document can be found at
 [](https://github.com/thomas-fossati/draft-ear/issues).
-
-# Document History
-
-<cref>Note to RFC Editor: please remove before publication.</cref>
-
-## draft-fv-rats-ear-00
-
-Initial release.
-
-## draft-fv-rats-ear-01
-
-* privacy considerations
-* OPA policy example
-* add rust-ear crate to the implementation status section
-
-## draft-fv-rats-ear-02
-
-* align JWT and CWT representations of eat_nonce
 
 # Acknowledgments
 {:numbered="false"}
