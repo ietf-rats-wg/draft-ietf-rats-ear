@@ -21,8 +21,8 @@ venue:
   type: "Working Group"
   mail: "rats@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/rats/"
-  github: "thomas-fossati/draft-ear"
-  latest: "https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html"
+  github: "ietf-rats-wg/draft-ietf-rats-ear"
+  latest: "https://ietf-rats-wg.github.io/draft-ietf-rats-ear/draft-ietf-rats-ear.html"
 pi: [toc, sortrefs, symrefs]
 
 author:
