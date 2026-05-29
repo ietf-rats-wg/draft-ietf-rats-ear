@@ -250,7 +250,7 @@ See also {{Section 4.1 of -eat}}.
 
 `ear_verified_attester_key` (optional)
 : A text string containing the public key for which the appraised Attester has provided proof of possession by signing a challenge provided by the Verifier/RP.
-The key can be either a SubjectPublicKeyInfo structure (see {{Section -4.1.2.7 of -pkix}}) with the textual encoding defined in {{Section 13 of -pkix-text}}, or a public-key certificate with the textual encoding defined in {{Section 5.1 of -pkix-text}}.
+The key can be either a SubjectPublicKeyInfo structure (see {{Section 4.1.2.7 of -pkix}}) with the textual encoding defined in {{Section 13 of -pkix-text}}, or a public-key certificate with the textual encoding defined in {{Section 5.1 of -pkix-text}}.
 
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
