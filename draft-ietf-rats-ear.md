@@ -272,7 +272,7 @@ case there is only one attester, the labelling can be freely chosen because
 there is no ambiguity.
 
 ~~~cbor-diag
-{::include cddl/examples/ear-json-1.diag}
+{::include-fold cddl/examples/ear-json-1.diag}
 ~~~
 {: #fig-ex-json-1 title="JSON claims-set: contraindicated appraisal" }
 
