@@ -1655,6 +1655,8 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <figure id="figure-3">
             <div class="lang-cbor-diag sourcecode" id="section-3.2.1-2.1">
 <pre>
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
 {
   "eat_profile": "tag:ietf.org,2026:rats/ear#04",
   "iat": 1666529184,
@@ -1676,7 +1678,10 @@ there is no ambiguity.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
       },
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
-      "ear_verified_attester_key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEn1LlwLN/KBYQRVH6HfIMTzfEqJOVztLe\nkLchp2hi78cCaMY81FBlYs8J9l7krc+M4aBeCGYFjba+hiXttJWPL7ydlE+5UG4U\nNkn3Eos8EiZByi9DVsyfy9eejh+8AXgp\n-----END PUBLIC KEY-----"
+      "ear_verified_attester_key": "-----BEGIN PUBLIC KEY-----\\
+nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEn1LlwLN/KBYQRVH6HfIMTzfEqJOVztLe\\
+nkLchp2hi78cCaMY81FBlYs8J9l7krc+M4aBeCGYFjba+hiXttJWPL7ydlE+5UG4U\\
+         nNkn3Eos8EiZByi9DVsyfy9eejh+8AXgp\n-----END PUBLIC KEY-----"
     }
   }
 }
