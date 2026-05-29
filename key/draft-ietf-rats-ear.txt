@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 28 November 2026                                          Cisco
+Expires: 30 November 2026                                          Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                             27 May 2026
+                                                             29 May 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -348,7 +348,7 @@ Table of Contents
       A text string containing the public key for which the appraised
       Attester has provided proof of possession by signing a challenge
       provided by the Verifier/RP.  The key can be either a
-      SubjectPublicKeyInfo structure (see Part -4.1.2.7 of [RFC5280])
+      SubjectPublicKeyInfo structure (see Section 4.1.2.7 of [RFC5280])
       with the textual encoding defined in Section 13 of [RFC7468], or a
       public-key certificate with the textual encoding defined in
       Section 5.1 of [RFC7468].
