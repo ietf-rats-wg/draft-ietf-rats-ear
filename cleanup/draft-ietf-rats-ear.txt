@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 29 November 2026                                          Cisco
+Expires: 19 December 2026                                          Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                             28 May 2026
+                                                            17 June 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 November 2026.
+   This Internet-Draft will expire on 19 December 2026.
 
 Copyright Notice
 
@@ -201,71 +201,76 @@ Table of Contents
 
    Where:
 
-   eat_profile (mandatory)  The EAT profile (Section 6 of [RFC9711])
-      associated with the EAR claims-set and encodings defined by this
-      document.  It MUST be the following tag URI ([RFC4151])
-      tag:ietf.org,2026:rats/ear#05.
+   eat_profile (mandatory)
+      The EAT profile (Section 6 of [RFC9711]) associated with the EAR
+      claims-set and encodings defined by this document.  It MUST be the
+      following tag URI ([RFC4151]) tag:ietf.org,2026:rats/ear#05.
 
-   ear_status (optional)  The overall appraisal status for the
-      (composite) attester represented as one of the four
-      trustworthiness tiers (Section 3.2 of [I-D.ietf-rats-ar4si]).  The
-      value of this claim MUST be set to a tier of no higher trust than
-      the tier corresponding to the worst status claim across all EAR
-      appraisal submods.  This claim exists to help Relying Parties
-      easily determine the overall status of the appraisal without
-      having to inspect each submod.
+   ear_status (optional)
+      The overall appraisal status for the (composite) attester
+      represented as one of the four trustworthiness tiers (Section 3.2
+      of [I-D.ietf-rats-ar4si]).  The value of this claim MUST be set to
+      a tier of no higher trust than the tier corresponding to the worst
+      status claim across all EAR appraisal submods.  This claim exists
+      to help Relying Parties easily determine the overall status of the
+      appraisal without having to inspect each submod.
 
-   iat (mandatory)  "Issued At" claim -- the time at which the EAR is
-      issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
-      [RFC9711] for the EAT-specific encoding restrictions (i.e.,
-      disallowing the floating point representation).
+   iat (mandatory)
+      "Issued At" claim -- the time at which the EAR is issued.  See
+      Section 4.1.6 of [RFC7519] and Section 4.3.1 of [RFC9711] for the
+      EAT-specific encoding restrictions (i.e., disallowing the floating
+      point representation).
 
-   exp (optional)  "Expiration Time" claim -- the time at which the EAR
-      expires and MUST NOT be accepted for processing.  See
-      Section 4.1.4 of [RFC7519].  Similar to iat, an EAR token MUST NOT
-      contain an exp claim in floating-point format.  Any recipient of a
-      token with a floating-point format exp claim MUST consider it an
-      error.
+   exp (optional)
+      "Expiration Time" claim -- the time at which the EAR expires and
+      MUST NOT be accepted for processing.  See Section 4.1.4 of
+      [RFC7519].  Similar to iat, an EAR token MUST NOT contain an exp
+      claim in floating-point format.  Any recipient of a token with a
+      floating-point format exp claim MUST consider it an error.
 
-   ear_verifier_id (mandatory)  Identifying information about the
-      appraising verifier.  See Section 3.3 of [I-D.ietf-rats-ar4si] for
-      further details on its structure and serialization.
+   ear_verifier_id (mandatory)
+      Identifying information about the appraising verifier.  See
+      Section 3.3 of [I-D.ietf-rats-ar4si] for further details on its
+      structure and serialization.
 
-   ear_raw_evidence (optional)  The unabridged evidence submitted for
-      appraisal, including any signed container/envelope, wrapped in a
-      Record CMW (see Section 3.1 of [I-D.ietf-rats-msg-wrap]).  This
-      field may be consumed by other Verifiers in multi-stage
-      verification scenarios or by auditors.  There are privacy
-      considerations associated with this claim.  See Section 8.
+   ear_raw_evidence (optional)
+      The unabridged evidence submitted for appraisal, including any
+      signed container/envelope, wrapped in a Record CMW (see
+      Section 3.1 of [I-D.ietf-rats-msg-wrap]).  This field may be
+      consumed by other Verifiers in multi-stage verification scenarios
+      or by auditors.  There are privacy considerations associated with
+      this claim.  See Section 8.
 
-   submods (mandatory)  A submodule map (Section 4.2.18 of [RFC9711])
-      holding one EAR-appraisal for each separately appraised attester.
-      The map MUST contain at least one entry.  For each appraised
-      attester the verifier chooses a unique label.  For example, when
-      evidence is in EAT format, the label could be constructed from the
-      associated EAT profile.  A verifier SHOULD publicly and
-      permanently document its labelling scheme for each supported
-      evidence type, unless EAR payloads are produced and consumed
-      entirely within a private deployment.  See Section 3.1 for the
-      details about the contents of an EAR-appraisal.
+   submods (mandatory)
+      A submodule map (Section 4.2.18 of [RFC9711]) holding one EAR-
+      appraisal for each separately appraised attester.  The map MUST
+      contain at least one entry.  For each appraised attester the
+      verifier chooses a unique label.  For example, when evidence is in
+      EAT format, the label could be constructed from the associated EAT
+      profile.  A verifier SHOULD publicly and permanently document its
+      labelling scheme for each supported evidence type, unless EAR
+      payloads are produced and consumed entirely within a private
+      deployment.  See Section 3.1 for the details about the contents of
+      an EAR-appraisal.
 
-   eat_nonce (optional)  A user supplied nonce that is echoed by the
-      verifier to provide freshness.  The nonce is a sequence of bytes
-      between 8 and 64 bytes long.  When serialized as JWT, the nonce
-      MUST be base64 encoded, resulting in a string between 12 and 88
-      bytes long.  See Section 4.1 of [RFC9711].
+   eat_nonce (optional)
+      A user supplied nonce that is echoed by the verifier to provide
+      freshness.  The nonce is a sequence of bytes between 8 and 64
+      bytes long.  When serialized as JWT, the nonce MUST be base64
+      encoded, resulting in a string between 12 and 88 bytes long.  See
+      Section 4.1 of [RFC9711].
 
-   ear_device_topology (optional)  A map that describes the device
-      attester graph using adjacency lists.  Attesters are represented
-      by their corresponding labels in the submods claim.  Each map key
-      represents an attester in the graph, and the associated map value
-      is an array of labels representing the list of sub-attesters for
-      that attester.  If the claim is present, the map MUST contain at
-      least one element.
+   ear_device_topology (optional)
+      A map that describes the device attester graph using adjacency
+      lists.  Attesters are represented by their corresponding labels in
+      the submods claim.  Each map key represents an attester in the
+      graph, and the associated map value is an array of labels
+      representing the list of sub-attesters for that attester.  If the
+      claim is present, the map MUST contain at least one element.
 
-   $$ear-extension (optional)  Any registered or unregistered extension.
-      An EAR extension MUST be a map.  See Section 4 for further
-      details.
+   $$ear-extension (optional)
+      Any registered or unregistered extension.  An EAR extension MUST
+      be a map.  See Section 4 for further details.
 
 3.1.  EAR Appraisal Claims
 
