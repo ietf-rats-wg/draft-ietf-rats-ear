@@ -134,11 +134,12 @@ The EAR claims-set is as follows:
 
 Where:
 
+{:vspace}
 `eat_profile` (mandatory)
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
-`tag:ietf.org,2026:rats/ear#04`.
+`tag:ietf.org,2026:rats/ear#05`.
 
 `ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the four trustworthiness tiers ({{Section 3.2 of -ar4si}}).
@@ -443,13 +444,13 @@ Media types for EAR are automatically derived from the base EAT media type
 For example, a JWT serialization would use:
 
 ~~~
-application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
+application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
 ~~~
 
 A CWT serialization would instead use:
 
 ~~~
-application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#04"
+application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
 ~~~
 
 # Implementation Status
@@ -479,8 +480,8 @@ fit".
 The organization responsible for this implementation is Project Veraison, a
 Linux Foundation project hosted at the Confidential Computing Consortium.
 
-The organization currently provides two separate implementations: one in Golang
-another in C17.
+The organization currently provides three separate implementations: one in
+Golang, one in Rust and another in C17.
 
 The developers can be contacted on the Zulip channel:
 [](https://veraison.zulipchat.com/#narrow/stream/357929-EAR/).
@@ -519,7 +520,8 @@ and consume attestation results.
 
 # Security Considerations
 
-TODO Security
+EAR is a profile of the EAT specification {{-eat}}, it also reuses the CWT specification {{-cwt}}.
+The security considerations of these specifications therefore apply here too.
 
 # Privacy Considerations {#sec-priv-cons}
 
@@ -534,9 +536,9 @@ Specifically:
 * It SHOULD be possible to disable inclusion of the optional `ear_raw_evidence`
   claim
 * It SHOULD be possible to disable inclusion of the optional
-  `ear_veraison_annotated_evidence` claim
+  `ear_attester_claims` and `ear_verifier_claims` claims
 * It SHOULD be possible to allow redaction, anonymisation or removal of
-  specific claims from the `ear_veraison_annotated_evidence` object
+  specific claims from the `ear_attester_claims` and `ear_verifier_claims` objects
 
 EAR is an EAT, therefore the privacy considerations in {{Section 8 of -eat}}
 apply.
