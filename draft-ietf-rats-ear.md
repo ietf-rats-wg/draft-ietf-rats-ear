@@ -134,6 +134,7 @@ The EAR claims-set is as follows:
 
 Where:
 
+{:vspace}
 `eat_profile` (mandatory)
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
