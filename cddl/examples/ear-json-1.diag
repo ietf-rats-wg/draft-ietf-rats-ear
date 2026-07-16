@@ -9,6 +9,10 @@
     "application/vnd.evidence",
     "NzQ3MjY5NzM2NTYzNzQK"
   ],
+  "ear_input_digest": [
+    "sha-256",
+    "TInrSlzsaz9jfL7abgvJ2roo2P93Jozst3x3OU_afNg"
+  ],
   "submods": {
     "PSA": {
       "ear_status": "contraindicated",
