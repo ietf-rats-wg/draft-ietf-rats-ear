@@ -58,7 +58,8 @@ normative:
   RFC9711: eat
   I-D.ietf-teep-protocol: teep
   RFC9782: eat-media-type
-  I-D.ietf-rats-msg-wrap: cmw
+  RFC9999: cmw
+  I-D.ietf-rats-eat-measured-component: eat-mc
 
 informative:
   RFC9334: rats-arch
@@ -193,10 +194,47 @@ Attesters are represented by their corresponding labels in the `submods` claim.
 Each map key represents an attester in the graph, and the associated map value is an array of labels representing the list of sub-attesters for that attester.
 If the claim is present, the map MUST contain at least one element.
 
+`ear_input_digest` (optional)
+: A cryptographic digest of the appraisal request input that produced this EAR, used to bind the EAR to the exact input the Verifier received.
+Its value is the `digest` type defined in {{Section 4.2 of -eat-mc}}.
+See {{sec-ear-input-digest}} for the details.
+
 `$$ear-extension` (optional)
 : Any registered or unregistered extension.
 An EAR extension MUST be a map.
 See {{sec-extensions}} for further details.
+
+## Input Digest {#sec-ear-input-digest}
+
+The `ear_input_digest` claim cryptographically binds an EAR to the exact appraisal request input received by the Verifier, providing a protection that `eat_nonce` alone does not provide.
+While `eat_nonce` establishes freshness and confirms that the Verifier processed the requester's nonce, it does not bind the remainder of the request.
+
+For example, an adversary positioned between the TLS terminator and the Verifier's trust boundary could substitute the evidence carried in the request while leaving the nonce intact.
+The Relying Party would then receive an EAR with a valid nonce, but for attacker-chosen evidence.
+`ear_input_digest` closes this attack by allowing the Relying Party to check that the digest matches the appraisal request input it originally sent (or caused to be sent), exposing any substitution.
+Other, similar, attacks that rely on tampering with the appraisal request input without affecting the nonce are also expected to be closed by the same mechanism.
+
+The digest is computed over the raw wire bytes of the complete appraisal request input:
+
+* The sender computes the digest over the encoded request bytes, after encoding and before transmission, and retains those exact bytes for later verification.
+* The Verifier computes the digest over the raw bytes as received on the wire, before any decoding or processing.
+
+Because neither side re-encodes the input before hashing, encoding format and field ordering are irrelevant: the sender and the Verifier are comparing the same bytes -- the ones that were sent on the wire.
+This also means `ear_input_digest` is transport-agnostic: it does not matter whether the bytes are carried in an HTTP body, a gRPC message, or any other framing, as long as the sender has access to, and retains, the exact bytes that the Verifier will hash.
+
+When using `ear_input_digest`, use of CMW ({{-cmw}}) as the appraisal request format is RECOMMENDED.
+CMW provides a well-defined encapsulation boundary that makes it straightforward for both parties to identify which bytes constitute the complete request input, and to apply the hash at the correct point in their respective pipelines.
+
+### Applicability {#sec-ear-input-digest-applicability}
+
+Deployments that produce or verify `ear_input_digest` MUST satisfy both of the following conditions:
+
+1. Encapsulation: the appraisal request input MUST be carried in a single, self-delimiting encapsulation; between the sender's encoding step and the Verifier's hashing step, this encapsulation MUST NOT be modified.
+2. Byte access: the sender MUST have access to, and retain, the literal octets of the encoded appraisal request input.
+
+If either condition does not hold, `ear_input_digest` SHOULD NOT be produced or verified.
+
+When both conditions hold, `ear_input_digest` provides strong end-to-end request binding, and Relying Parties SHOULD verify it.
 
 ## EAR Appraisal Claims {#sec-ear-appraisal}
 
@@ -521,6 +559,14 @@ and consume attestation results.
 
 TODO Security
 
+## Binding EAR to the Appraisal Request
+
+`eat_nonce` alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the evidence (or any other input) that the requester actually sent.
+An on-path attacker able to tamper with the appraisal request without disturbing the nonce -- for example, by substituting the evidence while leaving the nonce intact -- can therefore cause a Relying Party to accept an EAR that has a valid nonce but does not reflect the evidence the Relying Party asked to have appraised.
+
+The `ear_input_digest` claim (see {{sec-ear-input-digest}}), when applicable, mitigates this class of attack by binding the EAR to the exact wire bytes of the appraisal request the Verifier received.
+Implementers and deployers are strongly encouraged to read {{sec-ear-input-digest}} in full before deciding to produce or verify `ear_input_digest`, since an inappropriate deployment topology can silently negate its security benefit.
+
 # Privacy Considerations {#sec-priv-cons}
 
 EAR is designed to expose as little identifying information as possible about
@@ -635,6 +681,16 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear}} of {{&SELF}}
+
+### EAR Input Digest
+
+* Claim Name: ear_input_digest
+* Claim Description: Digest of the EAR Appraisal Request Input
+* JWT Claim Name: ear_input_digest
+* Claim Key: 1008 (suggested)
+* Claim Value Type(s): array
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-input-digest}} of {{&SELF}}
 
 ### EAR TEEP Claims
 

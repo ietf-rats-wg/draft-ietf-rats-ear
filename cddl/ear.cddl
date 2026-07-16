@@ -1,6 +1,7 @@
 ;# import rfc9711 as eat
 ;# import ar4si as ar4si
 ;# import cmw as cmw
+;# import eat-measured-component as mc
 
 EAR = {
   eat.profile-label => "tag:ietf.org,2026:rats/ear#04"
@@ -12,6 +13,7 @@ EAR = {
   eat.submods-label => { + text => EAR-appraisal }
   ? eat.nonce-label => eat.nonce-type
   ? topology-label => topology-type
+  ? input-digest-label => mc.digest
   * $$ear-extension
 }
 
@@ -21,3 +23,4 @@ cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
 raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
 verifier-id-label = eat.JC<"ear_verifier_id", 1004>
 topology-label = eat.JC<"ear_device_topology", 1007>
+input-digest-label = eat.JC<"ear_input_digest", 1008>
