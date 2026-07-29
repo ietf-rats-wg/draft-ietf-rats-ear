@@ -195,7 +195,6 @@ If the claim is present, the map MUST contain at least one element.
 
 `$$ear-extension` (optional)
 : Any registered or unregistered extension.
-An EAR extension MUST be a map.
 See {{sec-extensions}} for further details.
 
 ## EAR Appraisal Claims {#sec-ear-appraisal}
@@ -249,7 +248,6 @@ See also {{Section 4.1 of -eat}}.
 
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
-An EAR appraisal extension MUST be a map.
 See {{sec-extensions}} for further details.
 
 ## JSON Serialisation
@@ -374,6 +372,16 @@ a more stable meaning over time. In such cases, it is RECOMMENDED that new
 equivalent claims are created in the "public space" and are registered as
 described in {{sec-registered-claims}}. The original "private space" claims
 SHOULD then be deprecated by the application.
+
+## Grouping Claims Under a Single Top-Level Key
+
+EAR places no constraint on the type of value carried by an extension claim.
+An extension may therefore use any CBOR or JSON value type that is appropriate for the information it conveys.
+
+However, when an extension introduces more than one logically related claim and those claims are intended to be registered in the CWT or JWT claim registries, it is RECOMMENDED to group them as members of a single map value carried under one top-level registered key.
+This minimises consumption of the public codepoint namespace, which is a finite shared resource.
+
+This recommendation does not apply to claims minted from the private space (integer values less than -65536 for CWT, and Private Claim Names as defined in {{Section 4.3 of -jwt}} for JWT), where namespace pressure is not a concern.
 
 ## TEEP Extension {#sec-extensions-teep}
 
