@@ -331,7 +331,13 @@ The rules that govern extensibility of EAR are those defined in {{-cwt}} and
 An extension MUST NOT change the semantics of the `EAR` and `EAR-appraisal`
 claims-sets.
 
-A receiver MUST ignore any unknown claim.
+Whether or not an extension requires a new EAR profile identifier depends on whether it must be understood by all consumers of that EAR token.
+
+If an extension is optional, meaning a receiver that does not understand it can safely ignore it while still processing the rest of the EAR correctly, then the existing EAR profile identifier MAY be retained.
+(This is enabled by the requirement to ignore unknown claims stated in {{Section 4 of -eat}}.)
+
+However, if an extension introduces claims that MUST be understood and acted upon by all consumers, i.e., a receiver that does not recognise the extension cannot safely process the EAR, then a new EAT profile identifier MUST be used to signal this requirement.
+Such a profile identifier would typically be defined in a specification document alongside the mandatory extension claims.
 
 ## Unregistered claims
 
