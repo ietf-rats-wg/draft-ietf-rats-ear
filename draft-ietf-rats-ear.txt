@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 27 November 2026                                          Cisco
+Expires: 4 March 2027                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                             26 May 2026
+                                                          31 August 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 November 2026.
+   This Internet-Draft will expire on 4 March 2027.
 
 Copyright Notice
 
@@ -97,12 +97,13 @@ Table of Contents
      4.1.  Unregistered claims
      4.2.  Registered claims
      4.3.  Choosing between registered and unregistered claims
-     4.4.  TEEP Extension
-       4.4.1.  JSON Serialization Example
-       4.4.2.  CBOR Serialization Example
-     4.5.  Project Veraison Extensions
-       4.5.1.  JSON Serialization Examples
+     4.4.  Grouping Claims Under a Single Top-Level Key
+     4.5.  TEEP Extension
+       4.5.1.  JSON Serialization Example
        4.5.2.  CBOR Serialization Example
+     4.6.  Project Veraison Extensions
+       4.6.1.  JSON Serialization Examples
+       4.6.2.  CBOR Serialization Example
    5.  Media Types
    6.  Implementation Status
      6.1.  Project Veraison
@@ -118,17 +119,16 @@ Table of Contents
        9.1.3.  EAR Raw Evidence
        9.1.4.  EAR Appraisal Policy Identifier
        9.1.5.  Verifier Software Identifier
-       9.1.6.  EAR TEEP Claims
+       9.1.6.  Attester Claims
+       9.1.7.  Verifier Claims
+       9.1.8.  Device Topology
+       9.1.9.  EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
-   Appendix A.  Common CDDL Types
+   Appendix A.  Collated CDDL
    Appendix B.  Open Policy Agent Example
    Appendix C.  Open Issues
-   Appendix D.  Document History
-     D.1.  draft-fv-rats-ear-00
-     D.2.  draft-fv-rats-ear-01
-     D.3.  draft-fv-rats-ear-02
    Acknowledgments
    Authors' Addresses
 
@@ -187,6 +187,7 @@ Table of Contents
      ? raw-evidence-label => cmw-record
      eat.submods-label => { + text => EAR-appraisal }
      ? eat.nonce-label => eat.nonce-type
+     ? topology-label => topology-type
      * $$ear-extension
    }
 
@@ -195,6 +196,7 @@ Table of Contents
    ; EAR-specific claims
    raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
    verifier-id-label = eat.JC<"ear_verifier_id", 1004>
+   topology-label = eat.JC<"ear_device_topology", 1007>
 
                       Figure 1: EAR (CDDL Definition)
 
@@ -254,9 +256,16 @@ Table of Contents
       MUST be base64 encoded, resulting in a string between 12 and 88
       bytes long.  See Section 4.1 of [RFC9711].
 
+   ear_device_topology (optional)  A map that describes the device
+      attester graph using adjacency lists.  Attesters are represented
+      by their corresponding labels in the submods claim.  Each map key
+      represents an attester in the graph, and the associated map value
+      is an array of labels representing the list of sub-attesters for
+      that attester.  If the claim is present, the map MUST contain at
+      least one element.
+
    $$ear-extension (optional)  Any registered or unregistered extension.
-      An EAR extension MUST be a map.  See Section 4 for further
-      details.
+      See Section 4 for further details.
 
 3.1.  EAR Appraisal Claims
 
@@ -337,8 +346,8 @@ Table of Contents
       the Appraisal Policy for Evidence.
 
    $$ear-appraisal-extension (optional)
-      Any registered or unregistered extension.  An EAR appraisal
-      extension MUST be a map.  See Section 4 for further details.
+      Any registered or unregistered extension.  See Section 4 for
+      further details.
 
 3.2.  JSON Serialisation
 
@@ -546,7 +555,25 @@ Table of Contents
    space" and are registered as described in Section 4.2.  The original
    "private space" claims SHOULD then be deprecated by the application.
 
-4.4.  TEEP Extension
+4.4.  Grouping Claims Under a Single Top-Level Key
+
+   EAR places no constraint on the type of value carried by an extension
+   claim.  An extension may therefore use any CBOR or JSON value type
+   that is appropriate for the information it conveys.
+
+   However, when an extension introduces more than one logically related
+   claim and those claims are intended to be registered in the CWT or
+   JWT claim registries, it is RECOMMENDED to group them as members of a
+   single map value carried under one top-level registered key.  This
+   minimises consumption of the public codepoint namespace, which is a
+   finite shared resource.
+
+   This recommendation does not apply to claims minted from the private
+   space (integer values less than -65536 for CWT, and Private Claim
+   Names as defined in Section 4.3 of [RFC7519] for JWT), where
+   namespace pressure is not a concern.
+
+4.5.  TEEP Extension
 
    The TEEP protocol [I-D.ietf-teep-protocol] specifies the required
    claims that an attestation result must carry for a TAM (Trusted
@@ -579,7 +606,7 @@ Table of Contents
 
                  Figure 6: TEEP Extension (CDDL Definition)
 
-4.4.1.  JSON Serialization Example
+4.5.1.  JSON Serialization Example
 
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#04",
@@ -613,7 +640,7 @@ Table of Contents
      }
    }
 
-4.4.2.  CBOR Serialization Example
+4.5.2.  CBOR Serialization Example
 
    {
      265: "tag:ietf.org,2026:rats/ear#04",
@@ -647,7 +674,7 @@ Table of Contents
      }
    }
 
-4.5.  Project Veraison Extensions
+4.6.  Project Veraison Extensions
 
    The Project Veraison verifier defines a private, application-specific
    extension:
@@ -671,7 +698,7 @@ Table of Contents
 
            Figure 7: Project Veraison Extension (CDDL Definition)
 
-4.5.1.  JSON Serialization Examples
+4.6.1.  JSON Serialization Examples
 
    {
      "eat_profile": "tag:ietf.org,2026:rats/ear#04",
@@ -766,7 +793,7 @@ Table of Contents
      }
    }
 
-4.5.2.  CBOR Serialization Example
+4.6.2.  CBOR Serialization Example
 
    {
      265: "tag:ietf.org,2026:rats/ear#04",
@@ -1031,7 +1058,55 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.6.  EAR TEEP Claims
+9.1.6.  Attester Claims
+
+   *  Claim Name: ear_attester_claims
+
+   *  Claim Description: Attester Claims
+
+   *  JWT Claim Name: ear_attester_claims
+
+   *  Claim Key: 1005 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.1 of RFCthis
+
+9.1.7.  Verifier Claims
+
+   *  Claim Name: ear_verifier_claims
+
+   *  Claim Description: Verifier Claims
+
+   *  JWT Claim Name: ear_verifier_claims
+
+   *  Claim Key: 1006 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.1 of RFCthis
+
+9.1.8.  Device Topology
+
+   *  Claim Name: ear_device_topology
+
+   *  Claim Description: Device Attesters Arrangement
+
+   *  JWT Claim Name: ear_device_topology
+
+   *  Claim Key: 1007 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 of RFCthis
+
+9.1.9.  EAR TEEP Claims
 
    TODO
 
@@ -1132,13 +1207,154 @@ Table of Contents
               Architecture", RFC 9334, DOI 10.17487/RFC9334, January
               2023, <https://www.rfc-editor.org/rfc/rfc9334>.
 
-Appendix A.  Common CDDL Types
+Appendix A.  Collated CDDL
 
-   non-empty
-      A CDDL generic that can be used to ensure the presence of at least
-      one item in an object with only optional fields.
+   =============== NOTE: '\' line wrapping per RFC 8792 ================
 
-   non-empty<M> = (M) .within ({ + any => any })
+   ;;; *** undefined: $$ear-extension
+   ;;; *** undefined: $$ear-appraisal-extension
+   EAR = {
+     eat.profile-label => "tag:ietf.org,2026:rats/ear#04",
+     ? status-label => ar4si.trustworthiness-tier,
+     eat.iat-claim-label => ~eat.time-int,
+     ? eat.exp-claim-label => ~eat.time-int,
+     verifier-id-label => ar4si.verifier-id,
+     ? raw-evidence-label => cmw-record,
+     eat.submods-label => {+ text => EAR-appraisal},
+     ? eat.nonce-label => eat.nonce-type,
+     ? topology-label => topology-type,
+     * $$ear-extension,
+   }
+   cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
+   raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
+   verifier-id-label = eat.JC<"ear_verifier_id", 1004>
+   topology-label = eat.JC<"ear_device_topology", 1007>
+   EAR-appraisal = {
+     ? eat.profile-label => eat.general-uri / eat.general-oid,
+     status-label => ar4si.trustworthiness-tier,
+     ? trustworthiness-vector-label => ar4si.trustworthiness-vector,
+     ? appraisal-policy-ids-label => [+ text],
+     ? eat.nonce-label => eat.nonce-type,
+     ? attester-claims-label => claims-map-type,
+     ? verifier-claims-label => claims-map-type,
+     * $$ear-appraisal-extension,
+   }
+   status-label = eat.JC<"ear_status", 1000>
+   trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", \
+                                                                   1001>
+   appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
+   attester-claims-label = eat.JC<"ear_attester_claims", 1005>
+   verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
+   claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
+   claims-map-type-json = {+ text => any}
+   claims-map-type-cbor = {+ (text / int) => any}
+   topology-type = {+ text => [+ text]}
+   eat.JC<J, C> = eat.JSON-ONLY<J> / eat.CBOR-ONLY<C>
+   eat.JSON-ONLY<J> = J .feature "json"
+   eat.CBOR-ONLY<C> = C .feature "cbor"
+   eat.profile-label = eat.JC<"eat_profile", 265>
+   eat.iat-claim-label = eat.JC<"iat", 6>
+   eat.time-int = #6.1(int)
+   eat.exp-claim-label = eat.JC<"exp", 4>
+   eat.submods-label = eat.JC<"submods", 266>
+   eat.nonce-label = eat.JC<"eat_nonce", 10>
+   eat.nonce-type = eat.JC<tstr .size (8 .. 88), bstr .size (8 .. 64)>
+   eat.general-uri = eat.JC<text, ~uri>
+   eat.general-oid = eat.JC<eat.json-oid, ~eat.oid>
+   eat.json-oid = tstr .regexp "([0-2])((\\.0)|(\\.[1-9][0-9]*))*"
+   eat.oid = #6.111(bstr)
+   ar4si.trustworthiness-tier /= ar4si.trustworthiness-tier-none-label \
+   / ar4si.trustworthiness-tier-affirming-label / ar4si.trustworthiness\
+   -tier-warning-label / ar4si.trustworthiness-tier-contraindicated-\
+                                                                   label
+   ar4si.verifier-id = {
+     ar4si.developer-label => text,
+     ar4si.build-label => text,
+   }
+   ar4si.trustworthiness-vector = ar4si.non-empty<{
+       ? ar4si.instance-identity-label => ar4si.trustworthiness-claim,
+       ? ar4si.configuration-label => ar4si.trustworthiness-claim,
+       ? ar4si.executables-label => ar4si.trustworthiness-claim,
+       ? ar4si.file-system-label => ar4si.trustworthiness-claim,
+       ? ar4si.hardware-label => ar4si.trustworthiness-claim,
+       ? ar4si.runtime-opaque-label => ar4si.trustworthiness-claim,
+       ? ar4si.storage-opaque-label => ar4si.trustworthiness-claim,
+       ? ar4si.sourced-data-label => ar4si.trustworthiness-claim,
+   }>
+   ar4si.non-empty<M> = M .within ({+ any => any})
+   ar4si.trustworthiness-tier-none-label = ar4si.JC<"none", 0>
+   ar4si.trustworthiness-tier-affirming-label = ar4si.JC<"affirming", 2>
+   ar4si.trustworthiness-tier-warning-label = ar4si.JC<"warning", 32>
+   ar4si.trustworthiness-tier-contraindicated-label = ar4si.JC<"\
+                                                   contraindicated", 96>
+   ar4si.developer-label = ar4si.JC<"developer", 0>
+   ar4si.build-label = ar4si.JC<"build", 1>
+   ar4si.instance-identity-label = ar4si.JC<"instance-identity", 0>
+   ar4si.trustworthiness-claim = -128 .. 127
+   ar4si.configuration-label = ar4si.JC<"configuration", 1>
+   ar4si.executables-label = ar4si.JC<"executables", 2>
+   ar4si.file-system-label = ar4si.JC<"file-system", 3>
+   ar4si.hardware-label = ar4si.JC<"hardware", 4>
+   ar4si.runtime-opaque-label = ar4si.JC<"runtime-opaque", 5>
+   ar4si.storage-opaque-label = ar4si.JC<"storage-opaque", 6>
+   ar4si.sourced-data-label = ar4si.JC<"sourced-data", 7>
+   ar4si.JC<J, C> = ar4si.JSON-ONLY<J> / ar4si.CBOR-ONLY<C>
+   ar4si.JSON-ONLY<J> = J .feature "json"
+   ar4si.CBOR-ONLY<C> = C .feature "cbor"
+   cmw.json-record = [
+     type: cmw.media-type,
+     value: cmw.base64url-string,
+     ? ind: uint .bits cmw.cm-type,
+   ]
+   cmw.cbor-record = [
+     type: cmw.coap-content-format-type / cmw.media-type,
+     value: bytes,
+     ? ind: uint .bits cmw.cm-type,
+   ]
+   cmw.media-type = text .abnf ("Content-Type" .cat cmw.Content-Type-\
+                                                                   ABNF)
+   cmw.base64url-string = text .regexp "[A-Za-z0-9_-]+"
+   cmw.cm-type = &(
+     reference-values: 0,
+     endorsements: 1,
+     evidence: 2,
+     attestation-results: 3,
+     appraisal-policy: 4,
+   )
+   cmw.coap-content-format-type = uint .size 2
+   cmw.Content-Type-ABNF = '
+
+   Content-Type   = Media-Type-Name *( *SP ";" *SP parameter )
+   parameter      = token "=" ( token / quoted-string )
+
+   token          = 1*tchar
+   tchar          = "!" / "#" / "$" / "%" / "&" / "\'" / "*"
+                  / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+                  / DIGIT / ALPHA
+   quoted-string  = %x22 *( qdtext / quoted-pair ) %x22
+   qdtext         = SP / %x21 / %x23-5B / %x5D-7E
+   quoted-pair    = "\\" ( SP / VCHAR )
+
+   Media-Type-Name = type-name "/" subtype-name
+
+   type-name = restricted-name
+   subtype-name = restricted-name
+
+   restricted-name = restricted-name-first *126restricted-name-chars
+   restricted-name-first  = ALPHA / DIGIT
+   restricted-name-chars  = ALPHA / DIGIT / "!" / "#" /
+                            "$" / "&" / "-" / "^" / "_"
+   restricted-name-chars =/ "." ; Characters before first dot always
+                                ; specify a facet name
+   restricted-name-chars =/ "+" ; Characters after last plus always
+                                ; specify a structured syntax suffix
+
+   DIGIT     =  %x30-39           ; 0 - 9
+   POS-DIGIT =  %x31-39           ; 1 - 9
+   ALPHA     =  %x41-5A / %x61-7A ; A - Z / a - z
+   SP        =  %x20
+   VCHAR     =  %x21-7E           ; printable ASCII (no SP)
+   '
 
 Appendix B.  Open Policy Agent Example
 
@@ -1236,29 +1452,8 @@ Appendix C.  Open Issues
 
    // Note to RFC Editor: please remove before publication.
 
-   The list of currently open issues for this documents can be found at
+   The list of currently open issues for this document can be found at
    https://github.com/thomas-fossati/draft-ear/issues.
-
-Appendix D.  Document History
-
-
-   // Note to RFC Editor: please remove before publication.
-
-D.1.  draft-fv-rats-ear-00
-
-   Initial release.
-
-D.2.  draft-fv-rats-ear-01
-
-   *  privacy considerations
-
-   *  OPA policy example
-
-   *  add rust-ear crate to the implementation status section
-
-D.3.  draft-fv-rats-ear-02
-
-   *  align JWT and CWT representations of eat_nonce
 
 Acknowledgments
 
