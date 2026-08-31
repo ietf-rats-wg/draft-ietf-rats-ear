@@ -1840,7 +1840,11 @@ extended by plugging new claims into the <code>$$ear-extension</code> (or
 <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> for CWTs and JWTs respectively.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">An extension <span class="bcp14">MUST NOT</span> change the semantics of the <code>EAR</code> and <code>EAR-appraisal</code>
 claims-sets.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">A receiver <span class="bcp14">MUST</span> ignore any unknown claim.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-4">Whether or not an extension requires a new EAR profile identifier depends on whether it must be understood by all consumers of that EAR token.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5">If an extension is optional, meaning a receiver that does not understand it can safely ignore it while still processing the rest of the EAR correctly, then the existing EAR profile identifier <span class="bcp14">MAY</span> be retained.
+(This is enabled by the requirement to ignore unknown claims stated in <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4" class="relref">Section 4</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>.)<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6">However, if an extension introduces claims that <span class="bcp14">MUST</span> be understood and acted upon by all consumers, i.e., a receiver that does not recognise the extension cannot safely process the EAR, then a new EAT profile identifier <span class="bcp14">MUST</span> be used to signal this requirement.
+Such a profile identifier would typically be defined in a specification document alongside the mandatory extension claims.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <div id="unregistered-claims">
 <section id="section-4.1">
         <h3 id="name-unregistered-claims">
