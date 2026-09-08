@@ -17,7 +17,13 @@
         2: 96,
         4: 2
       },
-      1003: [ "https://veraison.example/policy/1/60a0068d" ]
+      1003: [ "https://veraison.example/policy/1/60a0068d" ],
+      1008:
+"-----BEGIN PUBLIC KEY-----
+MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEn1LlwLN/KBYQRVH6HfIMTzfEqJOVztLe
+kLchp2hi78cCaMY81FBlYs8J9l7krc+M4aBeCGYFjba+hiXttJWPL7ydlE+5UG4U
+Nkn3Eos8EiZByi9DVsyfy9eejh+8AXgp
+-----END PUBLIC KEY-----"
     }
   }
 }

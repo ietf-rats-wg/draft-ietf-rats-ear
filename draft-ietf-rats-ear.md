@@ -21,8 +21,8 @@ venue:
   type: "Working Group"
   mail: "rats@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/rats/"
-  github: "thomas-fossati/draft-ear"
-  latest: "https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html"
+  github: "ietf-rats-wg/draft-ietf-rats-ear"
+  latest: "https://ietf-rats-wg.github.io/draft-ietf-rats-ear/draft-ietf-rats-ear.html"
 pi: [toc, sortrefs, symrefs]
 
 author:
@@ -59,6 +59,7 @@ normative:
   I-D.ietf-teep-protocol: teep
   RFC9782: eat-media-type
   I-D.ietf-rats-msg-wrap: cmw
+  RFC7468: pkix-text
 
 informative:
   RFC9334: rats-arch
@@ -246,6 +247,10 @@ See also {{Section 4.1 of -eat}}.
 `ear_verifier_claims` (optional)
 : A map containing claims with Verifier authority, i.e., claims added by the Verifier during appraisal and derived from evaluating the Appraisal Policy for Evidence.
 
+`ear_verified_attester_key` (optional)
+: A text string containing the public key for which the appraised Attester has provided proof of possession by signing a challenge provided by the Verifier/RP.
+The key can be either a SubjectPublicKeyInfo structure (see {{Section 4.1.2.7 of -pkix}}) with the textual encoding defined in {{Section 13 of -pkix-text}}, or a public-key certificate with the textual encoding defined in {{Section 5.1 of -pkix-text}}.
+
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 See {{sec-extensions}} for further details.
@@ -265,7 +270,7 @@ case there is only one attester, the labelling can be freely chosen because
 there is no ambiguity.
 
 ~~~cbor-diag
-{::include cddl/examples/ear-json-1.diag}
+{::include-fold cddl/examples/ear-json-1.diag}
 ~~~
 {: #fig-ex-json-1 title="JSON claims-set: contraindicated appraisal" }
 
@@ -415,38 +420,6 @@ EAR defines a TEEP application extension for the purpose of conveying such claim
 
 ~~~cddl
 {::include cddl/examples/ext-teep-cbor-1.diag}
-~~~
-
-## Project Veraison Extensions {#sec-extensions-veraison}
-
-The Project Veraison verifier defines a private, application-specific
-extension:
-
-{:vspace}
-`ear_veraison_key_attestation`
-: contains the public key part of a successfully verified attested key.
-The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
-4.1.2.7 of -pkix}}).
-
-~~~cddl
-{::include cddl/ext-veraison.cddl}
-~~~
-{: #fig-cddl-veraison title="Project Veraison Extension (CDDL Definition)" }
-
-### JSON Serialization Examples
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-json-1.diag}
-~~~
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-json-2.diag}
-~~~
-
-### CBOR Serialization Example
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-cbor-1.diag}
 ~~~
 
 # Media Types
