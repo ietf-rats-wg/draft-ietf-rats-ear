@@ -142,7 +142,8 @@ It MUST be the following tag URI ({{-tag-uri}})
 
 `ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the four trustworthiness tiers ({{Section 3.2 of -ar4si}}).
-The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status claim across all EAR appraisal submods.
+The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an `EAR-appraisal`, a nested `EAR`, or a `Nested-Token` (see {{sec-nested-submods}}).
+When a submod is a `Nested-Token` whose contents the lead verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the lead verifier does not support -- the lead verifier MUST treat that submod as contributing no more than the least favorable trustworthiness tier to this computation.
 This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
 
 `iat` (mandatory)
@@ -168,17 +169,21 @@ There are privacy considerations associated with this claim.  See
 {{sec-priv-cons}}.
 
 `submods` (mandatory)
-: A submodule map ({{Section 4.2.18 of -eat}}) holding one `EAR-appraisal` for
-each separately appraised attester.
+: A submodule map ({{Section 4.2.18 of -eat}}) holding, for each separately
+appraised attester or sub-verifier, one of: an `EAR-appraisal`; a nested `EAR`
+claims-set; or a `Nested-Token` carrying a complete, independently signed EAR
+produced by a sub-verifier.
 The map MUST contain at least one entry.
-For each appraised attester the verifier chooses a unique label.
+For each appraised attester or sub-verifier the verifier chooses a unique
+label.
 For example, when evidence is in EAT format, the label could be constructed
 from the associated EAT profile.
 A verifier SHOULD publicly and permanently document its labelling scheme for
 each supported evidence type, unless EAR payloads are produced and consumed
 entirely within a private deployment.
 See {{sec-ear-appraisal}} for the details about the contents of an
-`EAR-appraisal`.
+`EAR-appraisal`, and {{sec-nested-submods}} for the recursive and tunnelled
+cases.
 
 `eat_nonce` (optional)
 : A user supplied nonce that is echoed by the verifier to provide freshness.
@@ -249,6 +254,77 @@ See also {{Section 4.1 of -eat}}.
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 See {{sec-extensions}} for further details.
+
+## Recursive and Tunnelled Submods {#sec-nested-submods}
+
+In addition to a flat `EAR-appraisal`, a submod MAY instead carry a nested
+`EAR` or a `Nested-Token` ({{Section 4.2.18.3 of -eat}}).
+This gives the EAR a recursive structure that can directly reflect the
+topology of a mesh of cooperating verifiers, e.g., a lead verifier that
+dispatches the appraisal of composite evidence to one or more sub-verifiers
+and then collects their results into its own EAR.
+
+The three $submod-value alternatives serve different purposes:
+
+{:vspace}
+`EAR-appraisal`
+: The existing, flat representation.
+Used when the (lead) verifier itself performs the appraisal of the associated
+attester, or restates a sub-verifier's result as its own appraisal.
+
+`EAR`
+: A complete EAR claims-set produced by a sub-verifier, embedded directly, in
+the same serialization (JSON or CBOR) as the enclosing EAR.
+This lets a sub-verifier's full result -- including its own `submods`,
+potentially several levels deep -- be embedded as plain claims data,
+integrity-protected only by the enclosing EAR's own signature.
+
+`Nested-Token`
+: A complete, independently signed EAR produced by a sub-verifier and
+tunnelled opaquely, using the nesting mechanics described in {{Section 4.2.18.3 of -eat}}.
+This is the only alternative that supports a sub-verifier whose EAR uses a
+different serialization than the enclosing token (e.g., a JWT-serialized
+sub-EAR nested inside a CWT-serialized top-level EAR, or vice versa).
+EAR restricts `Nested-Token` to its `"JWT"` and `"CBOR"` forms; the
+`"BUNDLE"` and `"DIGEST"` forms defined by {{-eat}} for detached claims-sets
+are out of scope for EAR.
+
+The existing flat representation of device topology, the
+`ear_device_topology` claim ({{sec-ear}}), is unaffected by, and can be used
+independently of, the above; it remains the appropriate choice when a single
+verifier appraises a composite attester made up of several evidence sources
+without delegating appraisal to other verifiers.
+
+A Relying Party that only consumes the top-level `ear_status` claim (see
+{{sec-ear}}) does not need to understand any of the above: correctness only
+depends on the lead verifier correctly rolling up the status of every submod,
+regardless of its representation, into that claim.
+A Relying Party that wants a full audit trail, however, needs to be able to
+recurse into nested `EAR` submods and to decode `Nested-Token` submods --
+which, per above, may require support for a different serialization or
+signature scheme than the one used by the enclosing token.
+
+{{fig-ex-json-3}} shows a lead verifier's EAR for a confidential computing
+scenario: a confidential VM ("cvm") running on a confidential platform
+("cpu") and using a trusted device ("gpu") to offload a specialized ML
+workload.
+Each submod uses a different $submod-value kind, reflecting a realistic split
+of appraisal responsibilities across independent, vendor-specific verifiers:
+"cvm" is appraised directly by the lead verifier and carries a flat
+`EAR-appraisal`; "cpu" is appraised by Vendor-A's confidential computing
+verifier, whose full EAR claims-set, including its own "platform" submod, is
+embedded in-band as a nested `EAR`, because it happens to use the same
+(JSON) serialization as the enclosing token; "gpu" is appraised by Vendor-B's
+confidential computing verifier, whose EAR is tunnelled opaquely as a
+`Nested-Token`, JWT-serialized regardless of the serialization of the
+enclosing token.
+The lead verifier's `ear_status` reflects the worst status found across all
+three, including the one it cannot itself parse.
+
+~~~cbor-diag
+{::include-fold cddl/examples/ear-json-3.diag}
+~~~
+{: #fig-ex-json-3 title="JSON claims-set: recursive and tunnelled submods" }
 
 ## JSON Serialisation
 

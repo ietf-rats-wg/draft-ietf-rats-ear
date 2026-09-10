@@ -220,6 +220,35 @@ json-wrapped-claims-set = base64-url-text
 cbor-wrapped-claims-set = bstr .cbor Claims-Set
 
 
+; Nested-Token (Section 4.2.18.3 of -eat): a fully independent, signed
+; token embedded in a submod. CBOR and JSON encodings diverge structurally,
+; not just by claim label, so both shapes are captured explicitly.
+
+Nested-Token = CBOR-Nested-Token / JSON-Selector
+
+CBOR-Nested-Token = JSON-Token-Inside-CBOR-Token / CBOR-Token-Inside-CBOR-Token
+
+CBOR-Token-Inside-CBOR-Token = bstr .cbor $CBOR-Tagged-Token
+JSON-Token-Inside-CBOR-Token = tstr
+
+; Minimal stub covering the tagged COSE/CWT shapes RFC 9711 allows here;
+; see RFC 8392 (CWT) and RFC 9052 (COSE) for the full structures.
+$CBOR-Tagged-Token /= #6.61(bstr)   ; CWT
+$CBOR-Tagged-Token /= #6.18(bstr)   ; COSE_Sign1
+$CBOR-Tagged-Token /= #6.17(bstr)   ; COSE_Mac0
+$CBOR-Tagged-Token /= #6.16(bstr)   ; COSE_Encrypt0
+
+JSON-Selector = $JSON-Selector
+
+$JSON-Selector /= [type: "JWT", nested-token: JWT-Message]
+$JSON-Selector /= [type: "CBOR", nested-token: CBOR-Token-Inside-JSON-Token]
+
+CBOR-Token-Inside-JSON-Token = base64-url-text
+
+; Minimal stub for a JWS Compact Serialization (RFC 7515); see RFC 9711
+; Section 4.2.18 for full semantics.
+JWT-Message = tstr .regexp "[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*"
+
 
 nonce-label                = JC< "eat_nonce",    10 >
 ueid-label                 = JC< "ueid",         256 >
