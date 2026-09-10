@@ -9,13 +9,21 @@ EAR = {
   ? eat.exp-claim-label => ~eat.time-int
   verifier-id-label => ar4si.verifier-id
   ? raw-evidence-label => cmw-record
-  eat.submods-label => { + text => EAR-appraisal }
+  eat.submods-label => { + text => $submod-value }
   ? eat.nonce-label => eat.nonce-type
   ? topology-label => topology-type
   * $$ear-extension
 }
 
 cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
+
+; A submod may carry a full appraisal, a recursive nested EAR (same
+; serialization as the enclosing token), or a fully independent, signed
+; EAR from a sub-verifier (via EAT's Nested-Token, which may use a
+; different serialization than the enclosing token).
+$submod-value /= EAR-appraisal
+$submod-value /= EAR
+$submod-value /= eat.Nested-Token
 
 ; EAR-specific claims
 raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>

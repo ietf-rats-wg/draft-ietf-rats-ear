@@ -1,0 +1,40 @@
+{
+  "eat_profile": "tag:ietf.org,2026:rats/ear#04",
+  "iat": 1666529184,
+  "ear_status": "warning",
+  "ear_verifier_id": {
+    "developer": "https://veraison-project.org",
+    "build": "vts 0.0.1"
+  },
+  "submods": {
+    "cvm": {
+      "ear_status": "affirming",
+      "ear_trustworthiness_vector": {
+        "instance-identity": 2,
+        "executables": 2,
+        "configuration": 2
+      }
+    },
+    "cpu": {
+      "eat_profile": "tag:ietf.org,2026:rats/ear#04",
+      "iat": 1666529150,
+      "ear_verifier_id": {
+        "developer": "https://vendor-a.example/cc-verifier",
+        "build": "cc-verifier 1.2.0"
+      },
+      "submods": {
+        "platform": {
+          "ear_status": "warning",
+          "ear_trustworthiness_vector": {
+            "hardware": 2,
+            "configuration": 1
+          }
+        }
+      }
+    },
+    "gpu": [
+      "JWT",
+      "eyJhbGciOiJFUzI1NiJ9.eyJlYXRfcHJvZmlsZSI6InRhZzppZXRmLm9yZywyMDI2OnJhdHMvZWFyIzA0IiwiaWF0IjoxNjY2NTI5MTAwLCJlYXJfc3RhdHVzIjoiYWZmaXJtaW5nIn0.QjJyZlBoM0tzWjF2WHdRbjlMbURhU3lFb1RjNGdIak0"
+    ]
+  }
+}
