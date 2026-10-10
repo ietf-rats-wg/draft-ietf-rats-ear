@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 14 March 2027                                             Cisco
+Expires: 13 April 2027                                             Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                       10 September 2026
+                                                         10 October 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 March 2027.
+   This Internet-Draft will expire on 13 April 2027.
 
 Copyright Notice
 
@@ -217,20 +217,28 @@ Table of Contents
       tag:ietf.org,2026:rats/ear#04.
 
    ear_status (optional)  The overall appraisal status for the
-      (composite) attester represented as one of the four
+      (composite) attester represented as one of the five
       trustworthiness tiers (Section 3.2 of [I-D.ietf-rats-ar4si]).  The
-      value of this claim MUST be set to a tier of no higher trust than
-      the tier corresponding to the worst status found across all
+      none tier is the neutral element of this computation: it does not
+      affect the result and MUST NOT be used as the value of this claim.
+      The value of this claim MUST be set to a tier of no higher trust
+      than the tier corresponding to the worst status found across all
       submods, regardless of whether a given submod is represented as an
       EAR-appraisal, a nested EAR, or a Nested-Token (see Section 3.2).
       When a submod is a Nested-Token whose contents the lead verifier
       cannot parse or independently verify -- for example, because it
       uses a serialization or a signature scheme the lead verifier does
-      not support -- the lead verifier MUST treat that submod as
-      contributing no more than the least favorable trustworthiness tier
-      to this computation.  This claim exists to help Relying Parties
-      easily determine the overall status of the appraisal without
-      having to inspect each submod.
+      not support -- the lead verifier MUST treat that submod as having
+      the incomplete tier (Section 3.2 of [I-D.ietf-rats-ar4si]) for the
+      purposes of computing this claim.  That is, the lead verifier was
+      unable to complete the appraisal of that submod, and therefore
+      cannot vouch for the trustworthiness of the attester it
+      represents.  The lead verifier MUST NOT infer from the opaque
+      submod any tier it has not itself established.  Relying Parties
+      that need to know whether the whole tree has been appraised have
+      to inspect the Nested-Token submods individually.  This claim
+      exists to help Relying Parties easily determine the overall status
+      of the appraisal without having to inspect each submod.
 
    iat (mandatory)  "Issued At" claim -- the time at which the EAR is
       issued.  See Section 4.1.6 of [RFC7519] and Section 4.3.1 of
@@ -321,10 +329,13 @@ Table of Contents
 
    ear_status (mandatory)
       The overall appraisal status for this attester represented as one
-      of the four trustworthiness tiers (Section 3.2 of
-      [I-D.ietf-rats-ar4si]).  The value of this claim MUST be set to a
-      tier of no higher trust than the tier corresponding to the worst
-      trustworthiness claim across the entire trustworthiness vector.
+      of the five trustworthiness tiers (Section 3.2 of
+      [I-D.ietf-rats-ar4si]).  The none tier is the neutral element of
+      this computation: it does not affect the result and MUST NOT be
+      used as the value of this claim.  The value of this claim MUST be
+      set to a tier of no higher trust than the tier corresponding to
+      the worst trustworthiness claim across the entire trustworthiness
+      vector.
 
    ear_trustworthiness_vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
@@ -434,8 +445,8 @@ Table of Contents
    B's confidential computing verifier, whose EAR is tunnelled opaquely
    as a Nested-Token, JWT-serialized regardless of the serialization of
    the enclosing token.  The lead verifier's ear_status reflects the
-   worst status found across all three, including the one it cannot
-   itself parse.
+   worst status found across all three; the one it cannot itself parse
+   is accounted for as incomplete.
 
    =============== NOTE: '\' line wrapping per RFC 8792 ================
 
@@ -1437,7 +1448,7 @@ Appendix A.  Collated CDDL
    ar4si.trustworthiness-tier /= ar4si.trustworthiness-tier-none-label \
    / ar4si.trustworthiness-tier-affirming-label / ar4si.trustworthiness\
    -tier-warning-label / ar4si.trustworthiness-tier-contraindicated-\
-                                                                   label
+                     label / ar4si.trustworthiness-tier-incomplete-label
    ar4si.verifier-id = {
      ar4si.developer-label => text,
      ar4si.build-label => text,
@@ -1458,6 +1469,8 @@ Appendix A.  Collated CDDL
    ar4si.trustworthiness-tier-warning-label = ar4si.JC<"warning", 32>
    ar4si.trustworthiness-tier-contraindicated-label = ar4si.JC<"\
                                                    contraindicated", 96>
+   ar4si.trustworthiness-tier-incomplete-label = ar4si.JC<"incomplete"\
+                                                                  , 127>
    ar4si.developer-label = ar4si.JC<"developer", 0>
    ar4si.build-label = ar4si.JC<"build", 1>
    ar4si.instance-identity-label = ar4si.JC<"instance-identity", 0>
