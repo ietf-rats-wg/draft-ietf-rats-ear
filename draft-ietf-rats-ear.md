@@ -62,6 +62,7 @@ normative:
 
 informative:
   RFC9334: rats-arch
+  I-D.ietf-rats-corim: corim
   RFC7942: impl-status
   RFC4151: tag-uri
   IANA.cwt:
@@ -246,6 +247,22 @@ See also {{Section 4.1 of -eat}}.
 
 `ear_verifier_claims` (optional)
 : A map containing claims with Verifier authority, i.e., claims added by the Verifier during appraisal and derived from evaluating the Appraisal Policy for Evidence.
+
+`ear_endorser_claims` (optional)
+: A map containing claims with Endorser authority, i.e., claims that are not present in the appraised Evidence and that the Verifier added during appraisal using Endorsements.
+Each key identifies the supply chain entity that asserted the claims in the associated value, which is a map of claims.
+Identifiers are subject to the rules given under `ear_rvp_claims`.
+
+`ear_rvp_claims` (optional)
+: A map containing claims with Reference Value Provider authority, i.e., claims that are present in the appraised Evidence and that the Verifier corroborated using Reference Values.
+Each key identifies the supply chain entity that provided the Reference Values, and the associated value is a map of the corroborated claims.
+A corroborated claim MAY be omitted from `ear_attester_claims`: the complete set of claims extracted from the Evidence is the union of the two maps.
+The identifier is a human-readable string (e.g., "Arm" or "NVIDIA") that the Verifier derives from the cryptographic identity of the supply chain entity (e.g., the key that signed the Endorsements or Reference Values) when it ingests them, so that Relying Parties do not have to handle keys.
+The same entity MUST be given the same identifier throughout an EAR, and an identifier MUST NOT be shared by distinct entities.
+A claim asserted by more than one authority appears under the identifier of each of them.
+Each occurrence is an independent assertion.
+To avoid arbitrary values, the Verifier SHOULD derive the identifier from the first of the following sources that is available: the subject name (e.g., the organization or common name attribute) of the certificate of the key that signed the CoRIM conveying the Endorsements or Reference Values, provided the certification path validates to a trust anchor of the Verifier; the `entity-name` of the entity with the `manifest-signer` role in the `corim-entity-map` ({{Section 4.1.5 of -corim}}); the `signer-name` in the `corim-signer-map` ({{Section 4.2.3.1 of -corim}}); a name configured in the Appraisal Policy for Evidence.
+The `entity-name` and `signer-name` are asserted by the signer itself, so the Verifier MUST NOT use them unless it has authenticated the binding between the name and the key that signed the CoRIM.
 
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
@@ -537,6 +554,10 @@ and consume attestation results.
 EAR is a profile of the EAT specification {{-eat}}, it also reuses the CWT specification {{-cwt}}.
 The security considerations of these specifications therefore apply here too.
 
+The `ear_endorser_claims` and `ear_rvp_claims` claims attribute claims to supply chain entities.
+The attribution is the Verifier's: Relying Parties do not see, and cannot check, the keys and signatures on which it is based.
+They therefore rely on the Verifier's mapping from cryptographic identities to identifiers, and on the integrity protection of the EAR.
+
 # Privacy Considerations {#sec-priv-cons}
 
 EAR is designed to expose as little identifying information as possible about
@@ -550,9 +571,11 @@ Specifically:
 * It SHOULD be possible to disable inclusion of the optional `ear_raw_evidence`
   claim
 * It SHOULD be possible to disable inclusion of the optional
-  `ear_attester_claims` and `ear_verifier_claims` claims
+  `ear_attester_claims`, `ear_verifier_claims`, `ear_endorser_claims` and
+  `ear_rvp_claims` claims
 * It SHOULD be possible to allow redaction, anonymisation or removal of
-  specific claims from the `ear_attester_claims` and `ear_verifier_claims` objects
+  specific claims from the `ear_attester_claims`, `ear_verifier_claims`,
+  `ear_endorser_claims` and `ear_rvp_claims` objects
 
 EAR is an EAT, therefore the privacy considerations in {{Section 8 of -eat}}
 apply.
@@ -638,6 +661,26 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Description: Verifier Claims
 * JWT Claim Name: ear_verifier_claims
 * Claim Key: 1006 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
+### Endorser Claims
+
+* Claim Name: ear_endorser_claims
+* Claim Description: Endorser Claims
+* JWT Claim Name: ear_endorser_claims
+* Claim Key: 1008 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
+### Reference Value Provider Claims
+
+* Claim Name: ear_rvp_claims
+* Claim Description: Reference Value Provider Claims
+* JWT Claim Name: ear_rvp_claims
+* Claim Key: 1009 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
