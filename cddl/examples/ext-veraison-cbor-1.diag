@@ -45,17 +45,25 @@
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      1006: {
-        "psa-certified": {
-          "certificate-number": "1234567890123-12345",
-          "date-of-issue": "23/06/2022",
-          "test-lab": "Riscure",
-          "certification-holder": "ACME Inc.",
-          "certified-product": "RoadRunner",
-          "hardware-version": "Gizmo v1.0.2",
-          "software-version": "TrustedFirmware-M v1.0.6",
-          "certification-type": "PSA Certified Level 1 v2.1",
-          "developer-type": "PSA Certified – Device"
+      1008: {
+        "ACME Security Lab": {
+          "psa-certified": {
+            "certificate-number": "1234567890123-12345",
+            "date-of-issue": "23/06/2022",
+            "test-lab": "Riscure",
+            "certification-holder": "ACME Inc.",
+            "certified-product": "RoadRunner",
+            "hardware-version": "Gizmo v1.0.2",
+            "software-version": "TrustedFirmware-M v1.0.6",
+            "certification-type": "PSA Certified Level 1 v2.1",
+            "developer-type": "PSA Certified – Device"
+          }
+        }
+      },
+      1009: {
+        "Arm": {
+          "psa-implementation-id":
+            "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
         }
       }
     }
