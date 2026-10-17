@@ -62,6 +62,7 @@ normative:
 
 informative:
   RFC9334: rats-arch
+  I-D.ietf-rats-multi-verifier: multi-verifier
   RFC7942: impl-status
   RFC4151: tag-uri
   IANA.cwt:
@@ -145,9 +146,9 @@ It MUST be the following tag URI ({{-tag-uri}})
 : The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The `none` tier is the neutral element of this computation: it does not affect the result and MUST NOT be used as the value of this claim.
 The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an `EAR-appraisal`, a nested `EAR`, or a `Nested-Token` (see {{sec-nested-submods}}).
-When a submod is a `Nested-Token` whose contents the lead verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the lead verifier does not support -- the lead verifier MUST treat that submod as having the `incomplete` tier ({{Section 3.2 of -ar4si}}) for the purposes of computing this claim.
-That is, the lead verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
-The lead verifier MUST NOT infer from the opaque submod any tier it has not itself established.
+When a submod is a `Nested-Token` whose contents the verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the verifier does not support, or because it does not contain an EAR -- the verifier MUST treat that submod as having the `incomplete` tier ({{Section 3.2 of -ar4si}}) for the purposes of computing this claim.
+That is, the verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
+The verifier MUST NOT infer from the opaque submod any tier it has not itself established.
 Relying Parties that need to know whether the whole tree has been appraised have to inspect the `Nested-Token` submods individually.
 This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
 
@@ -266,7 +267,8 @@ See {{sec-extensions}} for further details.
 In addition to a flat `EAR-appraisal`, a submod MAY instead carry a nested
 `EAR` or a `Nested-Token` ({{Section 4.2.18.3 of -eat}}).
 This gives the EAR a recursive structure that can directly reflect the
-topology of a mesh of cooperating verifiers, e.g., a lead verifier that
+topology of a mesh of cooperating verifiers, e.g., the lead verifier of the
+Hierarchical pattern defined in {{-multi-verifier}}, which
 dispatches the appraisal of composite evidence to one or more sub-verifiers
 and then collects their results into its own EAR.
 
@@ -275,7 +277,7 @@ The three $submod-value alternatives serve different purposes:
 {:vspace}
 `EAR-appraisal`
 : The existing, flat representation.
-Used when the (lead) verifier itself performs the appraisal of the associated
+Used when the verifier itself performs the appraisal of the associated
 attester, or restates a sub-verifier's result as its own appraisal.
 
 `EAR`
@@ -291,9 +293,17 @@ tunnelled opaquely, using the nesting mechanics described in {{Section 4.2.18.3 
 This is the only alternative that supports a sub-verifier whose EAR uses a
 different serialization than the enclosing token (e.g., a JWT-serialized
 sub-EAR nested inside a CWT-serialized top-level EAR, or vice versa).
+The nested token's encoding is self-describing, so the consumer needs no
+out-of-band knowledge of it: for CBOR it is given by the CBOR tag found after
+removing the byte string wrapping, for JSON by the `JSON-Selector` name
+({{Section 4.2.18 of -eat}}).
 EAR restricts `Nested-Token` to its `"JWT"` and `"CBOR"` forms; the
 `"BUNDLE"` and `"DIGEST"` forms defined by {{-eat}} for detached claims-sets
 are out of scope for EAR.
+The content of a `Nested-Token` MUST be an EAR.
+The CDDL cannot enforce this, because the token is opaque to the schema; a
+verifier that finds otherwise treats the submod as `incomplete` (see `ear_status`
+in {{sec-ear}}).
 
 The existing flat representation of device topology, the
 `ear_device_topology` claim ({{sec-ear}}), is unaffected by, and can be used
@@ -303,7 +313,7 @@ without delegating appraisal to other verifiers.
 
 A Relying Party that only consumes the top-level `ear_status` claim (see
 {{sec-ear}}) does not need to understand any of the above: correctness only
-depends on the lead verifier correctly rolling up the status of every submod,
+depends on the verifier correctly rolling up the status of every submod,
 regardless of its representation, into that claim.
 A Relying Party that wants a full audit trail, however, needs to be able to
 recurse into nested `EAR` submods and to decode `Nested-Token` submods --

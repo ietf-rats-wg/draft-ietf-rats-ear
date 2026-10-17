@@ -17,10 +17,13 @@ EAR = {
 
 cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
 
-; A submod may carry a full appraisal, a recursive nested EAR (same
-; serialization as the enclosing token), or a fully independent, signed
-; EAR from a sub-verifier (via EAT's Nested-Token, which may use a
-; different serialization than the enclosing token).
+; A submod carries one of:
+;  - EAR-appraisal: the appraisal of a single attester;
+;  - EAR: an unsigned EAR claims-set from a sub-verifier, in the same
+;    serialization as the enclosing token;
+;  - eat.Nested-Token: a complete, signed EAR from a sub-verifier, possibly
+;    in a different serialization than the enclosing token (see
+;    Section 4.2.18.3 of RFC 9711 for how the nested token is identified).
 $submod-value /= EAR-appraisal
 $submod-value /= EAR
 $submod-value /= eat.Nested-Token
