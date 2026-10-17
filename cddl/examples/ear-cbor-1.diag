@@ -9,6 +9,10 @@
     "application/vnd.evidence",
     h'6C696665626F61746D616E'
   ],
+  1008: [
+    1,
+    h'4c89eb4a5cec6b3f637cbeda6e0bc9daba28d8ff77268cecb77c77394fda7cd8'
+  ],
   266: {
     "PSA": {
       1000: 96,
