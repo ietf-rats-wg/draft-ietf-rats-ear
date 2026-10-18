@@ -153,6 +153,10 @@ The verifier MUST NOT infer from the opaque submod any tier it has not itself es
 Relying Parties that need to know whether the whole tree has been appraised have to inspect the `Nested-Token` submods individually.
 This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
 
+`ear_status_details` (optional)
+: A non-empty array of strings, each giving a reason why `ear_status` has a value other than `affirming`.
+See {{sec-details}} for the rules that apply to all `*_details` claims.
+
 `iat` (mandatory)
 : "Issued At" claim -- the time at which the EAR is issued.
 See {{Section 4.1.6 of -jwt}} and {{Section 4.3.1 of -eat}} for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).
@@ -267,10 +271,17 @@ The value of this claim MUST be set to a tier of no higher trust than the tier
 corresponding to the worst trustworthiness claim across the entire
 trustworthiness vector.
 
+`ear_status_details` (optional)
+: A non-empty array of strings, each giving a reason why `ear_status` has a value other than `affirming`.
+
 `ear_trustworthiness_vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
 See {{Section 3.1 of -ar4si}} for the details.
+
+`ear_trustworthiness_vector_details` (optional)
+: A map from trustworthiness vector categories to non-empty arrays of strings, each giving a reason why the corresponding category has a value other than `affirming`.
+Each key MUST be a category that is present in `ear_trustworthiness_vector`.
 This claim MUST be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
@@ -299,6 +310,19 @@ See also {{Section 4.1 of -eat}}.
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 See {{sec-extensions}} for further details.
+
+## Details Claims {#sec-details}
+
+The `ear_status_details` and `ear_trustworthiness_vector_details` claims let a Verifier tell the Relying Party why it did not assign the `affirming` tier.
+They are optional, and a Verifier MAY include them whenever the corresponding value is not `affirming`.
+
+Each string states one reason, in text meant for people (e.g., logs, diagnostics, support).
+The text is not standardised: it can change between Verifiers, versions of the same Verifier and, if localised, languages.
+A Relying Party MUST NOT base automated decisions on it.
+Those rely entirely on `ear_status` and `ear_trustworthiness_vector`, which remain authoritative.
+
+The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party MUST treat it as untrusted input when displaying or logging it.
+It can also reveal details of the Attester's state, see {{sec-priv-cons}}.
 
 ## Recursive and Tunnelled Submods {#sec-nested-submods}
 
@@ -684,6 +708,8 @@ to those claims, for example allowing their redaction, anonymisation or
 outright removal.
 Specifically:
 
+* It SHOULD be possible to disable inclusion of the optional
+  `ear_status_details` and `ear_trustworthiness_vector_details` claims
 * It SHOULD be possible to disable inclusion of the optional `ear_raw_evidence`
   claim
 * It SHOULD be possible to disable inclusion of the optional
@@ -725,6 +751,26 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Description: EAR Trustworthiness Vector
 * JWT Claim Name: ear_trustworthiness_vector
 * Claim Key: 1001 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
+### Status Details
+
+* Claim Name: ear_status_details
+* Claim Description: EAR Status Details
+* JWT Claim Name: ear_status_details
+* Claim Key: 1010 (suggested)
+* Claim Value Type(s): array
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} and {{sec-ear-appraisal}} of {{&SELF}}
+
+### Trustworthiness Vector Details
+
+* Claim Name: ear_trustworthiness_vector_details
+* Claim Description: EAR Trustworthiness Vector Details
+* JWT Claim Name: ear_trustworthiness_vector_details
+* Claim Key: 1011 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
