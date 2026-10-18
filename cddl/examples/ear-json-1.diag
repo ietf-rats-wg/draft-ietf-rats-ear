@@ -12,10 +12,16 @@
   "submods": {
     "PSA": {
       "ear_status": "contraindicated",
+      "ear_status_details": [
+        "The 'executables' category is contraindicated."
+      ],
       "ear_trustworthiness_vector": {
         "instance-identity": 2,
         "executables": 96,
         "hardware": 2
+      },
+      "ear_trustworthiness_vector_details": {
+        "executables": [ "unauthorized code found in runtime memory" ]
       },
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ]
