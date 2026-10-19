@@ -41,11 +41,11 @@ It can be serialized and protected using either CWT or JWT.
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.12.2
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.9.1
+    wcwidth 0.9.2
 -->
 <link href="draft-ietf-rats-ear.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1065,7 +1065,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 21 April 2027</td>
+<td class="center">Expires 22 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1078,12 +1078,12 @@ svg {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-18" class="published">18 October 2026</time>
+<time datetime="2026-10-19" class="published">19 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-21">21 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-22">22 April 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1159,7 +1159,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1462,7 +1462,7 @@ This claim exists to help Relying Parties easily determine the overall status of
 <dt id="section-3-5.5">
 <code>ear_status_details</code> (optional)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.6">
-          <p id="section-3-5.6.1">A non-empty array of strings, each giving a reason why <code>ear_status</code> has a value other than <code>affirming</code>.
+          <p id="section-3-5.6.1">A non-empty array of strings, each giving a reason for the value of <code>ear_status</code>.
 See <a href="#sec-details" class="auto internal xref">Section 3.2</a> for the rules that apply to all <code>*_details</code> claims.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -1617,7 +1617,7 @@ trustworthiness vector.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
 <dt id="section-3.1-2.5">
 <code>ear_status_details</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.6">
-            <p id="section-3.1-2.6.1">A non-empty array of strings, each giving a reason why <code>ear_status</code> has a value other than <code>affirming</code>.<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.6.1">A non-empty array of strings, each giving a reason for the value of <code>ear_status</code>.<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-2.7">
@@ -1631,7 +1631,7 @@ See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-1
 <dt id="section-3.1-2.9">
 <code>ear_trustworthiness_vector_details</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-2.10">
-            <p id="section-3.1-2.10.1">A map from trustworthiness vector categories to non-empty arrays of strings, each giving a reason why the corresponding category has a value other than <code>affirming</code>.
+            <p id="section-3.1-2.10.1">A map from trustworthiness vector categories to non-empty arrays of strings, each giving a reason for the value of the corresponding category.
 Each key <span class="bcp14">MUST</span> be a category that is present in <code>ear_trustworthiness_vector</code>.
 This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
@@ -1686,8 +1686,8 @@ See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for furth
         <h3 id="name-details-claims">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-details-claims" class="section-name selfRef">Details Claims</a>
         </h3>
-<p id="section-3.2-1">The <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code> claims let a Verifier tell the Relying Party why it did not assign the <code>affirming</code> tier.
-They are optional, and a Verifier <span class="bcp14">MAY</span> include them whenever the corresponding value is not <code>affirming</code>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">The <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code> claims let a Verifier tell the Relying Party the reasons for the values of <code>ear_status</code> and of the trustworthiness vector categories.
+They are optional, and are intended for values other than <code>affirming</code>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">Each string states one reason, in text meant for people (e.g., logs, diagnostics, support).
 The text is not standardised: it can change between Verifiers, versions of the same Verifier and, if localised, languages.
 A Relying Party <span class="bcp14">MUST NOT</span> base automated decisions on it.

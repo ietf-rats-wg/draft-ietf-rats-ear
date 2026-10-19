@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 21 April 2027                                             Cisco
+Expires: 22 April 2027                                             Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         18 October 2026
+                                                         19 October 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 April 2027.
+   This Internet-Draft will expire on 22 April 2027.
 
 Copyright Notice
 
@@ -221,9 +221,9 @@ Table of Contents
       appraisal without having to inspect each submod.
 
    ear_status_details (optional)
-      A non-empty array of strings, each giving a reason why ear_status
-      has a value other than affirming.  See Section 3.2 for the rules
-      that apply to all *_details claims.
+      A non-empty array of strings, each giving a reason for the value
+      of ear_status.  See Section 3.2 for the rules that apply to all
+      *_details claims.
 
    iat (mandatory)
       "Issued At" claim -- the time at which the EAR is issued.  See
@@ -341,8 +341,8 @@ Table of Contents
       trustworthiness claim across the entire trustworthiness vector.
 
    ear_status_details (optional)
-      A non-empty array of strings, each giving a reason why ear_status
-      has a value other than affirming.
+      A non-empty array of strings, each giving a reason for the value
+      of ear_status.
 
    ear_trustworthiness_vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
@@ -351,11 +351,11 @@ Table of Contents
 
    ear_trustworthiness_vector_details (optional)
       A map from trustworthiness vector categories to non-empty arrays
-      of strings, each giving a reason why the corresponding category
-      has a value other than affirming.  Each key MUST be a category
-      that is present in ear_trustworthiness_vector.  This claim MUST be
-      present unless the party requesting Evidence appraisal explicitly
-      asks for it to be dropped, e.g., via an API parameter or similar
+      of strings, each giving a reason for the value of the
+      corresponding category.  Each key MUST be a category that is
+      present in ear_trustworthiness_vector.  This claim MUST be present
+      unless the party requesting Evidence appraisal explicitly asks for
+      it to be dropped, e.g., via an API parameter or similar
       arrangement.  Such consumer would therefore rely entirely on the
       semantics of the ear_status claim.  This behaviour is NOT
       RECOMMENDED because of the resulting loss of quality of the
@@ -395,9 +395,9 @@ Table of Contents
 3.2.  Details Claims
 
    The ear_status_details and ear_trustworthiness_vector_details claims
-   let a Verifier tell the Relying Party why it did not assign the
-   affirming tier.  They are optional, and a Verifier MAY include them
-   whenever the corresponding value is not affirming.
+   let a Verifier tell the Relying Party the reasons for the values of
+   ear_status and of the trustworthiness vector categories.  They are
+   optional, and are intended for values other than affirming.
 
    Each string states one reason, in text meant for people (e.g., logs,
    diagnostics, support).  The text is not standardised: it can change
