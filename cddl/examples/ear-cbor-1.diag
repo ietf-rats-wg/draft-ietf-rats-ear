@@ -12,10 +12,14 @@
   266: {
     "PSA": {
       1000: 96,
+      1010: [ "The 'executables' category is contraindicated." ],
       1001: {
         0: 2,
         2: 96,
         4: 2
+      },
+      1011: {
+        2: [ "unauthorized code found in runtime memory" ]
       },
       1003: [ "https://veraison.example/policy/1/60a0068d" ]
     }
