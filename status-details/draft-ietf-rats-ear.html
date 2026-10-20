@@ -1065,7 +1065,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 22 April 2027</td>
+<td class="center">Expires 23 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1078,12 +1078,12 @@ svg {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-19" class="published">19 October 2026</time>
+<time datetime="2026-10-20" class="published">20 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-22">22 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-23">23 April 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1159,7 +1159,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1692,7 +1692,7 @@ They are optional, and are intended for values other than <code>affirming</code>
 The text is not standardised: it can change between Verifiers, versions of the same Verifier and, if localised, languages.
 A Relying Party <span class="bcp14">MUST NOT</span> base automated decisions on it.
 Those rely entirely on <code>ear_status</code> and <code>ear_trustworthiness_vector</code>, which remain authoritative.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party <span class="bcp14">MUST</span> treat it as untrusted input when displaying or logging it.
+<p id="section-3.2-3">The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party <span class="bcp14">MUST</span> treat it as untrusted input (see <a href="#sec-sec-cons" class="auto internal xref">Section 7</a>).
 It can also reveal details of the Attester's state, see <a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2425,13 +2425,15 @@ and consume attestation results.<a href="#section-6.1.3-1" class="pilcrow">¶</a
 </div>
 </section>
 </div>
-<div id="security-considerations">
+<div id="sec-sec-cons">
 <section id="section-7">
       <h2 id="name-security-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-7-1">EAR is a profile of the EAT specification <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>, it also reuses the CWT specification <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.
 The security considerations of these specifications therefore apply here too.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Any textual fields (e.g., the strings in <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code>) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
+Further discussion and references on this topic can be found in <span><a href="https://rfc-editor.org/rfc/rfc9839#section-7" class="relref">Section 7</a> of [<a href="#RFC9839" class="cite xref">RFC9839</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-priv-cons">
@@ -2887,8 +2889,12 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <span class="refAuthor">Sheffer, Y.</span> and <span class="refAuthor">A. Farrel</span>, <span class="refTitle">"Improving Awareness of Running Code: The Implementation Status Section"</span>, <span class="seriesInfo">BCP 205</span>, <span class="seriesInfo">RFC 7942</span>, <span class="seriesInfo">DOI 10.17487/RFC7942</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7942">https://www.rfc-editor.org/rfc/rfc7942</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9334">[RFC9334]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Thaler, D.</span>, <span class="refAuthor">Richardson, M.</span>, <span class="refAuthor">Smith, N.</span>, and <span class="refAuthor">W. Pan</span>, <span class="refTitle">"Remote ATtestation procedureS (RATS) Architecture"</span>, <span class="seriesInfo">RFC 9334</span>, <span class="seriesInfo">DOI 10.17487/RFC9334</span>, <time datetime="2023-01" class="refDate">January 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9334">https://www.rfc-editor.org/rfc/rfc9334</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9839">[RFC9839]</dt>
+      <dd>
+<span class="refAuthor">Bray, T.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Unicode Character Repertoire Subsets"</span>, <span class="seriesInfo">RFC 9839</span>, <span class="seriesInfo">DOI 10.17487/RFC9839</span>, <time datetime="2025-08" class="refDate">August 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9839">https://www.rfc-editor.org/rfc/rfc9839</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>

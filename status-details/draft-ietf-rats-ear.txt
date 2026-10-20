@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
-Expires: 22 April 2027                                             Cisco
+Expires: 23 April 2027                                             Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         19 October 2026
+                                                         20 October 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 April 2027.
+   This Internet-Draft will expire on 23 April 2027.
 
 Copyright Notice
 
@@ -408,8 +408,8 @@ Table of Contents
 
    The text can reproduce data controlled by the Attester (e.g., file
    names found in the Evidence), so a Relying Party MUST treat it as
-   untrusted input when displaying or logging it.  It can also reveal
-   details of the Attester's state, see Section 8.
+   untrusted input (see Section 7).  It can also reveal details of the
+   Attester's state, see Section 8.
 
 3.3.  JSON Serialisation
 
@@ -1029,6 +1029,13 @@ Table of Contents
    the CWT specification [RFC8392].  The security considerations of
    these specifications therefore apply here too.
 
+   Any textual fields (e.g., the strings in ear_status_details and
+   ear_trustworthiness_vector_details) that are stored in a file,
+   inserted into a database, or displayed to humans must be properly
+   sanitized to prevent attacks and undesirable behavior.  Further
+   discussion and references on this topic can be found in Section 7 of
+   [RFC9839].
+
 8.  Privacy Considerations
 
    EAR is designed to expose as little identifying information as
@@ -1331,6 +1338,10 @@ Table of Contents
               W. Pan, "Remote ATtestation procedureS (RATS)
               Architecture", RFC 9334, DOI 10.17487/RFC9334, January
               2023, <https://www.rfc-editor.org/rfc/rfc9334>.
+
+   [RFC9839]  Bray, T. and P. Hoffman, "Unicode Character Repertoire
+              Subsets", RFC 9839, DOI 10.17487/RFC9839, August 2025,
+              <https://www.rfc-editor.org/rfc/rfc9839>.
 
 Appendix A.  Collated CDDL
 
