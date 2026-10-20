@@ -61,6 +61,7 @@ normative:
   I-D.ietf-rats-msg-wrap: cmw
 
 informative:
+  RFC9839: unicode-subsets
   RFC9334: rats-arch
   RFC7942: impl-status
   RFC4151: tag-uri
@@ -272,7 +273,7 @@ The text is not standardised: it can change between Verifiers, versions of the s
 A Relying Party MUST NOT base automated decisions on it.
 Those rely entirely on `ear_status` and `ear_trustworthiness_vector`, which remain authoritative.
 
-The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party MUST treat it as untrusted input when displaying or logging it.
+The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party MUST treat it as untrusted input (see {{sec-sec-cons}}).
 It can also reveal details of the Attester's state, see {{sec-priv-cons}}.
 
 ## JSON Serialisation
@@ -556,10 +557,13 @@ license is Apache 2.0.  The library targets verifiers that need to produce
 attestation results as well as relying party applications that need to verify
 and consume attestation results.
 
-# Security Considerations
+# Security Considerations {#sec-sec-cons}
 
 EAR is a profile of the EAT specification {{-eat}}, it also reuses the CWT specification {{-cwt}}.
 The security considerations of these specifications therefore apply here too.
+
+Any textual fields (e.g., the strings in `ear_status_details` and `ear_trustworthiness_vector_details`) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
+Further discussion and references on this topic can be found in {{Section 7 of -unicode-subsets}}.
 
 # Privacy Considerations {#sec-priv-cons}
 
