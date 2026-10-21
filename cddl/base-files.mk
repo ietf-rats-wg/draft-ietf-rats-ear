@@ -6,3 +6,4 @@ EAR_BASE_FRAGS += topology.cddl
 EAR_BASE_EXAMPLES += examples/ear-cbor-1.diag
 EAR_BASE_EXAMPLES += examples/ear-json-1.diag
 EAR_BASE_EXAMPLES += examples/ear-json-2.diag
+EAR_BASE_EXAMPLES += examples/ear-json-3.diag
