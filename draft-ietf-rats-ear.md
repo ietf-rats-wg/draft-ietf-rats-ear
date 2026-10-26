@@ -312,9 +312,9 @@ See also {{Section 4.1 of -eat}}.
 `ear_endorser_claims` (optional)
 : A map containing claims with Endorser authority, i.e., claims that are not present in the appraised Evidence and that the Verifier added during appraisal using Endorsements.
 Each key identifies the supply chain entity that asserted the claims in the associated value, which is a map of claims.
-Identifiers are subject to the rules given under `ear_rvp_claims`.
+Identifiers are subject to the rules given under `ear_reference_value_provider_claims`.
 
-`ear_rvp_claims` (optional)
+`ear_reference_value_provider_claims` (optional)
 : A map containing claims with Reference Value Provider authority, i.e., claims that are present in the appraised Evidence and that the Verifier corroborated using Reference Values.
 Each key identifies the supply chain entity that provided the Reference Values, and the associated value is a map of the corroborated claims.
 A corroborated claim MAY be omitted from `ear_attester_claims`: the complete set of claims extracted from the Evidence is the union of the two maps.
@@ -711,7 +711,7 @@ The security considerations of these specifications therefore apply here too.
 Any textual fields (e.g., the strings in `ear_status_details` and `ear_trustworthiness_vector_details`) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
 Further discussion and references on this topic can be found in {{Section 7 of -unicode-subsets}}.
 
-The `ear_endorser_claims` and `ear_rvp_claims` claims attribute claims to supply chain entities.
+The `ear_endorser_claims` and `ear_reference_value_provider_claims` claims attribute claims to supply chain entities.
 The attribution is the Verifier's.
 Relying Parties cannot see or check the keys and signatures on which it is based.
 Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.
@@ -740,10 +740,10 @@ Specifically:
   claim
 * It SHOULD be possible to disable inclusion of the optional
   `ear_attester_claims`, `ear_verifier_claims`, `ear_endorser_claims` and
-  `ear_rvp_claims` claims
+  `ear_reference_value_provider_claims` claims
 * It SHOULD be possible to allow redaction, anonymisation or removal of
   specific claims from the `ear_attester_claims`, `ear_verifier_claims`,
-  `ear_endorser_claims` and `ear_rvp_claims` objects
+  `ear_endorser_claims` and `ear_reference_value_provider_claims` objects
 
 EAR is an EAT, therefore the privacy considerations in {{Section 8 of -eat}}
 apply.
@@ -865,9 +865,9 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 
 ### Reference Value Provider Claims
 
-* Claim Name: ear_rvp_claims
+* Claim Name: ear_reference_value_provider_claims
 * Claim Description: Reference Value Provider Claims
-* JWT Claim Name: ear_rvp_claims
+* JWT Claim Name: ear_reference_value_provider_claims
 * Claim Key: 1009 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
