@@ -407,7 +407,7 @@ Table of Contents
      ? attester-claims-label => claims-map-type
      ? verifier-claims-label => claims-map-type
      ? endorser-claims-label => supply-chain-claims-type
-     ? rvp-claims-label => supply-chain-claims-type
+     ? reference-value-provider-claims-label => supply-chain-claims-type
      * $$ear-appraisal-extension
    }
 
@@ -433,7 +433,7 @@ Table of Contents
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
    endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
-   rvp-claims-label = eat.JC<"ear_rvp_claims", 1009>
+   reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1009>
 
    ; supply chain entity name => claims it asserted
    supply-chain-claims-type = { + text => claims-map-type }
@@ -513,9 +513,9 @@ Table of Contents
       added during appraisal using Endorsements.  Each key identifies
       the supply chain entity that asserted the claims in the associated
       value, which is a map of claims.  Identifiers are subject to the
-      rules given under ear_rvp_claims.
+      rules given under ear_reference_value_provider_claims.
 
-   ear_rvp_claims (optional)
+   ear_reference_value_provider_claims (optional)
       A map containing claims with Reference Value Provider authority,
       i.e., claims that are present in the appraised Evidence and that
       the Verifier corroborated using Reference Values.  Each key
@@ -1142,7 +1142,7 @@ Table of Contents
              }
            }
          },
-         "ear_rvp_claims": {
+         "ear_reference_value_provider_claims": {
            "Arm": {
              "psa-implementation-id":
                "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
@@ -1345,12 +1345,12 @@ Table of Contents
    discussion and references on this topic can be found in Section 7 of
    [RFC9839].
 
-   The ear_endorser_claims and ear_rvp_claims claims attribute claims to
-   supply chain entities.  The attribution is the Verifier's.  Relying
-   Parties cannot see or check the keys and signatures on which it is
-   based.  Consequently, they rely on the Verifier's mapping from
-   cryptographic identities to identifiers and on the integrity
-   protection of the EAR.
+   The ear_endorser_claims and ear_reference_value_provider_claims
+   claims attribute claims to supply chain entities.  The attribution is
+   the Verifier's.  Relying Parties cannot see or check the keys and
+   signatures on which it is based.  Consequently, they rely on the
+   Verifier's mapping from cryptographic identities to identifiers and
+   on the integrity protection of the EAR.
 
 7.1.  Binding EAR to the Appraisal Request
 
@@ -1388,12 +1388,12 @@ Table of Contents
 
    *  It SHOULD be possible to disable inclusion of the optional
       ear_attester_claims, ear_verifier_claims, ear_endorser_claims and
-      ear_rvp_claims claims
+      ear_reference_value_provider_claims claims
 
    *  It SHOULD be possible to allow redaction, anonymisation or removal
       of specific claims from the ear_attester_claims,
-      ear_verifier_claims, ear_endorser_claims and ear_rvp_claims
-      objects
+      ear_verifier_claims, ear_endorser_claims and
+      ear_reference_value_provider_claims objects
 
    EAR is an EAT, therefore the privacy considerations in Section 8 of
    [RFC9711] apply.
@@ -1577,11 +1577,11 @@ Table of Contents
 
 9.1.11.  Reference Value Provider Claims
 
-   *  Claim Name: ear_rvp_claims
+   *  Claim Name: ear_reference_value_provider_claims
 
    *  Claim Description: Reference Value Provider Claims
 
-   *  JWT Claim Name: ear_rvp_claims
+   *  JWT Claim Name: ear_reference_value_provider_claims
 
    *  Claim Key: 1009 (suggested)
 
@@ -1786,7 +1786,8 @@ Appendix A.  Collated CDDL
      ? attester-claims-label => claims-map-type,
      ? verifier-claims-label => claims-map-type,
      ? endorser-claims-label => supply-chain-claims-type,
-     ? rvp-claims-label => supply-chain-claims-type,
+     ? reference-value-provider-claims-label => supply-chain-claims-\
+                                                                   type,
      * $$ear-appraisal-extension,
    }
    status-label = eat.JC<"ear_status", 1000>
@@ -1810,7 +1811,8 @@ Appendix A.  Collated CDDL
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
    endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
-   rvp-claims-label = eat.JC<"ear_rvp_claims", 1009>
+   reference-value-provider-claims-label = eat.JC<"\
+                             ear_reference_value_provider_claims", 1009>
    supply-chain-claims-type = {+ text => claims-map-type}
    claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
    claims-map-type-json = {+ text => any}

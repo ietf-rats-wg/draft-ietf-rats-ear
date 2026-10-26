@@ -1666,7 +1666,7 @@ EAR-appraisal = {
   ? attester-claims-label =&gt; claims-map-type
   ? verifier-claims-label =&gt; claims-map-type
   ? endorser-claims-label =&gt; supply-chain-claims-type
-  ? rvp-claims-label =&gt; supply-chain-claims-type
+  ? reference-value-provider-claims-label =&gt; supply-chain-claims-type
   * $$ear-appraisal-extension
 }
 
@@ -1692,7 +1692,7 @@ appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
 endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
-rvp-claims-label = eat.JC&lt;"ear_rvp_claims", 1009&gt;
+reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1009&gt;
 
 ; supply chain entity name =&gt; claims it asserted
 supply-chain-claims-type = { + text =&gt; claims-map-type }
@@ -1784,11 +1784,11 @@ See also <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.1" class="r
           <dd style="margin-left: 1.5em" id="section-3.2-2.20">
             <p id="section-3.2-2.20.1">A map containing claims with Endorser authority, i.e., claims that are not present in the appraised Evidence and that the Verifier added during appraisal using Endorsements.
 Each key identifies the supply chain entity that asserted the claims in the associated value, which is a map of claims.
-Identifiers are subject to the rules given under <code>ear_rvp_claims</code>.<a href="#section-3.2-2.20.1" class="pilcrow">¶</a></p>
+Identifiers are subject to the rules given under <code>ear_reference_value_provider_claims</code>.<a href="#section-3.2-2.20.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.2-2.21">
-<code>ear_rvp_claims</code> (optional)</dt>
+<code>ear_reference_value_provider_claims</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.2-2.22">
             <p id="section-3.2-2.22.1">A map containing claims with Reference Value Provider authority, i.e., claims that are present in the appraised Evidence and that the Verifier corroborated using Reference Values.
 Each key identifies the supply chain entity that provided the Reference Values, and the associated value is a map of the corroborated claims.
@@ -2482,7 +2482,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           }
         }
       },
-      "ear_rvp_claims": {
+      "ear_reference_value_provider_claims": {
         "Arm": {
           "psa-implementation-id":
             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
@@ -2725,7 +2725,7 @@ and consume attestation results.<a href="#section-6.1.3-1" class="pilcrow">¶</a
 The security considerations of these specifications therefore apply here too.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">Any textual fields (e.g., the strings in <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code>) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
 Further discussion and references on this topic can be found in <span><a href="https://rfc-editor.org/rfc/rfc9839#section-7" class="relref">Section 7</a> of [<a href="#RFC9839" class="cite xref">RFC9839</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">The <code>ear_endorser_claims</code> and <code>ear_rvp_claims</code> claims attribute claims to supply chain entities.
+<p id="section-7-3">The <code>ear_endorser_claims</code> and <code>ear_reference_value_provider_claims</code> claims attribute claims to supply chain entities.
 The attribution is the Verifier's.
 Relying Parties cannot see or check the keys and signatures on which it is based.
 Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.<a href="#section-7-3" class="pilcrow">¶</a></p>
@@ -2766,12 +2766,12 @@ claim<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
         <li class="normal" id="section-8-2.3">
           <p id="section-8-2.3.1">It <span class="bcp14">SHOULD</span> be possible to disable inclusion of the optional
 <code>ear_attester_claims</code>, <code>ear_verifier_claims</code>, <code>ear_endorser_claims</code> and
-<code>ear_rvp_claims</code> claims<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
+<code>ear_reference_value_provider_claims</code> claims<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-8-2.4">
           <p id="section-8-2.4.1">It <span class="bcp14">SHOULD</span> be possible to allow redaction, anonymisation or removal of
 specific claims from the <code>ear_attester_claims</code>, <code>ear_verifier_claims</code>,
-<code>ear_endorser_claims</code> and <code>ear_rvp_claims</code> objects<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
+<code>ear_endorser_claims</code> and <code>ear_reference_value_provider_claims</code> objects<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-8-3">EAR is an EAT, therefore the privacy considerations in <span><a href="https://rfc-editor.org/rfc/rfc9711#section-8" class="relref">Section 8</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>
@@ -3103,13 +3103,13 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
           </h4>
 <ul class="normal">
 <li class="normal" id="section-9.1.11-1.1">
-              <p id="section-9.1.11-1.1.1">Claim Name: ear_rvp_claims<a href="#section-9.1.11-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.1.1">Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.2">
               <p id="section-9.1.11-1.2.1">Claim Description: Reference Value Provider Claims<a href="#section-9.1.11-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.3">
-              <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_rvp_claims<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.4">
               <p id="section-9.1.11-1.4.1">Claim Key: 1009 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
@@ -3354,7 +3354,8 @@ EAR-appraisal = {
   ? attester-claims-label =&gt; claims-map-type,
   ? verifier-claims-label =&gt; claims-map-type,
   ? endorser-claims-label =&gt; supply-chain-claims-type,
-  ? rvp-claims-label =&gt; supply-chain-claims-type,
+  ? reference-value-provider-claims-label =&gt; supply-chain-claims-\
+                                                                type,
   * $$ear-appraisal-extension,
 }
 status-label = eat.JC&lt;"ear_status", 1000&gt;
@@ -3378,7 +3379,8 @@ appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
 endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
-rvp-claims-label = eat.JC&lt;"ear_rvp_claims", 1009&gt;
+reference-value-provider-claims-label = eat.JC&lt;"\
+                          ear_reference_value_provider_claims", 1009&gt;
 supply-chain-claims-type = {+ text =&gt; claims-map-type}
 claims-map-type = eat.JC&lt;claims-map-type-json, claims-map-type-cbor&gt;
 claims-map-type-json = {+ text =&gt; any}
