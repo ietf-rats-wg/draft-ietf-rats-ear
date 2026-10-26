@@ -88,12 +88,14 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  EAT Attestation Result
-     3.1.  EAR Appraisal Claims
-     3.2.  Recursive and Tunnelled Submods
-     3.3.  JSON Serialisation
-       3.3.1.  Examples
-     3.4.  CBOR Serialisation
+     3.1.  Input Digest
+       3.1.1.  Applicability
+     3.2.  EAR Appraisal Claims
+     3.3.  Recursive and Tunnelled Submods
+     3.4.  JSON Serialisation
        3.4.1.  Examples
+     3.5.  CBOR Serialisation
+       3.5.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
@@ -112,6 +114,7 @@ Table of Contents
        6.1.2.  github.com/veraison/c-ear
        6.1.3.  github.com/veraison/rust-ear
    7.  Security Considerations
+     7.1.  Binding EAR to the Appraisal Request
    8.  Privacy Considerations
    9.  IANA Considerations
      9.1.  New EAT Claims
@@ -123,7 +126,8 @@ Table of Contents
        9.1.6.  Attester Claims
        9.1.7.  Verifier Claims
        9.1.8.  Device Topology
-       9.1.9.  EAR TEEP Claims
+       9.1.9.  EAR Input Digest
+       9.1.10. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -178,6 +182,7 @@ Table of Contents
    ;# import rfc9711 as eat
    ;# import ar4si as ar4si
    ;# import cmw as cmw
+   ;# import eat-measured-component as mc
 
    EAR = {
      eat.profile-label => "tag:ietf.org,2026:rats/ear#05"
@@ -189,6 +194,7 @@ Table of Contents
      eat.submods-label => { + text => $submod-value }
      ? eat.nonce-label => eat.nonce-type
      ? topology-label => topology-type
+     ? input-digest-label => mc.digest
      * $$ear-extension
    }
 
@@ -209,6 +215,7 @@ Table of Contents
    raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
    verifier-id-label = eat.JC<"ear_verifier_id", 1004>
    topology-label = eat.JC<"ear_device_topology", 1007>
+   input-digest-label = eat.JC<"ear_input_digest", 1008>
 
                       Figure 1: EAR (CDDL Definition)
 
@@ -228,7 +235,7 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.2).  When a submod is a Nested-Token
+      a Nested-Token (see Section 3.3).  When a submod is a Nested-Token
       whose contents the verifier cannot parse or independently verify
       -- for example, because it uses a serialization or a signature
       scheme the verifier does not support, or because it does not
@@ -265,10 +272,10 @@ Table of Contents
    ear_raw_evidence (optional)
       The unabridged evidence submitted for appraisal, including any
       signed container/envelope, wrapped in a Record CMW (see
-      Section 3.1 of [I-D.ietf-rats-msg-wrap]).  This field may be
-      consumed by other Verifiers in multi-stage verification scenarios
-      or by auditors.  There are privacy considerations associated with
-      this claim.  See Section 8.
+      Section 3.1 of [RFC9999]).  This field may be consumed by other
+      Verifiers in multi-stage verification scenarios or by auditors.
+      There are privacy considerations associated with this claim.  See
+      Section 8.
 
    submods (mandatory)
       A submodule map (Section 4.2.18 of [RFC9711]) holding, for each
@@ -281,9 +288,9 @@ Table of Contents
       constructed from the associated EAT profile.  A verifier SHOULD
       publicly and permanently document its labelling scheme for each
       supported evidence type, unless EAR payloads are produced and
-      consumed entirely within a private deployment.  See Section 3.1
+      consumed entirely within a private deployment.  See Section 3.2
       for the details about the contents of an EAR-appraisal, and
-      Section 3.2 for the recursive and tunnelled cases.
+      Section 3.3 for the recursive and tunnelled cases.
 
    eat_nonce (optional)
       A user supplied nonce that is echoed by the verifier to provide
@@ -300,11 +307,80 @@ Table of Contents
       representing the list of sub-attesters for that attester.  If the
       claim is present, the map MUST contain at least one element.
 
+   ear_input_digest (optional)
+      A cryptographic digest of the appraisal request input that
+      produced this EAR, used to bind the EAR to the exact input the
+      Verifier received.  Its value is the digest type defined in
+      Section 4.2 of [I-D.ietf-rats-eat-measured-component].  See
+      Section 3.1 for the details.
+
    $$ear-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
       further details.
 
-3.1.  EAR Appraisal Claims
+3.1.  Input Digest
+
+   The ear_input_digest claim cryptographically binds an EAR to the
+   exact appraisal request input received by the Verifier, providing a
+   protection that eat_nonce alone does not provide.  While eat_nonce
+   establishes freshness and confirms that the Verifier processed the
+   requester's nonce, it does not bind the remainder of the request.
+
+   For example, an adversary positioned between the TLS terminator and
+   the Verifier's trust boundary could substitute the evidence carried
+   in the request while leaving the nonce intact.  The Relying Party
+   would then receive an EAR with a valid nonce, but for attacker-chosen
+   evidence. ear_input_digest closes this attack by allowing the Relying
+   Party to check that the digest matches the appraisal request input it
+   originally sent (or caused to be sent), exposing any substitution.
+   Other, similar, attacks that rely on tampering with the appraisal
+   request input without affecting the nonce are also expected to be
+   closed by the same mechanism.
+
+   The digest is computed over the raw wire bytes of the complete
+   appraisal request input:
+
+   *  The sender computes the digest over the encoded request bytes,
+      after encoding and before transmission, and retains those exact
+      bytes for later verification.
+
+   *  The Verifier computes the digest over the raw bytes as received on
+      the wire, before any decoding or processing.
+
+   Because neither side re-encodes the input before hashing, encoding
+   format and field ordering are irrelevant: the sender and the Verifier
+   are comparing the same bytes -- the ones that were sent on the wire.
+   This also means ear_input_digest is transport-agnostic: it does not
+   matter whether the bytes are carried in an HTTP body, a gRPC message,
+   or any other framing, as long as the sender has access to, and
+   retains, the exact bytes that the Verifier will hash.
+
+   When using ear_input_digest, use of CMW ([RFC9999]) as the appraisal
+   request format is RECOMMENDED.  CMW provides a well-defined
+   encapsulation boundary that makes it straightforward for both parties
+   to identify which bytes constitute the complete request input, and to
+   apply the hash at the correct point in their respective pipelines.
+
+3.1.1.  Applicability
+
+   Deployments that produce or verify ear_input_digest MUST satisfy both
+   of the following conditions:
+
+   1.  Encapsulation: the appraisal request input MUST be carried in a
+       single, self-delimiting encapsulation; between the sender's
+       encoding step and the Verifier's hashing step, this encapsulation
+       MUST NOT be modified.
+
+   2.  Byte access: the sender MUST have access to, and retain, the
+       literal octets of the encoded appraisal request input.
+
+   If either condition does not hold, ear_input_digest SHOULD NOT be
+   produced or verified.
+
+   When both conditions hold, ear_input_digest provides strong end-to-
+   end request binding, and Relying Parties SHOULD verify it.
+
+3.2.  EAR Appraisal Claims
 
    ;# import ar4si as ar4si
    ;# import rfc9711 as eat
@@ -389,7 +465,7 @@ Table of Contents
       Any registered or unregistered extension.  See Section 4 for
       further details.
 
-3.2.  Recursive and Tunnelled Submods
+3.3.  Recursive and Tunnelled Submods
 
    In addition to a flat EAR-appraisal, a submod MAY instead carry a
    nested EAR or a Nested-Token (Section 4.2.18.3 of [RFC9711]).  This
@@ -515,9 +591,9 @@ Table of Contents
 
          Figure 3: JSON claims-set: recursive and tunnelled submods
 
-3.3.  JSON Serialisation
+3.4.  JSON Serialisation
 
-3.3.1.  Examples
+3.4.1.  Examples
 
    The example in Figure 4 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
@@ -539,6 +615,10 @@ Table of Contents
      "ear_raw_evidence": [
        "application/vnd.evidence",
        "NzQ3MjY5NzM2NTYzNzQK"
+     ],
+     "ear_input_digest": [
+       "sha-256",
+       "TInrSlzsaz9jfL7abgvJ2roo2P93Jozst3x3OU_afNg"
      ],
      "submods": {
        "PSA": {
@@ -622,9 +702,9 @@ Table of Contents
 
            Figure 5: JSON claims-set: simple affirming appraisal
 
-3.4.  CBOR Serialisation
+3.5.  CBOR Serialisation
 
-3.4.1.  Examples
+3.5.1.  Examples
 
    The example in Figure 6 is semantically equivalent to that in
    Figure 4.  It shows the same "contraindicated" appraisal using the
@@ -640,6 +720,10 @@ Table of Contents
      1002: [
        "application/vnd.evidence",
        h'6C696665626F61746D616E'
+     ],
+     1008: [
+       1,
+       h'4c89eb4a5cec6b3f637cbeda6e0bc9daba28d8ff77268cecb77c77394fda7cd8'
      ],
      266: {
        "PSA": {
@@ -1123,6 +1207,25 @@ Table of Contents
    the CWT specification [RFC8392].  The security considerations of
    these specifications therefore apply here too.
 
+7.1.  Binding EAR to the Appraisal Request
+
+   eat_nonce alone only proves that the Verifier processed a request
+   carrying a given nonce; it does not prove that the request contained
+   the evidence (or any other input) that the requester actually sent.
+   An on-path attacker able to tamper with the appraisal request without
+   disturbing the nonce -- for example, by substituting the evidence
+   while leaving the nonce intact -- can therefore cause a Relying Party
+   to accept an EAR that has a valid nonce but does not reflect the
+   evidence the Relying Party asked to have appraised.
+
+   The ear_input_digest claim (see Section 3.1), when applicable,
+   mitigates this class of attack by binding the EAR to the exact wire
+   bytes of the appraisal request the Verifier received.  Implementers
+   and deployers are strongly encouraged to read Section 3.1 in full
+   before deciding to produce or verify ear_input_digest, since an
+   inappropriate deployment topology can silently negate its security
+   benefit.
+
 8.  Privacy Considerations
 
    EAR is designed to expose as little identifying information as
@@ -1176,7 +1279,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 9.1.2.  Trustworthiness Vector
 
@@ -1192,7 +1295,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 9.1.3.  EAR Raw Evidence
 
@@ -1224,7 +1327,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 9.1.5.  Verifier Software Identifier
 
@@ -1256,7 +1359,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 9.1.7.  Verifier Claims
 
@@ -1272,7 +1375,7 @@ Table of Contents
 
    *  Change Controller: IESG
 
-   *  Specification Document(s): Section 3.1 of RFCthis
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 9.1.8.  Device Topology
 
@@ -1290,7 +1393,23 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.9.  EAR TEEP Claims
+9.1.9.  EAR Input Digest
+
+   *  Claim Name: ear_input_digest
+
+   *  Claim Description: Digest of the EAR Appraisal Request Input
+
+   *  JWT Claim Name: ear_input_digest
+
+   *  Claim Key: 1008 (suggested)
+
+   *  Claim Value Type(s): array
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.1 of RFCthis
+
+9.1.10.  EAR TEEP Claims
 
    TODO
 
@@ -1305,12 +1424,13 @@ Table of Contents
               10, 18 May 2026, <https://datatracker.ietf.org/doc/html/
               draft-ietf-rats-ar4si-10>.
 
-   [I-D.ietf-rats-msg-wrap]
-              Birkholz, H., Smith, N., Fossati, T., Tschofenig, H., and
-              D. Glaze, "RATS Conceptual Messages Wrapper (CMW)", Work
-              in Progress, Internet-Draft, draft-ietf-rats-msg-wrap-23,
-              11 December 2025, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-msg-wrap-23>.
+   [I-D.ietf-rats-eat-measured-component]
+              Frost, S., Fossati, T., Tschofenig, H., and H. Birkholz,
+              "Entity Attestation Token (EAT) Measured Component", Work
+              in Progress, Internet-Draft, draft-ietf-rats-eat-measured-
+              component-12, 20 February 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              eat-measured-component-12>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
@@ -1358,6 +1478,11 @@ Table of Contents
               Attestation Token (EAT) Media Types", RFC 9782,
               DOI 10.17487/RFC9782, May 2025,
               <https://www.rfc-editor.org/rfc/rfc9782>.
+
+   [RFC9999]  Birkholz, H., Smith, N., Fossati, T., and H. Tschofenig,
+              "Remote ATtestation procedureS (RATS) Conceptual Message
+              Wrapper (CMW)", RFC 9999, DOI 10.17487/RFC9999, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9999>.
 
    [STD94]    Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
@@ -1414,6 +1539,7 @@ Appendix A.  Collated CDDL
      eat.submods-label => {+ text => $submod-value},
      ? eat.nonce-label => eat.nonce-type,
      ? topology-label => topology-type,
+     ? input-digest-label => mc.digest,
      * $$ear-extension,
    }
    cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
@@ -1421,6 +1547,7 @@ Appendix A.  Collated CDDL
    raw-evidence-label = eat.JC<"ear_raw_evidence", 1002>
    verifier-id-label = eat.JC<"ear_verifier_id", 1004>
    topology-label = eat.JC<"ear_device_topology", 1007>
+   input-digest-label = eat.JC<"ear_input_digest", 1008>
    EAR-appraisal = {
      ? eat.profile-label => eat.general-uri / eat.general-oid,
      status-label => ar4si.trustworthiness-tier,
@@ -1568,6 +1695,15 @@ Appendix A.  Collated CDDL
    SP        =  %x20
    VCHAR     =  %x21-7E           ; printable ASCII (no SP)
    '
+   mc.digest = [
+     alg: int / text,
+     val: mc.digest-value-type,
+   ]
+   mc.digest-value-type = mc.eat.JC<mc.bytes-b64u, bytes>
+   mc.eat.JC<J, C> = mc.eat.JSON-ONLY<J> / mc.eat.CBOR-ONLY<C>
+   mc.eat.JSON-ONLY<J> = J .feature "json"
+   mc.eat.CBOR-ONLY<C> = C .feature "cbor"
+   mc.bytes-b64u = text .b64u bytes
 
 Appendix B.  Open Policy Agent Example
 
