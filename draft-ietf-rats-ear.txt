@@ -91,11 +91,12 @@ Table of Contents
      3.1.  Input Digest
        3.1.1.  Applicability
      3.2.  EAR Appraisal Claims
-     3.3.  Recursive and Tunnelled Submods
-     3.4.  JSON Serialisation
-       3.4.1.  Examples
-     3.5.  CBOR Serialisation
+     3.3.  Details Claims
+     3.4.  Recursive and Tunnelled Submods
+     3.5.  JSON Serialisation
        3.5.1.  Examples
+     3.6.  CBOR Serialisation
+       3.6.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
@@ -120,14 +121,16 @@ Table of Contents
      9.1.  New EAT Claims
        9.1.1.  EAR Status
        9.1.2.  Trustworthiness Vector
-       9.1.3.  EAR Raw Evidence
-       9.1.4.  EAR Appraisal Policy Identifier
-       9.1.5.  Verifier Software Identifier
-       9.1.6.  Attester Claims
-       9.1.7.  Verifier Claims
-       9.1.8.  Device Topology
-       9.1.9.  EAR Input Digest
-       9.1.10. EAR TEEP Claims
+       9.1.3.  Status Details
+       9.1.4.  Trustworthiness Vector Details
+       9.1.5.  EAR Raw Evidence
+       9.1.6.  EAR Appraisal Policy Identifier
+       9.1.7.  Verifier Software Identifier
+       9.1.8.  Attester Claims
+       9.1.9.  Verifier Claims
+       9.1.10. Device Topology
+       9.1.11. EAR Input Digest
+       9.1.12. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -187,6 +190,7 @@ Table of Contents
    EAR = {
      eat.profile-label => "tag:ietf.org,2026:rats/ear#05"
      ? status-label => ar4si.trustworthiness-tier
+     ? status-details-label => details-type
      eat.iat-claim-label => ~eat.time-int
      ? eat.exp-claim-label => ~eat.time-int
      verifier-id-label => ar4si.verifier-id
@@ -235,7 +239,7 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.3).  When a submod is a Nested-Token
+      a Nested-Token (see Section 3.4).  When a submod is a Nested-Token
       whose contents the verifier cannot parse or independently verify
       -- for example, because it uses a serialization or a signature
       scheme the verifier does not support, or because it does not
@@ -250,6 +254,11 @@ Table of Contents
       the Nested-Token submods individually.  This claim exists to help
       Relying Parties easily determine the overall status of the
       appraisal without having to inspect each submod.
+
+   ear_status_details (optional)
+      A non-empty array of strings, each giving a reason for the value
+      of ear_status.  See Section 3.3 for the rules that apply to all
+      *_details claims.
 
    iat (mandatory)
       "Issued At" claim -- the time at which the EAR is issued.  See
@@ -290,7 +299,7 @@ Table of Contents
       supported evidence type, unless EAR payloads are produced and
       consumed entirely within a private deployment.  See Section 3.2
       for the details about the contents of an EAR-appraisal, and
-      Section 3.3 for the recursive and tunnelled cases.
+      Section 3.4 for the recursive and tunnelled cases.
 
    eat_nonce (optional)
       A user supplied nonce that is echoed by the verifier to provide
@@ -388,7 +397,9 @@ Table of Contents
    EAR-appraisal = {
      ? eat.profile-label => eat.general-uri / eat.general-oid
      status-label => ar4si.trustworthiness-tier
+     ? status-details-label => details-type
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector
+     ? trustworthiness-vector-details-label => trustworthiness-vector-details
      ? appraisal-policy-ids-label => [ + text ]
      ? eat.nonce-label => eat.nonce-type
      ? attester-claims-label => claims-map-type
@@ -398,6 +409,22 @@ Table of Contents
 
    status-label = eat.JC<"ear_status", 1000>
    trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", 1001>
+   status-details-label = eat.JC<"ear_status_details", 1010>
+   trustworthiness-vector-details-label =
+     eat.JC<"ear_trustworthiness_vector_details", 1011>
+
+   details-type = [ + text ]
+
+   trustworthiness-vector-details = ar4si.non-empty<{
+     ? ar4si.instance-identity-label => details-type,
+     ? ar4si.configuration-label => details-type,
+     ? ar4si.executables-label => details-type,
+     ? ar4si.file-system-label => details-type,
+     ? ar4si.hardware-label => details-type,
+     ? ar4si.runtime-opaque-label => details-type,
+     ? ar4si.storage-opaque-label => details-type,
+     ? ar4si.sourced-data-label => details-type,
+   }>
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
@@ -423,10 +450,20 @@ Table of Contents
       the worst trustworthiness claim across the entire trustworthiness
       vector.
 
+   ear_status_details (optional)
+      A non-empty array of strings, each giving a reason for the value
+      of ear_status.
+
    ear_trustworthiness_vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
       appraisal for this attester.  See Section 3.1 of
-      [I-D.ietf-rats-ar4si] for the details.  This claim MUST be present
+      [I-D.ietf-rats-ar4si] for the details.
+
+   ear_trustworthiness_vector_details (optional)
+      A map from trustworthiness vector categories to non-empty arrays
+      of strings, each giving a reason for the value of the
+      corresponding category.  Each key MUST be a category that is
+      present in ear_trustworthiness_vector.  This claim MUST be present
       unless the party requesting Evidence appraisal explicitly asks for
       it to be dropped, e.g., via an API parameter or similar
       arrangement.  Such consumer would therefore rely entirely on the
@@ -465,7 +502,26 @@ Table of Contents
       Any registered or unregistered extension.  See Section 4 for
       further details.
 
-3.3.  Recursive and Tunnelled Submods
+3.3.  Details Claims
+
+   The ear_status_details and ear_trustworthiness_vector_details claims
+   let a Verifier tell the Relying Party the reasons for the values of
+   ear_status and of the trustworthiness vector categories.  They are
+   optional, and are intended for values other than affirming.
+
+   Each string states one reason, in text meant for people (e.g., logs,
+   diagnostics, support).  The text is not standardised: it can change
+   between Verifiers, versions of the same Verifier and, if localised,
+   languages.  A Relying Party MUST NOT base automated decisions on it.
+   Those rely entirely on ear_status and ear_trustworthiness_vector,
+   which remain authoritative.
+
+   The text can reproduce data controlled by the Attester (e.g., file
+   names found in the Evidence), so a Relying Party MUST treat it as
+   untrusted input (see Section 7).  It can also reveal details of the
+   Attester's state, see Section 8.
+
+3.4.  Recursive and Tunnelled Submods
 
    In addition to a flat EAR-appraisal, a submod MAY instead carry a
    nested EAR or a Nested-Token (Section 4.2.18.3 of [RFC9711]).  This
@@ -591,9 +647,9 @@ Table of Contents
 
          Figure 3: JSON claims-set: recursive and tunnelled submods
 
-3.4.  JSON Serialisation
+3.5.  JSON Serialisation
 
-3.4.1.  Examples
+3.5.1.  Examples
 
    The example in Figure 4 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
@@ -623,10 +679,16 @@ Table of Contents
      "submods": {
        "PSA": {
          "ear_status": "contraindicated",
+         "ear_status_details": [
+           "The 'executables' category is contraindicated."
+         ],
          "ear_trustworthiness_vector": {
            "instance-identity": 2,
            "executables": 96,
            "hardware": 2
+         },
+         "ear_trustworthiness_vector_details": {
+           "executables": [ "unauthorized code found in runtime memory" ]
          },
          "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ]
@@ -702,9 +764,9 @@ Table of Contents
 
            Figure 5: JSON claims-set: simple affirming appraisal
 
-3.5.  CBOR Serialisation
+3.6.  CBOR Serialisation
 
-3.5.1.  Examples
+3.6.1.  Examples
 
    The example in Figure 6 is semantically equivalent to that in
    Figure 4.  It shows the same "contraindicated" appraisal using the
@@ -728,10 +790,14 @@ Table of Contents
      266: {
        "PSA": {
          1000: 96,
+         1010: [ "The 'executables' category is contraindicated." ],
          1001: {
            0: 2,
            2: 96,
            4: 2
+         },
+         1011: {
+           2: [ "unauthorized code found in runtime memory" ]
          },
          1003: [ "https://veraison.example/policy/1/60a0068d" ]
        }
@@ -1207,6 +1273,13 @@ Table of Contents
    the CWT specification [RFC8392].  The security considerations of
    these specifications therefore apply here too.
 
+   Any textual fields (e.g., the strings in ear_status_details and
+   ear_trustworthiness_vector_details) that are stored in a file,
+   inserted into a database, or displayed to humans must be properly
+   sanitized to prevent attacks and undesirable behavior.  Further
+   discussion and references on this topic can be found in Section 7 of
+   [RFC9839].
+
 7.1.  Binding EAR to the Appraisal Request
 
    eat_nonce alone only proves that the Verifier processed a request
@@ -1234,6 +1307,9 @@ Table of Contents
    applying privacy-preserving techniques to those claims, for example
    allowing their redaction, anonymisation or outright removal.
    Specifically:
+
+   *  It SHOULD be possible to disable inclusion of the optional
+      ear_status_details and ear_trustworthiness_vector_details claims
 
    *  It SHOULD be possible to disable inclusion of the optional
       ear_raw_evidence claim
@@ -1297,7 +1373,39 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.3.  EAR Raw Evidence
+9.1.3.  Status Details
+
+   *  Claim Name: ear_status_details
+
+   *  Claim Description: EAR Status Details
+
+   *  JWT Claim Name: ear_status_details
+
+   *  Claim Key: 1010 (suggested)
+
+   *  Claim Value Type(s): array
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 and Section 3.2 of RFCthis
+
+9.1.4.  Trustworthiness Vector Details
+
+   *  Claim Name: ear_trustworthiness_vector_details
+
+   *  Claim Description: EAR Trustworthiness Vector Details
+
+   *  JWT Claim Name: ear_trustworthiness_vector_details
+
+   *  Claim Key: 1011 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
+
+9.1.5.  EAR Raw Evidence
 
    *  Claim Name: ear_raw_evidence
 
@@ -1313,7 +1421,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.4.  EAR Appraisal Policy Identifier
+9.1.6.  EAR Appraisal Policy Identifier
 
    *  Claim Name: ear_appraisal_policy_ids
 
@@ -1329,7 +1437,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.5.  Verifier Software Identifier
+9.1.7.  Verifier Software Identifier
 
    *  Claim Name: ear_verifier_id
 
@@ -1345,7 +1453,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.6.  Attester Claims
+9.1.8.  Attester Claims
 
    *  Claim Name: ear_attester_claims
 
@@ -1361,7 +1469,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.7.  Verifier Claims
+9.1.9.  Verifier Claims
 
    *  Claim Name: ear_verifier_claims
 
@@ -1377,7 +1485,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.8.  Device Topology
+9.1.10.  Device Topology
 
    *  Claim Name: ear_device_topology
 
@@ -1393,7 +1501,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.9.  EAR Input Digest
+9.1.11.  EAR Input Digest
 
    *  Claim Name: ear_input_digest
 
@@ -1409,7 +1517,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.10.  EAR TEEP Claims
+9.1.12.  EAR TEEP Claims
 
    TODO
 
@@ -1523,6 +1631,10 @@ Table of Contents
               Architecture", RFC 9334, DOI 10.17487/RFC9334, January
               2023, <https://www.rfc-editor.org/rfc/rfc9334>.
 
+   [RFC9839]  Bray, T. and P. Hoffman, "Unicode Character Repertoire
+              Subsets", RFC 9839, DOI 10.17487/RFC9839, August 2025,
+              <https://www.rfc-editor.org/rfc/rfc9839>.
+
 Appendix A.  Collated CDDL
 
    =============== NOTE: '\' line wrapping per RFC 8792 ================
@@ -1532,6 +1644,7 @@ Appendix A.  Collated CDDL
    EAR = {
      eat.profile-label => "tag:ietf.org,2026:rats/ear#05",
      ? status-label => ar4si.trustworthiness-tier,
+     ? status-details-label => details-type,
      eat.iat-claim-label => ~eat.time-int,
      ? eat.exp-claim-label => ~eat.time-int,
      verifier-id-label => ar4si.verifier-id,
@@ -1551,7 +1664,10 @@ Appendix A.  Collated CDDL
    EAR-appraisal = {
      ? eat.profile-label => eat.general-uri / eat.general-oid,
      status-label => ar4si.trustworthiness-tier,
+     ? status-details-label => details-type,
      ? trustworthiness-vector-label => ar4si.trustworthiness-vector,
+     ? trustworthiness-vector-details-label => trustworthiness-vector-\
+                                                                details,
      ? appraisal-policy-ids-label => [+ text],
      ? eat.nonce-label => eat.nonce-type,
      ? attester-claims-label => claims-map-type,
@@ -1561,6 +1677,20 @@ Appendix A.  Collated CDDL
    status-label = eat.JC<"ear_status", 1000>
    trustworthiness-vector-label = eat.JC<"ear_trustworthiness_vector", \
                                                                    1001>
+   status-details-label = eat.JC<"ear_status_details", 1010>
+   trustworthiness-vector-details-label = eat.JC<"\
+                              ear_trustworthiness_vector_details", 1011>
+   details-type = [+ text]
+   trustworthiness-vector-details = ar4si.non-empty<{
+       ? ar4si.instance-identity-label => details-type,
+       ? ar4si.configuration-label => details-type,
+       ? ar4si.executables-label => details-type,
+       ? ar4si.file-system-label => details-type,
+       ? ar4si.hardware-label => details-type,
+       ? ar4si.runtime-opaque-label => details-type,
+       ? ar4si.storage-opaque-label => details-type,
+       ? ar4si.sourced-data-label => details-type,
+   }>
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
@@ -1571,36 +1701,7 @@ Appendix A.  Collated CDDL
    eat.JC<J, C> = eat.JSON-ONLY<J> / eat.CBOR-ONLY<C>
    eat.JSON-ONLY<J> = J .feature "json"
    eat.CBOR-ONLY<C> = C .feature "cbor"
-   eat.profile-label = eat.JC<"eat_profile", 265>
-   eat.iat-claim-label = eat.JC<"iat", 6>
-   eat.time-int = #6.1(int)
-   eat.exp-claim-label = eat.JC<"exp", 4>
-   eat.submods-label = eat.JC<"submods", 266>
-   eat.nonce-label = eat.JC<"eat_nonce", 10>
-   eat.nonce-type = eat.JC<tstr .size (8 .. 88), bstr .size (8 .. 64)>
-   eat.Nested-Token = eat.CBOR-Nested-Token / eat.JSON-Selector
-   eat.general-uri = eat.JC<text, ~uri>
-   eat.general-oid = eat.JC<eat.json-oid, ~eat.oid>
-   eat.CBOR-Nested-Token = eat.JSON-Token-Inside-CBOR-Token / eat.CBOR-\
-                                                 Token-Inside-CBOR-Token
-   eat.JSON-Selector = eat.$JSON-Selector
-   eat.json-oid = tstr .regexp "([0-2])((\\.0)|(\\.[1-9][0-9]*))*"
-   eat.oid = #6.111(bstr)
-   eat.JSON-Token-Inside-CBOR-Token = tstr
-   eat.CBOR-Token-Inside-CBOR-Token = bstr .cbor eat.$CBOR-Tagged-Token
-   eat.$JSON-Selector /= [
-       type: "JWT",
-       nested-token: eat.JWT-Message,
-   ] / [
-       type: "CBOR",
-       nested-token: eat.CBOR-Token-Inside-JSON-Token,
-   ]
-   eat.$CBOR-Tagged-Token /= #6.61(bstr) / #6.18(bstr) / #6.17(bstr) / \
-                                                             #6.16(bstr)
-   eat.JWT-Message = tstr .regexp "[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A\
-                                                           -Za-z0-9_-]*"
-   eat.CBOR-Token-Inside-JSON-Token = eat.base64-url-text
-   eat.base64-url-text = tstr .regexp "[A-Za-z0-9_-]+"
+   ar4si.non-empty<M> = M .within ({+ any => any})
    ar4si.trustworthiness-tier /= ar4si.trustworthiness-tier-none-label \
    / ar4si.trustworthiness-tier-affirming-label / ar4si.trustworthiness\
    -tier-warning-label / ar4si.trustworthiness-tier-contraindicated-\
@@ -1619,18 +1720,7 @@ Appendix A.  Collated CDDL
        ? ar4si.storage-opaque-label => ar4si.trustworthiness-claim,
        ? ar4si.sourced-data-label => ar4si.trustworthiness-claim,
    }>
-   ar4si.non-empty<M> = M .within ({+ any => any})
-   ar4si.trustworthiness-tier-none-label = ar4si.JC<"none", 0>
-   ar4si.trustworthiness-tier-affirming-label = ar4si.JC<"affirming", 2>
-   ar4si.trustworthiness-tier-warning-label = ar4si.JC<"warning", 32>
-   ar4si.trustworthiness-tier-contraindicated-label = ar4si.JC<"\
-                                                   contraindicated", 96>
-   ar4si.trustworthiness-tier-incomplete-label = ar4si.JC<"incomplete"\
-                                                                  , 127>
-   ar4si.developer-label = ar4si.JC<"developer", 0>
-   ar4si.build-label = ar4si.JC<"build", 1>
    ar4si.instance-identity-label = ar4si.JC<"instance-identity", 0>
-   ar4si.trustworthiness-claim = -128 .. 127
    ar4si.configuration-label = ar4si.JC<"configuration", 1>
    ar4si.executables-label = ar4si.JC<"executables", 2>
    ar4si.file-system-label = ar4si.JC<"file-system", 3>
@@ -1641,6 +1731,16 @@ Appendix A.  Collated CDDL
    ar4si.JC<J, C> = ar4si.JSON-ONLY<J> / ar4si.CBOR-ONLY<C>
    ar4si.JSON-ONLY<J> = J .feature "json"
    ar4si.CBOR-ONLY<C> = C .feature "cbor"
+   ar4si.trustworthiness-tier-none-label = ar4si.JC<"none", 0>
+   ar4si.trustworthiness-tier-affirming-label = ar4si.JC<"affirming", 2>
+   ar4si.trustworthiness-tier-warning-label = ar4si.JC<"warning", 32>
+   ar4si.trustworthiness-tier-contraindicated-label = ar4si.JC<"\
+                                                   contraindicated", 96>
+   ar4si.trustworthiness-tier-incomplete-label = ar4si.JC<"incomplete"\
+                                                                  , 127>
+   ar4si.developer-label = ar4si.JC<"developer", 0>
+   ar4si.build-label = ar4si.JC<"build", 1>
+   ar4si.trustworthiness-claim = -128 .. 127
    cmw.json-record = [
      type: cmw.media-type,
      value: cmw.base64url-string,
@@ -1704,6 +1804,36 @@ Appendix A.  Collated CDDL
    mc.eat.JSON-ONLY<J> = J .feature "json"
    mc.eat.CBOR-ONLY<C> = C .feature "cbor"
    mc.bytes-b64u = text .b64u bytes
+   eat.profile-label = eat.JC<"eat_profile", 265>
+   eat.iat-claim-label = eat.JC<"iat", 6>
+   eat.time-int = #6.1(int)
+   eat.exp-claim-label = eat.JC<"exp", 4>
+   eat.submods-label = eat.JC<"submods", 266>
+   eat.nonce-label = eat.JC<"eat_nonce", 10>
+   eat.nonce-type = eat.JC<tstr .size (8 .. 88), bstr .size (8 .. 64)>
+   eat.Nested-Token = eat.CBOR-Nested-Token / eat.JSON-Selector
+   eat.general-uri = eat.JC<text, ~uri>
+   eat.general-oid = eat.JC<eat.json-oid, ~eat.oid>
+   eat.CBOR-Nested-Token = eat.JSON-Token-Inside-CBOR-Token / eat.CBOR-\
+                                                 Token-Inside-CBOR-Token
+   eat.JSON-Selector = eat.$JSON-Selector
+   eat.json-oid = tstr .regexp "([0-2])((\\.0)|(\\.[1-9][0-9]*))*"
+   eat.oid = #6.111(bstr)
+   eat.JSON-Token-Inside-CBOR-Token = tstr
+   eat.CBOR-Token-Inside-CBOR-Token = bstr .cbor eat.$CBOR-Tagged-Token
+   eat.$JSON-Selector /= [
+       type: "JWT",
+       nested-token: eat.JWT-Message,
+   ] / [
+       type: "CBOR",
+       nested-token: eat.CBOR-Token-Inside-JSON-Token,
+   ]
+   eat.$CBOR-Tagged-Token /= #6.61(bstr) / #6.18(bstr) / #6.17(bstr) / \
+                                                             #6.16(bstr)
+   eat.JWT-Message = tstr .regexp "[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A\
+                                                           -Za-z0-9_-]*"
+   eat.CBOR-Token-Inside-JSON-Token = eat.base64-url-text
+   eat.base64-url-text = tstr .regexp "[A-Za-z0-9_-]+"
 
 Appendix B.  Open Policy Agent Example
 
