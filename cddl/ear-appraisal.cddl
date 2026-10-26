@@ -12,7 +12,7 @@ EAR-appraisal = {
   ? attester-claims-label => claims-map-type
   ? verifier-claims-label => claims-map-type
   ? endorser-claims-label => supply-chain-claims-type
-  ? rvp-claims-label => supply-chain-claims-type
+  ? reference-value-provider-claims-label => supply-chain-claims-type
   * $$ear-appraisal-extension
 }
 
@@ -38,7 +38,7 @@ appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
 attester-claims-label = eat.JC<"ear_attester_claims", 1005>
 verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
 endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
-rvp-claims-label = eat.JC<"ear_rvp_claims", 1009>
+reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1009>
 
 ; supply chain entity name => claims it asserted
 supply-chain-claims-type = { + text => claims-map-type }

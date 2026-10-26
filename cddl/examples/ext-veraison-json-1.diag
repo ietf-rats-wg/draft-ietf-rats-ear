@@ -60,7 +60,7 @@
           }
         }
       },
-      "ear_rvp_claims": {
+      "ear_reference_value_provider_claims": {
         "Arm": {
           "psa-implementation-id":
             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
