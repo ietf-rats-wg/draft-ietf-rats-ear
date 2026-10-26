@@ -2723,11 +2723,12 @@ and consume attestation results.<a href="#section-6.1.3-1" class="pilcrow">¶</a
       </h2>
 <p id="section-7-1">EAR is a profile of the EAT specification <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>, it also reuses the CWT specification <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.
 The security considerations of these specifications therefore apply here too.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">The <code>ear_endorser_claims</code> and <code>ear_rvp_claims</code> claims attribute claims to supply chain entities.
-The attribution is the Verifier's: Relying Parties do not see, and cannot check, the keys and signatures on which it is based.
-They therefore rely on the Verifier's mapping from cryptographic identities to identifiers, and on the integrity protection of the EAR.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">Any textual fields (e.g., the strings in <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code>) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
-Further discussion and references on this topic can be found in <span><a href="https://rfc-editor.org/rfc/rfc9839#section-7" class="relref">Section 7</a> of [<a href="#RFC9839" class="cite xref">RFC9839</a>]</span>.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-2">Any textual fields (e.g., the strings in <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code>) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
+Further discussion and references on this topic can be found in <span><a href="https://rfc-editor.org/rfc/rfc9839#section-7" class="relref">Section 7</a> of [<a href="#RFC9839" class="cite xref">RFC9839</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">The <code>ear_endorser_claims</code> and <code>ear_rvp_claims</code> claims attribute claims to supply chain entities.
+The attribution is the Verifier's.
+Relying Parties cannot see or check the keys and signatures on which it is based.
+Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div id="binding-ear-to-the-appraisal-request">
 <section id="section-7.1">
         <h3 id="name-binding-ear-to-the-appraisa">
