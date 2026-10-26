@@ -1338,13 +1338,19 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
                     <p id="section-toc.1-1.9.2.1.2.9.1"><a href="#section-9.1.9" class="auto internal xref">9.1.9</a>.  <a href="#name-verifier-claims" class="internal xref">Verifier Claims</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.10">
-                    <p id="section-toc.1-1.9.2.1.2.10.1"><a href="#section-9.1.10" class="auto internal xref">9.1.10</a>. <a href="#name-device-topology" class="internal xref">Device Topology</a></p>
+                    <p id="section-toc.1-1.9.2.1.2.10.1"><a href="#section-9.1.10" class="auto internal xref">9.1.10</a>. <a href="#name-endorser-claims" class="internal xref">Endorser Claims</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.11">
-                    <p id="section-toc.1-1.9.2.1.2.11.1"><a href="#section-9.1.11" class="auto internal xref">9.1.11</a>. <a href="#name-ear-input-digest" class="internal xref">EAR Input Digest</a></p>
+                    <p id="section-toc.1-1.9.2.1.2.11.1"><a href="#section-9.1.11" class="auto internal xref">9.1.11</a>. <a href="#name-reference-value-provider-cl" class="internal xref">Reference Value Provider Claims</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.12">
-                    <p id="section-toc.1-1.9.2.1.2.12.1"><a href="#section-9.1.12" class="auto internal xref">9.1.12</a>. <a href="#name-ear-teep-claims" class="internal xref">EAR TEEP Claims</a></p>
+                    <p id="section-toc.1-1.9.2.1.2.12.1"><a href="#section-9.1.12" class="auto internal xref">9.1.12</a>. <a href="#name-device-topology" class="internal xref">Device Topology</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.13">
+                    <p id="section-toc.1-1.9.2.1.2.13.1"><a href="#section-9.1.13" class="auto internal xref">9.1.13</a>. <a href="#name-ear-input-digest" class="internal xref">EAR Input Digest</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.14">
+                    <p id="section-toc.1-1.9.2.1.2.14.1"><a href="#section-9.1.14" class="auto internal xref">9.1.14</a>. <a href="#name-ear-teep-claims" class="internal xref">EAR TEEP Claims</a></p>
 </li>
                 </ul>
 </li>
@@ -1659,6 +1665,8 @@ EAR-appraisal = {
   ? eat.nonce-label =&gt; eat.nonce-type
   ? attester-claims-label =&gt; claims-map-type
   ? verifier-claims-label =&gt; claims-map-type
+  ? endorser-claims-label =&gt; supply-chain-claims-type
+  ? reference-value-provider-claims-label =&gt; supply-chain-claims-type
   * $$ear-appraisal-extension
 }
 
@@ -1683,6 +1691,11 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
+reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1009&gt;
+
+; supply chain entity name =&gt; claims it asserted
+supply-chain-claims-type = { + text =&gt; claims-map-type }
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1767,10 +1780,32 @@ See also <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.1" class="r
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.2-2.19">
-<code>$$ear-appraisal-extension</code> (optional)</dt>
+<code>ear_endorser_claims</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.2-2.20">
-            <p id="section-3.2-2.20.1">Any registered or unregistered extension.
-See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.2-2.20.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-2.20.1">A map containing claims with Endorser authority, i.e., claims that are not present in the appraised Evidence and that the Verifier added during appraisal using Endorsements.
+Each key identifies the supply chain entity that asserted the claims in the associated value, which is a map of claims.
+Identifiers are subject to the rules given under <code>ear_reference_value_provider_claims</code>.<a href="#section-3.2-2.20.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.2-2.21">
+<code>ear_reference_value_provider_claims</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.22">
+            <p id="section-3.2-2.22.1">A map containing claims with Reference Value Provider authority, i.e., claims that are present in the appraised Evidence and that the Verifier corroborated using Reference Values.
+Each key identifies the supply chain entity that provided the Reference Values, and the associated value is a map of the corroborated claims.
+A corroborated claim <span class="bcp14">MAY</span> be omitted from <code>ear_attester_claims</code>: the complete set of claims extracted from the Evidence is the union of the two maps.
+The identifier is a human-readable string (e.g., "Arm" or "NVIDIA") that the Verifier derives from the cryptographic identity of the supply chain entity (e.g., the key that signed the Endorsements or Reference Values) when it ingests them, so that Relying Parties do not have to handle keys.
+The same entity <span class="bcp14">MUST</span> be given the same identifier throughout an EAR, and an identifier <span class="bcp14">MUST NOT</span> be shared by distinct entities.
+A claim asserted by more than one authority appears under the identifier of each of them.
+Each occurrence is an independent assertion.
+To avoid arbitrary values, the Verifier <span class="bcp14">SHOULD</span> derive the identifier from the first of the following sources that is available: the subject name (e.g., the organization or common name attribute) of the certificate of the key that signed the CoRIM conveying the Endorsements or Reference Values, provided the certification path validates to a trust anchor of the Verifier; the <code>entity-name</code> of the entity with the <code>manifest-signer</code> role in the <code>corim-entity-map</code> (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-11#section-4.1.5" class="relref">Section 4.1.5</a> of [<a href="#I-D.ietf-rats-corim" class="cite xref">I-D.ietf-rats-corim</a>]</span>); the <code>signer-name</code> in the <code>corim-signer-map</code> (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-11#section-4.2.3.1" class="relref">Section 4.2.3.1</a> of [<a href="#I-D.ietf-rats-corim" class="cite xref">I-D.ietf-rats-corim</a>]</span>); a name configured in the Appraisal Policy for Evidence.
+The <code>entity-name</code> and <code>signer-name</code> are asserted by the signer itself, so the Verifier <span class="bcp14">MUST NOT</span> use them unless it has authenticated the binding between the name and the key that signed the CoRIM.<a href="#section-3.2-2.22.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.2-2.23">
+<code>$$ear-appraisal-extension</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.24">
+            <p id="section-3.2-2.24.1">Any registered or unregistered extension.
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.2-2.24.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -2432,17 +2467,25 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      "ear_verifier_claims": {
-        "psa-certified": {
-          "certificate-number": "1234567890123-12345",
-          "date-of-issue": "23/06/2022",
-          "test-lab": "Riscure",
-          "certification-holder": "ACME Inc.",
-          "certified-product": "RoadRunner",
-          "hardware-version": "Gizmo v1.0.2",
-          "software-version": "TrustedFirmware-M v1.0.6",
-          "certification-type": "PSA Certified Level 1 v2.1",
-          "developer-type": "PSA Certified – Device"
+      "ear_endorser_claims": {
+        "ACME Security Lab": {
+          "psa-certified": {
+            "certificate-number": "1234567890123-12345",
+            "date-of-issue": "23/06/2022",
+            "test-lab": "Riscure",
+            "certification-holder": "ACME Inc.",
+            "certified-product": "RoadRunner",
+            "hardware-version": "Gizmo v1.0.2",
+            "software-version": "TrustedFirmware-M v1.0.6",
+            "certification-type": "PSA Certified Level 1 v2.1",
+            "developer-type": "PSA Certified – Device"
+          }
+        }
+      },
+      "ear_reference_value_provider_claims": {
+        "Arm": {
+          "psa-implementation-id":
+            "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
         }
       }
     }
@@ -2538,17 +2581,25 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      1006: {
-        "psa-certified": {
-          "certificate-number": "1234567890123-12345",
-          "date-of-issue": "23/06/2022",
-          "test-lab": "Riscure",
-          "certification-holder": "ACME Inc.",
-          "certified-product": "RoadRunner",
-          "hardware-version": "Gizmo v1.0.2",
-          "software-version": "TrustedFirmware-M v1.0.6",
-          "certification-type": "PSA Certified Level 1 v2.1",
-          "developer-type": "PSA Certified – Device"
+      1008: {
+        "ACME Security Lab": {
+          "psa-certified": {
+            "certificate-number": "1234567890123-12345",
+            "date-of-issue": "23/06/2022",
+            "test-lab": "Riscure",
+            "certification-holder": "ACME Inc.",
+            "certified-product": "RoadRunner",
+            "hardware-version": "Gizmo v1.0.2",
+            "software-version": "TrustedFirmware-M v1.0.6",
+            "certification-type": "PSA Certified Level 1 v2.1",
+            "developer-type": "PSA Certified – Device"
+          }
+        }
+      },
+      1009: {
+        "Arm": {
+          "psa-implementation-id":
+            "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
         }
       }
     }
@@ -2674,6 +2725,10 @@ and consume attestation results.<a href="#section-6.1.3-1" class="pilcrow">¶</a
 The security considerations of these specifications therefore apply here too.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">Any textual fields (e.g., the strings in <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code>) that are stored in a file, inserted into a database, or displayed to humans must be properly sanitized to prevent attacks and undesirable behavior.
 Further discussion and references on this topic can be found in <span><a href="https://rfc-editor.org/rfc/rfc9839#section-7" class="relref">Section 7</a> of [<a href="#RFC9839" class="cite xref">RFC9839</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">The <code>ear_endorser_claims</code> and <code>ear_reference_value_provider_claims</code> claims attribute claims to supply chain entities.
+The attribution is the Verifier's.
+Relying Parties cannot see or check the keys and signatures on which it is based.
+Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div id="binding-ear-to-the-appraisal-request">
 <section id="section-7.1">
         <h3 id="name-binding-ear-to-the-appraisa">
@@ -2710,11 +2765,13 @@ claim<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-8-2.3">
           <p id="section-8-2.3.1">It <span class="bcp14">SHOULD</span> be possible to disable inclusion of the optional
-<code>ear_attester_claims</code> and <code>ear_verifier_claims</code> claims<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
+<code>ear_attester_claims</code>, <code>ear_verifier_claims</code>, <code>ear_endorser_claims</code> and
+<code>ear_reference_value_provider_claims</code> claims<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-8-2.4">
           <p id="section-8-2.4.1">It <span class="bcp14">SHOULD</span> be possible to allow redaction, anonymisation or removal of
-specific claims from the <code>ear_attester_claims</code> and <code>ear_verifier_claims</code> objects<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
+specific claims from the <code>ear_attester_claims</code>, <code>ear_verifier_claims</code>,
+<code>ear_endorser_claims</code> and <code>ear_reference_value_provider_claims</code> objects<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-8-3">EAR is an EAT, therefore the privacy considerations in <span><a href="https://rfc-editor.org/rfc/rfc9711#section-8" class="relref">Section 8</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>
@@ -3009,23 +3066,23 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
           </ul>
 </section>
 </div>
-<div id="device-topology">
+<div id="endorser-claims">
 <section id="section-9.1.10">
-          <h4 id="name-device-topology">
-<a href="#section-9.1.10" class="section-number selfRef">9.1.10. </a><a href="#name-device-topology" class="section-name selfRef">Device Topology</a>
+          <h4 id="name-endorser-claims">
+<a href="#section-9.1.10" class="section-number selfRef">9.1.10. </a><a href="#name-endorser-claims" class="section-name selfRef">Endorser Claims</a>
           </h4>
 <ul class="normal">
 <li class="normal" id="section-9.1.10-1.1">
-              <p id="section-9.1.10-1.1.1">Claim Name: ear_device_topology<a href="#section-9.1.10-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.1.1">Claim Name: ear_endorser_claims<a href="#section-9.1.10-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.2">
-              <p id="section-9.1.10-1.2.1">Claim Description: Device Attesters Arrangement<a href="#section-9.1.10-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.2.1">Claim Description: Endorser Claims<a href="#section-9.1.10-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.3">
-              <p id="section-9.1.10-1.3.1">JWT Claim Name: ear_device_topology<a href="#section-9.1.10-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.3.1">JWT Claim Name: ear_endorser_claims<a href="#section-9.1.10-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.4">
-              <p id="section-9.1.10-1.4.1">Claim Key: 1007 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.4.1">Claim Key: 1008 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.5">
               <p id="section-9.1.10-1.5.1">Claim Value Type(s): map<a href="#section-9.1.10-1.5.1" class="pilcrow">¶</a></p>
@@ -3034,47 +3091,107 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.10-1.6.1">Change Controller: IESG<a href="#section-9.1.10-1.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.7">
-              <p id="section-9.1.10-1.7.1">Specification Document(s): <a href="#sec-ear" class="auto internal xref">Section 3</a> of RFCthis<a href="#section-9.1.10-1.7.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.7.1">Specification Document(s): <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.2</a> of RFCthis<a href="#section-9.1.10-1.7.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
-<div id="ear-input-digest">
+<div id="reference-value-provider-claims">
 <section id="section-9.1.11">
-          <h4 id="name-ear-input-digest">
-<a href="#section-9.1.11" class="section-number selfRef">9.1.11. </a><a href="#name-ear-input-digest" class="section-name selfRef">EAR Input Digest</a>
+          <h4 id="name-reference-value-provider-cl">
+<a href="#section-9.1.11" class="section-number selfRef">9.1.11. </a><a href="#name-reference-value-provider-cl" class="section-name selfRef">Reference Value Provider Claims</a>
           </h4>
 <ul class="normal">
 <li class="normal" id="section-9.1.11-1.1">
-              <p id="section-9.1.11-1.1.1">Claim Name: ear_input_digest<a href="#section-9.1.11-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.1.1">Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.2">
-              <p id="section-9.1.11-1.2.1">Claim Description: Digest of the EAR Appraisal Request Input<a href="#section-9.1.11-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.2.1">Claim Description: Reference Value Provider Claims<a href="#section-9.1.11-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.3">
-              <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_input_digest<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.4">
-              <p id="section-9.1.11-1.4.1">Claim Key: 1008 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.4.1">Claim Key: 1009 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.5">
-              <p id="section-9.1.11-1.5.1">Claim Value Type(s): array<a href="#section-9.1.11-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.5.1">Claim Value Type(s): map<a href="#section-9.1.11-1.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.6">
               <p id="section-9.1.11-1.6.1">Change Controller: IESG<a href="#section-9.1.11-1.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.7">
-              <p id="section-9.1.11-1.7.1">Specification Document(s): <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a> of RFCthis<a href="#section-9.1.11-1.7.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.7.1">Specification Document(s): <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.2</a> of RFCthis<a href="#section-9.1.11-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="device-topology">
+<section id="section-9.1.12">
+          <h4 id="name-device-topology">
+<a href="#section-9.1.12" class="section-number selfRef">9.1.12. </a><a href="#name-device-topology" class="section-name selfRef">Device Topology</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.12-1.1">
+              <p id="section-9.1.12-1.1.1">Claim Name: ear_device_topology<a href="#section-9.1.12-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.2">
+              <p id="section-9.1.12-1.2.1">Claim Description: Device Attesters Arrangement<a href="#section-9.1.12-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.3">
+              <p id="section-9.1.12-1.3.1">JWT Claim Name: ear_device_topology<a href="#section-9.1.12-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.4">
+              <p id="section-9.1.12-1.4.1">Claim Key: 1007 (suggested)<a href="#section-9.1.12-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.5">
+              <p id="section-9.1.12-1.5.1">Claim Value Type(s): map<a href="#section-9.1.12-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.6">
+              <p id="section-9.1.12-1.6.1">Change Controller: IESG<a href="#section-9.1.12-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.12-1.7">
+              <p id="section-9.1.12-1.7.1">Specification Document(s): <a href="#sec-ear" class="auto internal xref">Section 3</a> of RFCthis<a href="#section-9.1.12-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="ear-input-digest">
+<section id="section-9.1.13">
+          <h4 id="name-ear-input-digest">
+<a href="#section-9.1.13" class="section-number selfRef">9.1.13. </a><a href="#name-ear-input-digest" class="section-name selfRef">EAR Input Digest</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-9.1.13-1.1">
+              <p id="section-9.1.13-1.1.1">Claim Name: ear_input_digest<a href="#section-9.1.13-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.2">
+              <p id="section-9.1.13-1.2.1">Claim Description: Digest of the EAR Appraisal Request Input<a href="#section-9.1.13-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.3">
+              <p id="section-9.1.13-1.3.1">JWT Claim Name: ear_input_digest<a href="#section-9.1.13-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.4">
+              <p id="section-9.1.13-1.4.1">Claim Key: 1008 (suggested)<a href="#section-9.1.13-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.5">
+              <p id="section-9.1.13-1.5.1">Claim Value Type(s): array<a href="#section-9.1.13-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.6">
+              <p id="section-9.1.13-1.6.1">Change Controller: IESG<a href="#section-9.1.13-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.13-1.7">
+              <p id="section-9.1.13-1.7.1">Specification Document(s): <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a> of RFCthis<a href="#section-9.1.13-1.7.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="ear-teep-claims">
-<section id="section-9.1.12">
+<section id="section-9.1.14">
           <h4 id="name-ear-teep-claims">
-<a href="#section-9.1.12" class="section-number selfRef">9.1.12. </a><a href="#name-ear-teep-claims" class="section-name selfRef">EAR TEEP Claims</a>
+<a href="#section-9.1.14" class="section-number selfRef">9.1.14. </a><a href="#name-ear-teep-claims" class="section-name selfRef">EAR TEEP Claims</a>
           </h4>
-<p id="section-9.1.12-1">TODO<a href="#section-9.1.12-1" class="pilcrow">¶</a></p>
+<p id="section-9.1.14-1">TODO<a href="#section-9.1.14-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3157,6 +3274,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="I-D.ietf-rats-corim">[I-D.ietf-rats-corim]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Fossati, T.</span>, <span class="refAuthor">Deshpande, Y.</span>, <span class="refAuthor">Smith, N.</span>, and <span class="refAuthor">W. Pan</span>, <span class="refTitle">"Concise Reference Integrity Manifest"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-corim-11</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-11">https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-11</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.ietf-rats-multi-verifier">[I-D.ietf-rats-multi-verifier]</dt>
         <dd>
 <span class="refAuthor">Deshpande, Y.</span>, <span class="refAuthor">jun, Z.</span>, <span class="refAuthor">Labiod, H.</span>, and <span class="refAuthor">H. Birkholz</span>, <span class="refTitle">"Remote Attestation with Multiple Verifiers"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-multi-verifier-00</span>, <time datetime="2026-05-05" class="refDate">5 May 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-multi-verifier-00">https://datatracker.ietf.org/doc/html/draft-ietf-rats-multi-verifier-00</a>&gt;</span>. </dd>
@@ -3232,6 +3353,9 @@ EAR-appraisal = {
   ? eat.nonce-label =&gt; eat.nonce-type,
   ? attester-claims-label =&gt; claims-map-type,
   ? verifier-claims-label =&gt; claims-map-type,
+  ? endorser-claims-label =&gt; supply-chain-claims-type,
+  ? reference-value-provider-claims-label =&gt; supply-chain-claims-\
+                                                                type,
   * $$ear-appraisal-extension,
 }
 status-label = eat.JC&lt;"ear_status", 1000&gt;
@@ -3254,6 +3378,10 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
+reference-value-provider-claims-label = eat.JC&lt;"\
+                          ear_reference_value_provider_claims", 1009&gt;
+supply-chain-claims-type = {+ text =&gt; claims-map-type}
 claims-map-type = eat.JC&lt;claims-map-type-json, claims-map-type-cbor&gt;
 claims-map-type-json = {+ text =&gt; any}
 claims-map-type-cbor = {+ (text / int) =&gt; any}

@@ -128,9 +128,11 @@ Table of Contents
        9.1.7.  Verifier Software Identifier
        9.1.8.  Attester Claims
        9.1.9.  Verifier Claims
-       9.1.10. Device Topology
-       9.1.11. EAR Input Digest
-       9.1.12. EAR TEEP Claims
+       9.1.10. Endorser Claims
+       9.1.11. Reference Value Provider Claims
+       9.1.12. Device Topology
+       9.1.13. EAR Input Digest
+       9.1.14. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -404,6 +406,8 @@ Table of Contents
      ? eat.nonce-label => eat.nonce-type
      ? attester-claims-label => claims-map-type
      ? verifier-claims-label => claims-map-type
+     ? endorser-claims-label => supply-chain-claims-type
+     ? reference-value-provider-claims-label => supply-chain-claims-type
      * $$ear-appraisal-extension
    }
 
@@ -428,6 +432,11 @@ Table of Contents
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
+   endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
+   reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1009>
+
+   ; supply chain entity name => claims it asserted
+   supply-chain-claims-type = { + text => claims-map-type }
 
               Figure 2: EAR Appraisal Claims (CDDL Definition)
 
@@ -497,6 +506,46 @@ Table of Contents
       A map containing claims with Verifier authority, i.e., claims
       added by the Verifier during appraisal and derived from evaluating
       the Appraisal Policy for Evidence.
+
+   ear_endorser_claims (optional)
+      A map containing claims with Endorser authority, i.e., claims that
+      are not present in the appraised Evidence and that the Verifier
+      added during appraisal using Endorsements.  Each key identifies
+      the supply chain entity that asserted the claims in the associated
+      value, which is a map of claims.  Identifiers are subject to the
+      rules given under ear_reference_value_provider_claims.
+
+   ear_reference_value_provider_claims (optional)
+      A map containing claims with Reference Value Provider authority,
+      i.e., claims that are present in the appraised Evidence and that
+      the Verifier corroborated using Reference Values.  Each key
+      identifies the supply chain entity that provided the Reference
+      Values, and the associated value is a map of the corroborated
+      claims.  A corroborated claim MAY be omitted from
+      ear_attester_claims: the complete set of claims extracted from the
+      Evidence is the union of the two maps.  The identifier is a human-
+      readable string (e.g., "Arm" or "NVIDIA") that the Verifier
+      derives from the cryptographic identity of the supply chain entity
+      (e.g., the key that signed the Endorsements or Reference Values)
+      when it ingests them, so that Relying Parties do not have to
+      handle keys.  The same entity MUST be given the same identifier
+      throughout an EAR, and an identifier MUST NOT be shared by
+      distinct entities.  A claim asserted by more than one authority
+      appears under the identifier of each of them.  Each occurrence is
+      an independent assertion.  To avoid arbitrary values, the Verifier
+      SHOULD derive the identifier from the first of the following
+      sources that is available: the subject name (e.g., the
+      organization or common name attribute) of the certificate of the
+      key that signed the CoRIM conveying the Endorsements or Reference
+      Values, provided the certification path validates to a trust
+      anchor of the Verifier; the entity-name of the entity with the
+      manifest-signer role in the corim-entity-map (Section 4.1.5 of
+      [I-D.ietf-rats-corim]); the signer-name in the corim-signer-map
+      (Section 4.2.3.1 of [I-D.ietf-rats-corim]); a name configured in
+      the Appraisal Policy for Evidence.  The entity-name and signer-
+      name are asserted by the signer itself, so the Verifier MUST NOT
+      use them unless it has authenticated the binding between the name
+      and the key that signed the CoRIM.
 
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
@@ -1078,17 +1127,25 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         "ear_verifier_claims": {
-           "psa-certified": {
-             "certificate-number": "1234567890123-12345",
-             "date-of-issue": "23/06/2022",
-             "test-lab": "Riscure",
-             "certification-holder": "ACME Inc.",
-             "certified-product": "RoadRunner",
-             "hardware-version": "Gizmo v1.0.2",
-             "software-version": "TrustedFirmware-M v1.0.6",
-             "certification-type": "PSA Certified Level 1 v2.1",
-             "developer-type": "PSA Certified – Device"
+         "ear_endorser_claims": {
+           "ACME Security Lab": {
+             "psa-certified": {
+               "certificate-number": "1234567890123-12345",
+               "date-of-issue": "23/06/2022",
+               "test-lab": "Riscure",
+               "certification-holder": "ACME Inc.",
+               "certified-product": "RoadRunner",
+               "hardware-version": "Gizmo v1.0.2",
+               "software-version": "TrustedFirmware-M v1.0.6",
+               "certification-type": "PSA Certified Level 1 v2.1",
+               "developer-type": "PSA Certified – Device"
+             }
+           }
+         },
+         "ear_reference_value_provider_claims": {
+           "Arm": {
+             "psa-implementation-id":
+               "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
            }
          }
        }
@@ -1173,17 +1230,25 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         1006: {
-           "psa-certified": {
-             "certificate-number": "1234567890123-12345",
-             "date-of-issue": "23/06/2022",
-             "test-lab": "Riscure",
-             "certification-holder": "ACME Inc.",
-             "certified-product": "RoadRunner",
-             "hardware-version": "Gizmo v1.0.2",
-             "software-version": "TrustedFirmware-M v1.0.6",
-             "certification-type": "PSA Certified Level 1 v2.1",
-             "developer-type": "PSA Certified – Device"
+         1008: {
+           "ACME Security Lab": {
+             "psa-certified": {
+               "certificate-number": "1234567890123-12345",
+               "date-of-issue": "23/06/2022",
+               "test-lab": "Riscure",
+               "certification-holder": "ACME Inc.",
+               "certified-product": "RoadRunner",
+               "hardware-version": "Gizmo v1.0.2",
+               "software-version": "TrustedFirmware-M v1.0.6",
+               "certification-type": "PSA Certified Level 1 v2.1",
+               "developer-type": "PSA Certified – Device"
+             }
+           }
+         },
+         1009: {
+           "Arm": {
+             "psa-implementation-id":
+               "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
            }
          }
        }
@@ -1280,6 +1345,13 @@ Table of Contents
    discussion and references on this topic can be found in Section 7 of
    [RFC9839].
 
+   The ear_endorser_claims and ear_reference_value_provider_claims
+   claims attribute claims to supply chain entities.  The attribution is
+   the Verifier's.  Relying Parties cannot see or check the keys and
+   signatures on which it is based.  Consequently, they rely on the
+   Verifier's mapping from cryptographic identities to identifiers and
+   on the integrity protection of the EAR.
+
 7.1.  Binding EAR to the Appraisal Request
 
    eat_nonce alone only proves that the Verifier processed a request
@@ -1315,11 +1387,13 @@ Table of Contents
       ear_raw_evidence claim
 
    *  It SHOULD be possible to disable inclusion of the optional
-      ear_attester_claims and ear_verifier_claims claims
+      ear_attester_claims, ear_verifier_claims, ear_endorser_claims and
+      ear_reference_value_provider_claims claims
 
    *  It SHOULD be possible to allow redaction, anonymisation or removal
-      of specific claims from the ear_attester_claims and
-      ear_verifier_claims objects
+      of specific claims from the ear_attester_claims,
+      ear_verifier_claims, ear_endorser_claims and
+      ear_reference_value_provider_claims objects
 
    EAR is an EAT, therefore the privacy considerations in Section 8 of
    [RFC9711] apply.
@@ -1485,7 +1559,39 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.10.  Device Topology
+9.1.10.  Endorser Claims
+
+   *  Claim Name: ear_endorser_claims
+
+   *  Claim Description: Endorser Claims
+
+   *  JWT Claim Name: ear_endorser_claims
+
+   *  Claim Key: 1008 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
+
+9.1.11.  Reference Value Provider Claims
+
+   *  Claim Name: ear_reference_value_provider_claims
+
+   *  Claim Description: Reference Value Provider Claims
+
+   *  JWT Claim Name: ear_reference_value_provider_claims
+
+   *  Claim Key: 1009 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
+
+9.1.12.  Device Topology
 
    *  Claim Name: ear_device_topology
 
@@ -1501,7 +1607,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.11.  EAR Input Digest
+9.1.13.  EAR Input Digest
 
    *  Claim Name: ear_input_digest
 
@@ -1517,7 +1623,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.12.  EAR TEEP Claims
+9.1.14.  EAR TEEP Claims
 
    TODO
 
@@ -1604,6 +1710,13 @@ Table of Contents
 
 10.2.  Informative References
 
+   [I-D.ietf-rats-corim]
+              Birkholz, H., Fossati, T., Deshpande, Y., Smith, N., and
+              W. Pan, "Concise Reference Integrity Manifest", Work in
+              Progress, Internet-Draft, draft-ietf-rats-corim-11, 6 July
+              2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              rats-corim-11>.
+
    [I-D.ietf-rats-multi-verifier]
               Deshpande, Y., jun, Z., Labiod, H., and H. Birkholz,
               "Remote Attestation with Multiple Verifiers", Work in
@@ -1672,6 +1785,9 @@ Appendix A.  Collated CDDL
      ? eat.nonce-label => eat.nonce-type,
      ? attester-claims-label => claims-map-type,
      ? verifier-claims-label => claims-map-type,
+     ? endorser-claims-label => supply-chain-claims-type,
+     ? reference-value-provider-claims-label => supply-chain-claims-\
+                                                                   type,
      * $$ear-appraisal-extension,
    }
    status-label = eat.JC<"ear_status", 1000>
@@ -1694,6 +1810,10 @@ Appendix A.  Collated CDDL
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
+   endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
+   reference-value-provider-claims-label = eat.JC<"\
+                             ear_reference_value_provider_claims", 1009>
+   supply-chain-claims-type = {+ text => claims-map-type}
    claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
    claims-map-type-json = {+ text => any}
    claims-map-type-cbor = {+ (text / int) => any}
