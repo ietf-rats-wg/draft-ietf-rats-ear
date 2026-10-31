@@ -27,8 +27,8 @@ pi: [toc, sortrefs, symrefs]
 
 author:
 - name: Thomas Fossati
-  org: Linaro
-  email: thomas.fossati@linaro.org
+  org: NVIDIA
+  email: tfossati@nvidia.com
 - name: Eric Voit
   org: Cisco
   email: evoit@cisco.com
