@@ -30,7 +30,19 @@
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
       "eat_transport_identity_key":
-        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw"
+        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw",
+      "eat_secret_wrapping_keys": {
+        "keys": [
+          {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+            "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+            "kid": "wrap-1",
+            "alg": "ECDH-ES+A256KW"
+          }
+        ]
+      }
     }
   }
 }
