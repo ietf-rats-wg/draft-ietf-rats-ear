@@ -1,0 +1,9 @@
+;# import rfc9711 as eat
+;# import eat-measured-component as mc
+
+; The public key the Attester uses to authenticate itself to its peer in a
+; secure channel: either the DER encoding of its SubjectPublicKeyInfo, or
+; a digest of that encoding.
+transport-identity-key-type = spki-type / mc.digest
+
+spki-type = eat.JC<text .b64u bytes, bytes>
