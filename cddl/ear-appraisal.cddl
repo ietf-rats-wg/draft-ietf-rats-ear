@@ -13,6 +13,7 @@ EAR-appraisal = {
   ? verifier-claims-label => claims-map-type
   ? endorser-claims-label => supply-chain-claims-type
   ? reference-value-provider-claims-label => supply-chain-claims-type
+  ? secret-wrapping-keys-label => secret-wrapping-keys-type
   * $$ear-appraisal-extension
 }
 
@@ -39,6 +40,7 @@ attester-claims-label = eat.JC<"ear_attester_claims", 1005>
 verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
 endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
 reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1015>
+secret-wrapping-keys-label = eat.JC<"eat_secret_wrapping_keys", 1013>
 
 ; supply chain entity name => claims it asserted
 supply-chain-claims-type = { + text => claims-map-type }
