@@ -45,7 +45,7 @@
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      1008: {
+      1014: {
         "ACME Security Lab": {
           "psa-certified": {
             "certificate-number": "1234567890123-12345",
@@ -60,7 +60,7 @@
           }
         }
       },
-      1009: {
+      1015: {
         "Arm": {
           "psa-implementation-id":
             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
