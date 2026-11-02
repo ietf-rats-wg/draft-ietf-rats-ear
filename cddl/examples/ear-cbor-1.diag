@@ -25,7 +25,11 @@
       1011: {
         2: [ "unauthorized code found in runtime memory" ]
       },
-      1003: [ "https://veraison.example/policy/1/60a0068d" ]
+      1003: [ "https://veraison.example/policy/1/60a0068d" ],
+      1012: [
+        1,
+        h'51b944cdfa544d4c3273aa6bf350625a7dd53bbb6a71723274f538b19a207760'
+      ]
     }
   }
 }
