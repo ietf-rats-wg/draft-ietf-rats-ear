@@ -336,7 +336,8 @@ See {{sec-extensions}} for further details.
 
 ## Secret Wrapping Keys {#sec-secret-wrapping-keys}
 
-The `eat_secret_wrapping_keys` claim carries public keys of an Attester, so that a Relying Party can release a secret to it by wrapping the secret to one of the keys.
+The `eat_secret_wrapping_keys` claim carries public keys that an Attester designates for encrypting, or establishing keys for, secrets released to it.
+A Relying Party can release a secret to the Attester by wrapping it to one of the keys.
 Secure key release protocols are an example of this use.
 Like any EAT claim, it can appear in Evidence, where the Attester publishes the keys, and in an Attestation Result, where the Verifier conveys keys it obtained from appraised Evidence.
 
@@ -345,6 +346,8 @@ The set MUST NOT be empty.
 The keys MUST be public keys: private and symmetric key parameters MUST NOT be present.
 The claim defines no labels or roles for individual keys.
 The algorithms, the intended use and any identifier of a key are conveyed by its own parameters (e.g., `alg`, `key_ops` and `kid`), which a Relying Party can use to select the key it needs.
+A Relying Party MUST NOT wrap a secret to a key unless the key's own parameters (`alg` or `key_ops`) indicate that it is intended for encryption, key wrapping or key agreement.
+A set can contain keys intended for other purposes, such as signature verification; the Relying Party ignores those.
 
 In an Attestation Result, the Verifier MUST include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
