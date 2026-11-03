@@ -436,8 +436,8 @@ Table of Contents
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
-   endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
-   reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1009>
+   endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
+   reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1015>
    secret-wrapping-keys-label = eat.JC<"eat_secret_wrapping_keys", 1013>
 
    ; supply chain entity name => claims it asserted
@@ -1300,7 +1300,7 @@ Table of Contents
              "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
            "psa-certification-reference": "1234567890123-12345"
          },
-         1008: {
+         1014: {
            "ACME Security Lab": {
              "psa-certified": {
                "certificate-number": "1234567890123-12345",
@@ -1315,7 +1315,7 @@ Table of Contents
              }
            }
          },
-         1009: {
+         1015: {
            "Arm": {
              "psa-implementation-id":
                "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
@@ -1646,7 +1646,7 @@ Table of Contents
 
    *  JWT Claim Name: ear_endorser_claims
 
-   *  Claim Key: 1008 (suggested)
+   *  Claim Key: 1014 (suggested)
 
    *  Claim Value Type(s): map
 
@@ -1662,7 +1662,7 @@ Table of Contents
 
    *  JWT Claim Name: ear_reference_value_provider_claims
 
-   *  Claim Key: 1009 (suggested)
+   *  Claim Key: 1015 (suggested)
 
    *  Claim Value Type(s): map
 
@@ -1912,9 +1912,9 @@ Appendix A.  Collated CDDL
    appraisal-policy-ids-label = eat.JC<"ear_appraisal_policy_ids", 1003>
    attester-claims-label = eat.JC<"ear_attester_claims", 1005>
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
-   endorser-claims-label = eat.JC<"ear_endorser_claims", 1008>
+   endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
    reference-value-provider-claims-label = eat.JC<"\
-                             ear_reference_value_provider_claims", 1009>
+                             ear_reference_value_provider_claims", 1015>
    secret-wrapping-keys-label = eat.JC<"eat_secret_wrapping_keys", 1013>
    supply-chain-claims-type = {+ text => claims-map-type}
    claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
@@ -2170,10 +2170,10 @@ Appendix C.  Open Issues
 
 Acknowledgments
 
-   Many thanks to Dave Thaler, Dhawal Kumar, Ding Ma, Greg Kostal, Jerry
-   Yu, Raghuram Yeluri, Simon Frost, Tobin Feldman-Fitzthum, Yogesh
-   Deshpande for helpful comments and discussions that have shaped this
-   document.
+   Many thanks to Dave Thaler, Dhawal Kumar, Ding Ma, Greg Kostal,
+   Hannes Tschofenig, Jerry Yu, Raghuram Yeluri, Simon Frost, Tobin
+   Feldman-Fitzthum, Yogesh Deshpande for helpful comments and
+   discussions that have shaped this document.
 
 Authors' Addresses
 

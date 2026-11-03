@@ -1701,8 +1701,8 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
-endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
-reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1009&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1014&gt;
+reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1015&gt;
 secret-wrapping-keys-label = eat.JC&lt;"eat_secret_wrapping_keys", 1013&gt;
 
 ; supply chain entity name =&gt; claims it asserted
@@ -2644,7 +2644,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      1008: {
+      1014: {
         "ACME Security Lab": {
           "psa-certified": {
             "certificate-number": "1234567890123-12345",
@@ -2659,7 +2659,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           }
         }
       },
-      1009: {
+      1015: {
         "Arm": {
           "psa-implementation-id":
             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
@@ -3154,7 +3154,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.10-1.3.1">JWT Claim Name: ear_endorser_claims<a href="#section-9.1.10-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.4">
-              <p id="section-9.1.10-1.4.1">Claim Key: 1008 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.4.1">Claim Key: 1014 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.5">
               <p id="section-9.1.10-1.5.1">Claim Value Type(s): map<a href="#section-9.1.10-1.5.1" class="pilcrow">¶</a></p>
@@ -3184,7 +3184,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.4">
-              <p id="section-9.1.11-1.4.1">Claim Key: 1009 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.4.1">Claim Key: 1015 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.5">
               <p id="section-9.1.11-1.5.1">Claim Value Type(s): map<a href="#section-9.1.11-1.5.1" class="pilcrow">¶</a></p>
@@ -3485,9 +3485,9 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
-endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1014&gt;
 reference-value-provider-claims-label = eat.JC&lt;"\
-                          ear_reference_value_provider_claims", 1009&gt;
+                          ear_reference_value_provider_claims", 1015&gt;
 secret-wrapping-keys-label = eat.JC&lt;"eat_secret_wrapping_keys", 1013&gt;
 supply-chain-claims-type = {+ text =&gt; claims-map-type}
 claims-map-type = eat.JC&lt;claims-map-type-json, claims-map-type-cbor&gt;
@@ -3764,6 +3764,7 @@ Dave Thaler,
 Dhawal Kumar,
 Ding Ma,
 Greg Kostal,
+Hannes Tschofenig,
 Jerry Yu,
 Raghuram Yeluri,
 Simon Frost,
