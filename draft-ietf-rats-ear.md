@@ -858,7 +858,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear_endorser_claims
 * Claim Description: Endorser Claims
 * JWT Claim Name: ear_endorser_claims
-* Claim Key: 1008 (suggested)
+* Claim Key: 1014 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
@@ -868,7 +868,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Name: ear_reference_value_provider_claims
 * Claim Description: Reference Value Provider Claims
 * JWT Claim Name: ear_reference_value_provider_claims
-* Claim Key: 1009 (suggested)
+* Claim Key: 1015 (suggested)
 * Claim Value Type(s): map
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
@@ -1015,6 +1015,7 @@ Dave Thaler,
 Dhawal Kumar,
 Ding Ma,
 Greg Kostal,
+Hannes Tschofenig,
 Jerry Yu,
 Raghuram Yeluri,
 Simon Frost,
