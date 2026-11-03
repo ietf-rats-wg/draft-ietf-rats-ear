@@ -26,26 +26,26 @@ separately examined.
 EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT or JWT. 
     " name="description">
-<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="xml2rfc 3.35.0" name="generator">
 <meta content="EAT" name="keyword">
 <meta content="attestation result" name="keyword">
 <meta content="attestation verifier" name="keyword">
 <meta content="AR4SI" name="keyword">
 <meta content="draft-ietf-rats-ear-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.1
-    Python 3.14.8
-    ConfigArgParse 1.8.0
+  xml2rfc 3.35.0
+    Python 3.14.10
+    ConfigArgParse 1.9.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.13.4
+    platformdirs 4.14.3
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.9.2
+    wcwidth 0.9.4
 -->
 <link href="draft-ietf-rats-ear.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1065,7 +1065,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 6 May 2027</td>
+<td class="center">Expires 7 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1078,17 +1078,17 @@ svg {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-11-02" class="published">2 November 2026</time>
+<time datetime="2026-11-03" class="published">3 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-06">6 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-07">7 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">T. Fossati</div>
-<div class="org">Linaro</div>
+<div class="org">NVIDIA</div>
 </div>
 <div class="author">
       <div class="author-name">E. Voit</div>
@@ -1159,7 +1159,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1698,8 +1698,8 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
-endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
-reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1009&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1014&gt;
+reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1015&gt;
 transport-identity-key-label = eat.JC&lt;"eat_transport_identity_key", 1012&gt;
 
 ; supply chain entity name =&gt; claims it asserted
@@ -2631,7 +2631,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
         "psa-certification-reference": "1234567890123-12345"
       },
-      1008: {
+      1014: {
         "ACME Security Lab": {
           "psa-certified": {
             "certificate-number": "1234567890123-12345",
@@ -2646,7 +2646,7 @@ ear.veraison.key-attestation-label = eat.JC&lt;"ear_veraison_key_attestation", -
           }
         }
       },
-      1009: {
+      1015: {
         "Arm": {
           "psa-implementation-id":
             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
@@ -3132,7 +3132,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.10-1.3.1">JWT Claim Name: ear_endorser_claims<a href="#section-9.1.10-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.4">
-              <p id="section-9.1.10-1.4.1">Claim Key: 1008 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.10-1.4.1">Claim Key: 1014 (suggested)<a href="#section-9.1.10-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.10-1.5">
               <p id="section-9.1.10-1.5.1">Claim Value Type(s): map<a href="#section-9.1.10-1.5.1" class="pilcrow">¶</a></p>
@@ -3162,7 +3162,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.11-1.3.1">JWT Claim Name: ear_reference_value_provider_claims<a href="#section-9.1.11-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.4">
-              <p id="section-9.1.11-1.4.1">Claim Key: 1009 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.11-1.4.1">Claim Key: 1015 (suggested)<a href="#section-9.1.11-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.11-1.5">
               <p id="section-9.1.11-1.5.1">Claim Value Type(s): map<a href="#section-9.1.11-1.5.1" class="pilcrow">¶</a></p>
@@ -3459,9 +3459,9 @@ trustworthiness-vector-details = ar4si.non-empty&lt;{
 appraisal-policy-ids-label = eat.JC&lt;"ear_appraisal_policy_ids", 1003&gt;
 attester-claims-label = eat.JC&lt;"ear_attester_claims", 1005&gt;
 verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
-endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1008&gt;
+endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1014&gt;
 reference-value-provider-claims-label = eat.JC&lt;"\
-                          ear_reference_value_provider_claims", 1009&gt;
+                          ear_reference_value_provider_claims", 1015&gt;
 transport-identity-key-label = eat.JC&lt;"eat_transport_identity_key", \
                                                                 1012&gt;
 supply-chain-claims-type = {+ text =&gt; claims-map-type}
@@ -3730,6 +3730,7 @@ Dave Thaler,
 Dhawal Kumar,
 Ding Ma,
 Greg Kostal,
+Hannes Tschofenig,
 Jerry Yu,
 Raghuram Yeluri,
 Simon Frost,
@@ -3745,10 +3746,10 @@ for helpful comments and discussions that have shaped this document.<a href="#ap
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Thomas Fossati</span></div>
-<div dir="auto" class="left"><span class="org">Linaro</span></div>
+<div dir="auto" class="left"><span class="org">NVIDIA</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:thomas.fossati@linaro.org" class="email">thomas.fossati@linaro.org</a>
+<a href="mailto:tfossati@nvidia.com" class="email">tfossati@nvidia.com</a>
 </div>
 </address>
 <address class="vcard">
