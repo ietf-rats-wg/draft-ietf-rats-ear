@@ -347,7 +347,7 @@ The keys MUST be public keys: private and symmetric key parameters MUST NOT be p
 The claim defines no labels or roles for individual keys.
 The algorithms, the intended use and any identifier of a key are conveyed by its own parameters (e.g., `alg`, `key_ops` and `kid`), which a Relying Party can use to select the key it needs.
 A Relying Party MUST NOT wrap a secret to a key unless the key's own parameters (`alg` or `key_ops`) indicate that it is intended for encryption, key wrapping or key agreement.
-A set can contain keys intended for other purposes, such as signature verification; the Relying Party ignores those.
+If a set contains keys intended for other purposes, such as signature verification, the Relying Party MUST ignore them.
 
 In an Attestation Result, the Verifier MUST include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
