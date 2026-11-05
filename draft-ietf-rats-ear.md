@@ -769,7 +769,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Description: EAR Status
 * JWT Claim Name: ear_status
 * Claim Key: 1000 (suggested)
-* Claim Value Type(s): unsigned integer (0, 2, 32, 96)
+* Claim Value Type(s): unsigned integer (0, 2, 32, 96, 127)
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
