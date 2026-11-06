@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 7 May 2027                                                Cisco
+Expires: 10 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         3 November 2026
+                                                         6 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2027.
+   This Internet-Draft will expire on 10 May 2027.
 
 Copyright Notice
 
@@ -1425,7 +1425,7 @@ Table of Contents
 
    *  Claim Key: 1000 (suggested)
 
-   *  Claim Value Type(s): unsigned integer (0, 2, 32, 96)
+   *  Claim Value Type(s): unsigned integer (0, 2, 32, 96, 127)
 
    *  Change Controller: IESG
 
@@ -2059,9 +2059,9 @@ Appendix C.  Open Issues
 Acknowledgments
 
    Many thanks to Dave Thaler, Dhawal Kumar, Ding Ma, Greg Kostal,
-   Hannes Tschofenig, Jerry Yu, Raghuram Yeluri, Simon Frost, Tobin
-   Feldman-Fitzthum, Yogesh Deshpande for helpful comments and
-   discussions that have shaped this document.
+   Hannes Tschofenig, Jerry Yu, Mikko Ylinen, Raghuram Yeluri, Simon
+   Frost, Tobin Feldman-Fitzthum, Yogesh Deshpande for helpful comments
+   and discussions that have shaped this document.
 
 Authors' Addresses
 
