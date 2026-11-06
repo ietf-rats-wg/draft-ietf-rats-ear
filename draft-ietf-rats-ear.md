@@ -363,7 +363,7 @@ A mismatch MUST be treated as an attestation failure.
 ## Secret Wrapping Keys {#sec-secret-wrapping-keys}
 
 The `eat_secret_wrapping_keys` claim carries public keys that an Attester designates for encrypting, or establishing keys for, secrets released to it.
-A Relying Party can release a secret to the Attester by wrapping it to one of the keys.
+A Relying Party can release a secret to the Attester by wrapping it with one of the keys.
 Secure key release protocols are an example of this use.
 Like any EAT claim, it can appear in Evidence, where the Attester publishes the keys, and in an Attestation Result, where the Verifier conveys keys it obtained from appraised Evidence.
 
@@ -372,12 +372,12 @@ The set MUST NOT be empty.
 The keys MUST be public keys: private and symmetric key parameters MUST NOT be present.
 The claim defines no labels or roles for individual keys.
 The algorithms, the intended use and any identifier of a key are conveyed by its own parameters (e.g., `alg`, `key_ops` and `kid`), which a Relying Party can use to select the key it needs.
-A Relying Party MUST NOT wrap a secret to a key unless the key's own parameters (`alg` or `key_ops`) indicate that it is intended for encryption, key wrapping or key agreement.
+A Relying Party MUST NOT wrap a secret with a key unless the key's own parameters (`alg` or `key_ops`) indicate that it is intended for encryption, key wrapping or key agreement.
 If a set contains keys intended for other purposes, such as signature verification, the Relying Party MUST ignore them.
 
 In an Attestation Result, the Verifier MUST include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
-A Relying Party gets that assurance by using the key: a secret wrapped to a key whose private part the Attester does not hold cannot be unwrapped by it.
+A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.
 
 A Verifier that conveys this claim in an appraisal record MUST NOT also include it in `ear_verifier_claims`.
 If the claim also appears in `ear_verifier_claims`, the Relying Party MUST use the claim in the appraisal record and ignore the other occurrence.
@@ -771,7 +771,7 @@ Consequently, they rely on the Verifier's mapping from cryptographic identities 
 
 ## Releasing Secrets to Published Keys
 
-A Relying Party that wraps a secret to a key in `eat_secret_wrapping_keys` (see {{sec-secret-wrapping-keys}}) MUST check that the EAR is fresh for its request, for example by verifying `eat_nonce`, and that `ear_status` is acceptable under its Appraisal Policy for Attestation Results.
+A Relying Party that wraps a secret with a key in `eat_secret_wrapping_keys` (see {{sec-secret-wrapping-keys}}) MUST check that the EAR is fresh for its request, for example by verifying `eat_nonce`, and that `ear_status` is acceptable under its Appraisal Policy for Attestation Results.
 Otherwise, a stale EAR could direct a secret to an environment that has since been compromised.
 
 ## Binding EAR to the Appraisal Request
