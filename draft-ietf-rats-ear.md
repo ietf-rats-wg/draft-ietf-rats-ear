@@ -353,8 +353,8 @@ In an Attestation Result, the Verifier MUST include a key only if the appraised 
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
 A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.
 
-A Verifier that conveys this claim in an appraisal record MUST NOT also include it in `ear_verifier_claims`.
-If the claim also appears in `ear_verifier_claims`, the Relying Party MUST use the claim in the appraisal record and ignore the other occurrence.
+A Verifier that conveys the `ear_secret_wrapping_keys` claim MUST NOT include a functionally equivalent claim in `ear_verifier_claims`.
+If a functionally equivalent claim appears in `ear_verifier_claims`, the Relying Party MUST use the `ear_secret_wrapping_keys` claim and ignore the other occurrence.
 
 ## Details Claims {#sec-details}
 
