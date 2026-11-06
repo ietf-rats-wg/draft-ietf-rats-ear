@@ -47,6 +47,7 @@ normative:
   RFC7519: jwt
   RFC8392: cwt
   RFC8610: cddl
+  RFC7517: jwk
   RFC5280: pkix
   STD94:
     -: cbor
@@ -325,9 +326,35 @@ Each occurrence is an independent assertion.
 To avoid arbitrary values, the Verifier SHOULD derive the identifier from the first of the following sources that is available: the subject name (e.g., the organization or common name attribute) of the certificate of the key that signed the CoRIM conveying the Endorsements or Reference Values, provided the certification path validates to a trust anchor of the Verifier; the `entity-name` of the entity with the `manifest-signer` role in the `corim-entity-map` ({{Section 4.1.5 of -corim}}); the `signer-name` in the `corim-signer-map` ({{Section 4.2.3.1 of -corim}}); a name configured in the Appraisal Policy for Evidence.
 The `entity-name` and `signer-name` are asserted by the signer itself, so the Verifier MUST NOT use them unless it has authenticated the binding between the name and the key that signed the CoRIM.
 
+`eat_secret_wrapping_keys` (optional)
+: The public keys that the appraised Attester publishes so that a Relying Party can wrap a secret to it.
+See {{sec-secret-wrapping-keys}}.
+
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 See {{sec-extensions}} for further details.
+
+## Secret Wrapping Keys {#sec-secret-wrapping-keys}
+
+The `eat_secret_wrapping_keys` claim carries public keys that an Attester designates for encrypting, or establishing keys for, secrets released to it.
+A Relying Party can release a secret to the Attester by wrapping it with one of the keys.
+Secure key release protocols are an example of this use.
+Like any EAT claim, it can appear in Evidence, where the Attester publishes the keys, and in an Attestation Result, where the Verifier conveys keys it obtained from appraised Evidence.
+
+The value is a JWK Set ({{Section 5 of -jwk}}) in JSON, or a COSE_KeySet ({{Section 7 of -cose}}) in CBOR.
+The set MUST NOT be empty.
+The keys MUST be public keys: private and symmetric key parameters MUST NOT be present.
+The claim defines no labels or roles for individual keys.
+The algorithms, the intended use and any identifier of a key are conveyed by its own parameters (e.g., `alg`, `key_ops` and `kid`), which a Relying Party can use to select the key it needs.
+A Relying Party MUST NOT wrap a secret with a key unless the key's own parameters (`alg` or `key_ops`) indicate that it is intended for encryption, key wrapping or key agreement.
+If a set contains keys intended for other purposes, such as signature verification, the Relying Party MUST ignore them.
+
+In an Attestation Result, the Verifier MUST include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
+The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
+A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.
+
+A Verifier that conveys the `ear_secret_wrapping_keys` claim MUST NOT include a functionally equivalent claim in `ear_verifier_claims`.
+If a functionally equivalent claim appears in `ear_verifier_claims`, the Relying Party MUST use the `ear_secret_wrapping_keys` claim and ignore the other occurrence.
 
 ## Details Claims {#sec-details}
 
@@ -716,6 +743,11 @@ The attribution is the Verifier's.
 Relying Parties cannot see or check the keys and signatures on which it is based.
 Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.
 
+## Releasing Secrets to Published Keys
+
+A Relying Party that wraps a secret with a key in `eat_secret_wrapping_keys` (see {{sec-secret-wrapping-keys}}) MUST check that the EAR is fresh for its request, for example by verifying `eat_nonce`, and that `ear_status` is acceptable under its Appraisal Policy for Attestation Results.
+Otherwise, a stale EAR could direct a secret to an environment that has since been compromised.
+
 ## Binding EAR to the Appraisal Request
 
 `eat_nonce` alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the evidence (or any other input) that the requester actually sent.
@@ -892,6 +924,16 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Value Type(s): array
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-input-digest}} of {{&SELF}}
+
+### Secret Wrapping Keys
+
+* Claim Name: eat_secret_wrapping_keys
+* Claim Description: Secret Wrapping Keys
+* JWT Claim Name: eat_secret_wrapping_keys
+* Claim Key: 1013 (suggested)
+* Claim Value Type(s): map (JWK Set) or array (COSE_KeySet)
+* Change Controller: IESG
+* Specification Document(s): {{sec-secret-wrapping-keys}} of {{&SELF}}
 
 ### EAR TEEP Claims
 
