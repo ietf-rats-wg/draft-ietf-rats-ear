@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 7 May 2027                                                Cisco
+Expires: 10 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         3 November 2026
+                                                         6 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2027.
+   This Internet-Draft will expire on 10 May 2027.
 
 Copyright Notice
 
@@ -578,7 +578,7 @@ Table of Contents
    for individual keys.  The algorithms, the intended use and any
    identifier of a key are conveyed by its own parameters (e.g., alg,
    key_ops and kid), which a Relying Party can use to select the key it
-   needs.  A Relying Party MUST NOT wrap a secret to a key unless the
+   needs.  A Relying Party MUST NOT wrap a secret with a key unless the
    key's own parameters (alg or key_ops) indicate that it is intended
    for encryption, key wrapping or key agreement.  If a set contains
    keys intended for other purposes, such as signature verification, the
@@ -591,7 +591,7 @@ Table of Contents
    The Verifier does not assert that the Attester holds the
    corresponding private keys, because this claim does not rely on proof
    of possession.  A Relying Party gets that assurance by using the key:
-   a secret wrapped to a key whose private part the Attester does not
+   a secret wrapped with a key whose private part the Attester does not
    hold cannot be unwrapped by it.
 
    A Verifier that conveys this claim in an appraisal record MUST NOT
