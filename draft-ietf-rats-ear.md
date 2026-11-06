@@ -325,9 +325,38 @@ Each occurrence is an independent assertion.
 To avoid arbitrary values, the Verifier SHOULD derive the identifier from the first of the following sources that is available: the subject name (e.g., the organization or common name attribute) of the certificate of the key that signed the CoRIM conveying the Endorsements or Reference Values, provided the certification path validates to a trust anchor of the Verifier; the `entity-name` of the entity with the `manifest-signer` role in the `corim-entity-map` ({{Section 4.1.5 of -corim}}); the `signer-name` in the `corim-signer-map` ({{Section 4.2.3.1 of -corim}}); a name configured in the Appraisal Policy for Evidence.
 The `entity-name` and `signer-name` are asserted by the signer itself, so the Verifier MUST NOT use them unless it has authenticated the binding between the name and the key that signed the CoRIM.
 
+`eat_transport_identity_key` (optional)
+: The public key the appraised Attester uses to authenticate itself to its peer in a secure channel.
+See {{sec-transport-identity-key}}.
+
 `$$ear-appraisal-extension` (optional)
 : Any registered or unregistered extension.
 See {{sec-extensions}} for further details.
+
+## Transport Identity Key {#sec-transport-identity-key}
+
+The `eat_transport_identity_key` claim identifies the key an Attester uses to authenticate itself in a secure channel, for example the end-entity key of a TLS certificate.
+It lets a Relying Party tie an attestation to the entity it is talking to.
+Like any EAT claim, it can also appear in Evidence, where the Attester asserts it, and in an Attestation Result, where it is present only if the Verifier appraised it in Evidence.
+
+The value is one of:
+
+* the DER encoding of the key's SubjectPublicKeyInfo ({{Section 4.1.2.7 of -pkix}}), as a byte string, or as a base64url-encoded string in JSON;
+* a digest of that encoding, in the `digest` format of {{Section 4.2 of -eat-mc}}.
+
+The SubjectPublicKeyInfo MUST be encoded exactly as the Attester presents it to its peer: the `subjectPublicKeyInfo` field of the end-entity certificate, or the raw public key itself when no certificate is used.
+This lets the Relying Party compare encodings byte for byte, and makes the digest form reproducible.
+
+The digest form identifies the hash algorithm, so that it can be used before the channel's algorithms are negotiated.
+It suits Attesters whose Evidence carries only a digest of the key, and keeps Evidence and Attestation Results small when keys are large, as post-quantum keys are.
+
+The claim only says that the key is resident in the Attester's Target Environment.
+It does not prove that the peer holds the corresponding private key: the Relying Party obtains that proof from the channel's authentication step (e.g., CertificateVerify in TLS).
+To tie the attestation to the peer, the Relying Party MUST compare the SubjectPublicKeyInfo of the key it authenticated with the claim byte for byte, hashing it with the algorithm named in the claim when the digest form is used.
+A mismatch MUST be treated as an attestation failure.
+
+A Verifier that conveys this claim in an appraisal record MUST NOT also include it in `ear_verifier_claims`.
+If the claim also appears in `ear_verifier_claims`, the Relying Party MUST use the claim in the appraisal record and ignore the other occurrence.
 
 ## Details Claims {#sec-details}
 
@@ -892,6 +921,16 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Value Type(s): array
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-input-digest}} of {{&SELF}}
+
+### Transport Identity Key
+
+* Claim Name: eat_transport_identity_key
+* Claim Description: Transport Identity Key
+* JWT Claim Name: eat_transport_identity_key
+* Claim Key: 1012 (suggested)
+* Claim Value Type(s): byte string or text string (SubjectPublicKeyInfo), or array (digest)
+* Change Controller: IESG
+* Specification Document(s): {{sec-transport-identity-key}} of {{&SELF}}
 
 ### EAR TEEP Claims
 
