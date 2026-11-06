@@ -1847,7 +1847,7 @@ A Relying Party <span class="bcp14">MUST NOT</span> wrap a secret with a key unl
 If a set contains keys intended for other purposes, such as signature verification, the Relying Party <span class="bcp14">MUST</span> ignore them.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">In an Attestation Result, the Verifier <span class="bcp14">MUST</span> include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
-A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+A Relying Party gets that assurance by using the key: a secret wrapped to a key whose private part the Attester does not hold cannot be unwrapped by it.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">A Verifier that conveys this claim in an appraisal record <span class="bcp14">MUST NOT</span> also include it in <code>ear_verifier_claims</code>.
 If the claim also appears in <code>ear_verifier_claims</code>, the Relying Party <span class="bcp14">MUST</span> use the claim in the appraisal record and ignore the other occurrence.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 </section>

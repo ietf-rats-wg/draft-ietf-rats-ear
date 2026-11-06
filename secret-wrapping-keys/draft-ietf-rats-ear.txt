@@ -591,7 +591,7 @@ Table of Contents
    The Verifier does not assert that the Attester holds the
    corresponding private keys, because this claim does not rely on proof
    of possession.  A Relying Party gets that assurance by using the key:
-   a secret wrapped with a key whose private part the Attester does not
+   a secret wrapped to a key whose private part the Attester does not
    hold cannot be unwrapped by it.
 
    A Verifier that conveys this claim in an appraisal record MUST NOT
