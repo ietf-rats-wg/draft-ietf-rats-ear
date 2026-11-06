@@ -1835,7 +1835,7 @@ See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for furth
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-secret-wrapping-keys" class="section-name selfRef">Secret Wrapping Keys</a>
         </h3>
 <p id="section-3.3-1">The <code>eat_secret_wrapping_keys</code> claim carries public keys that an Attester designates for encrypting, or establishing keys for, secrets released to it.
-A Relying Party can release a secret to the Attester by wrapping it to one of the keys.
+A Relying Party can release a secret to the Attester by wrapping it with one of the keys.
 Secure key release protocols are an example of this use.
 Like any EAT claim, it can appear in Evidence, where the Attester publishes the keys, and in an Attestation Result, where the Verifier conveys keys it obtained from appraised Evidence.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">The value is a JWK Set (<span><a href="https://rfc-editor.org/rfc/rfc7517#section-5" class="relref">Section 5</a> of [<a href="#RFC7517" class="cite xref">RFC7517</a>]</span>) in JSON, or a COSE_KeySet (<span><a href="https://rfc-editor.org/rfc/rfc9052#section-7" class="relref">Section 7</a> of [<a href="#STD96" class="cite xref">STD96</a>]</span>) in CBOR.
@@ -1847,7 +1847,7 @@ A Relying Party <span class="bcp14">MUST NOT</span> wrap a secret with a key unl
 If a set contains keys intended for other purposes, such as signature verification, the Relying Party <span class="bcp14">MUST</span> ignore them.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">In an Attestation Result, the Verifier <span class="bcp14">MUST</span> include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
 The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
-A Relying Party gets that assurance by using the key: a secret wrapped to a key whose private part the Attester does not hold cannot be unwrapped by it.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">A Verifier that conveys this claim in an appraisal record <span class="bcp14">MUST NOT</span> also include it in <code>ear_verifier_claims</code>.
 If the claim also appears in <code>ear_verifier_claims</code>, the Relying Party <span class="bcp14">MUST</span> use the claim in the appraisal record and ignore the other occurrence.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 </section>
@@ -2797,7 +2797,7 @@ Consequently, they rely on the Verifier's mapping from cryptographic identities 
         <h3 id="name-releasing-secrets-to-publis">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-releasing-secrets-to-publis" class="section-name selfRef">Releasing Secrets to Published Keys</a>
         </h3>
-<p id="section-7.1-1">A Relying Party that wraps a secret to a key in <code>eat_secret_wrapping_keys</code> (see <a href="#sec-secret-wrapping-keys" class="auto internal xref">Section 3.3</a>) <span class="bcp14">MUST</span> check that the EAR is fresh for its request, for example by verifying <code>eat_nonce</code>, and that <code>ear_status</code> is acceptable under its Appraisal Policy for Attestation Results.
+<p id="section-7.1-1">A Relying Party that wraps a secret with a key in <code>eat_secret_wrapping_keys</code> (see <a href="#sec-secret-wrapping-keys" class="auto internal xref">Section 3.3</a>) <span class="bcp14">MUST</span> check that the EAR is fresh for its request, for example by verifying <code>eat_nonce</code>, and that <code>ear_status</code> is acceptable under its Appraisal Policy for Attestation Results.
 Otherwise, a stale EAR could direct a secret to an environment that has since been compromised.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
