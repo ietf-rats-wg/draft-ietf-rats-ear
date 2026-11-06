@@ -280,15 +280,15 @@ trustworthiness vector.
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal for
 this attester.
 See {{Section 3.1 of -ar4si}} for the details.
-
-`ear_trustworthiness_vector_details` (optional)
-: A map from trustworthiness vector categories to non-empty arrays of strings, each giving a reason for the value of the corresponding category.
-Each key MUST be a category that is present in `ear_trustworthiness_vector`.
 This claim MUST be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
 arrangement.  Such consumer would therefore rely entirely on the semantics of
 the `ear_status` claim.  This behaviour is NOT RECOMMENDED because of the
 resulting loss of quality of the appraisal result.
+
+`ear_trustworthiness_vector_details` (optional)
+: A map from trustworthiness vector categories to non-empty arrays of strings, each giving a reason for the value of the corresponding category.
+Each key MUST be a category that is present in `ear_trustworthiness_vector`.
 
 `ear_appraisal_policy_ids` (optional)
 : A list of one or more unique identifiers for appraisal policies used to evaluate the attestation results.
