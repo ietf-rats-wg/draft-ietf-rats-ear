@@ -1504,7 +1504,7 @@ Table of Contents
 
    *  Claim Key: 1000 (suggested)
 
-   *  Claim Value Type(s): unsigned integer (0, 2, 32, 96)
+   *  Claim Value Type(s): unsigned integer (0, 2, 32, 96, 127)
 
    *  Change Controller: IESG
 
@@ -2171,9 +2171,9 @@ Appendix C.  Open Issues
 Acknowledgments
 
    Many thanks to Dave Thaler, Dhawal Kumar, Ding Ma, Greg Kostal,
-   Hannes Tschofenig, Jerry Yu, Raghuram Yeluri, Simon Frost, Tobin
-   Feldman-Fitzthum, Yogesh Deshpande for helpful comments and
-   discussions that have shaped this document.
+   Hannes Tschofenig, Jerry Yu, Mikko Ylinen, Raghuram Yeluri, Simon
+   Frost, Tobin Feldman-Fitzthum, Yogesh Deshpande for helpful comments
+   and discussions that have shaped this document.
 
 Authors' Addresses
 
