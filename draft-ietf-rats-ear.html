@@ -1212,24 +1212,27 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-transport-identity-key" class="internal xref">Transport Identity Key</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
-                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-details-claims" class="internal xref">Details Claims</a></p>
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-secret-wrapping-keys" class="internal xref">Secret Wrapping Keys</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
-                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-recursive-and-tunnelled-sub" class="internal xref">Recursive and Tunnelled Submods</a></p>
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-details-claims" class="internal xref">Details Claims</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
-                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-json-serialisation" class="internal xref">JSON Serialisation</a></p>
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-recursive-and-tunnelled-sub" class="internal xref">Recursive and Tunnelled Submods</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-json-serialisation" class="internal xref">JSON Serialisation</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
-                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.1">
+                    <p id="section-toc.1-1.3.2.7.2.1.1"><a href="#section-3.7.1" class="auto internal xref">3.7.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
-                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-cbor-serialisation" class="internal xref">CBOR Serialisation</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-cbor-serialisation" class="internal xref">CBOR Serialisation</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.1">
-                    <p id="section-toc.1-1.3.2.7.2.1.1"><a href="#section-3.7.1" class="auto internal xref">3.7.1</a>.  <a href="#name-examples-2" class="internal xref">Examples</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8.2.1">
+                    <p id="section-toc.1-1.3.2.8.2.1.1"><a href="#section-3.8.1" class="auto internal xref">3.8.1</a>.  <a href="#name-examples-2" class="internal xref">Examples</a></p>
 </li>
                 </ul>
 </li>
@@ -1300,7 +1303,10 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-binding-ear-to-the-appraisa" class="internal xref">Binding EAR to the Appraisal Request</a></p>
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-releasing-secrets-to-publis" class="internal xref">Releasing Secrets to Published Keys</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-binding-ear-to-the-appraisa" class="internal xref">Binding EAR to the Appraisal Request</a></p>
 </li>
             </ul>
 </li>
@@ -1356,7 +1362,10 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
                     <p id="section-toc.1-1.9.2.1.2.14.1"><a href="#section-9.1.14" class="auto internal xref">9.1.14</a>. <a href="#name-transport-identity-key-2" class="internal xref">Transport Identity Key</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.15">
-                    <p id="section-toc.1-1.9.2.1.2.15.1"><a href="#section-9.1.15" class="auto internal xref">9.1.15</a>. <a href="#name-ear-teep-claims" class="internal xref">EAR TEEP Claims</a></p>
+                    <p id="section-toc.1-1.9.2.1.2.15.1"><a href="#section-9.1.15" class="auto internal xref">9.1.15</a>. <a href="#name-secret-wrapping-keys-2" class="internal xref">Secret Wrapping Keys</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.16">
+                    <p id="section-toc.1-1.9.2.1.2.16.1"><a href="#section-9.1.16" class="auto internal xref">9.1.16</a>. <a href="#name-ear-teep-claims" class="internal xref">EAR TEEP Claims</a></p>
 </li>
                 </ul>
 </li>
@@ -1501,7 +1510,7 @@ It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RF
         <dd style="margin-left: 1.5em" id="section-3-5.4">
           <p id="section-3-5.4.1">The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-11#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
 The <code>none</code> tier is the neutral element of this computation: it does not affect the result and <span class="bcp14">MUST NOT</span> be used as the value of this claim.
-The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an <code>EAR-appraisal</code>, a nested <code>EAR</code>, or a <code>Nested-Token</code> (see <a href="#sec-nested-submods" class="auto internal xref">Section 3.5</a>).
+The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an <code>EAR-appraisal</code>, a nested <code>EAR</code>, or a <code>Nested-Token</code> (see <a href="#sec-nested-submods" class="auto internal xref">Section 3.6</a>).
 When a submod is a <code>Nested-Token</code> whose contents the verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the verifier does not support, or because it does not contain an EAR -- the verifier <span class="bcp14">MUST</span> treat that submod as having the <code>incomplete</code> tier (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-11#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>) for the purposes of computing this claim.
 That is, the verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
 The verifier <span class="bcp14">MUST NOT</span> infer from the opaque submod any tier it has not itself established.
@@ -1513,7 +1522,7 @@ This claim exists to help Relying Parties easily determine the overall status of
 <code>ear_status_details</code> (optional)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.6">
           <p id="section-3-5.6.1">A non-empty array of strings, each giving a reason for the value of <code>ear_status</code>.
-See <a href="#sec-details" class="auto internal xref">Section 3.4</a> for the rules that apply to all <code>*_details</code> claims.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
+See <a href="#sec-details" class="auto internal xref">Section 3.5</a> for the rules that apply to all <code>*_details</code> claims.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.7">
@@ -1566,7 +1575,7 @@ A verifier <span class="bcp14">SHOULD</span> publicly and permanently document i
 each supported evidence type, unless EAR payloads are produced and consumed
 entirely within a private deployment.
 See <a href="#sec-ear-appraisal" class="auto internal xref">Section 3.2</a> for the details about the contents of an
-<code>EAR-appraisal</code>, and <a href="#sec-nested-submods" class="auto internal xref">Section 3.5</a> for the recursive and tunnelled
+<code>EAR-appraisal</code>, and <a href="#sec-nested-submods" class="auto internal xref">Section 3.6</a> for the recursive and tunnelled
 cases.<a href="#section-3-5.16.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -1658,7 +1667,6 @@ CMW provides a well-defined encapsulation boundary that makes it straightforward
 <figure id="figure-2">
           <div class="lang-cddl sourcecode" id="section-3.2-1.1">
 <pre>
-;# import ar4si as ar4si
 ;# import rfc9711 as eat
 
 EAR-appraisal = {
@@ -1674,6 +1682,7 @@ EAR-appraisal = {
   ? endorser-claims-label =&gt; supply-chain-claims-type
   ? reference-value-provider-claims-label =&gt; supply-chain-claims-type
   ? transport-identity-key-label =&gt; transport-identity-key-type
+  ? secret-wrapping-keys-label =&gt; secret-wrapping-keys-type
   * $$ear-appraisal-extension
 }
 
@@ -1701,6 +1710,7 @@ verifier-claims-label = eat.JC&lt;"ear_verifier_claims", 1006&gt;
 endorser-claims-label = eat.JC&lt;"ear_endorser_claims", 1014&gt;
 reference-value-provider-claims-label = eat.JC&lt;"ear_reference_value_provider_claims", 1015&gt;
 transport-identity-key-label = eat.JC&lt;"eat_transport_identity_key", 1012&gt;
+secret-wrapping-keys-label = eat.JC&lt;"eat_secret_wrapping_keys", 1013&gt;
 
 ; supply chain entity name =&gt; claims it asserted
 supply-chain-claims-type = { + text =&gt; claims-map-type }
@@ -1812,15 +1822,22 @@ The <code>entity-name</code> and <code>signer-name</code> are asserted by the si
 <dt id="section-3.2-2.23">
 <code>eat_transport_identity_key</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.2-2.24">
-            <p id="section-3.2-2.24.1">The public key the appraised Attester uses to authenticate itself to its peer in a secure channel.
+            <p id="section-3.2-2.24.1">The public key that the appraised Attester uses to authenticate itself to its peer in a secure channel.
 See <a href="#sec-transport-identity-key" class="auto internal xref">Section 3.3</a>.<a href="#section-3.2-2.24.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.2-2.25">
-<code>$$ear-appraisal-extension</code> (optional)</dt>
+<code>eat_secret_wrapping_keys</code> (optional)</dt>
           <dd style="margin-left: 1.5em" id="section-3.2-2.26">
-            <p id="section-3.2-2.26.1">Any registered or unregistered extension.
-See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.2-2.26.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-2.26.1">The public keys that the appraised Attester publishes so that a Relying Party can wrap a secret to it.
+See <a href="#sec-secret-wrapping-keys" class="auto internal xref">Section 3.4</a>.<a href="#section-3.2-2.26.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.2-2.27">
+<code>$$ear-appraisal-extension</code> (optional)</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.28">
+            <p id="section-3.2-2.28.1">Any registered or unregistered extension.
+See <a href="#sec-extensions" class="auto internal xref">Section 4</a> for further details.<a href="#section-3.2-2.28.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1851,58 +1868,79 @@ It suits Attesters whose Evidence carries only a digest of the key, and keeps Ev
 It does not prove that the peer holds the corresponding private key: the Relying Party obtains that proof from the channel's authentication step (e.g., CertificateVerify in TLS).
 To tie the attestation to the peer, the Relying Party <span class="bcp14">MUST</span> compare the SubjectPublicKeyInfo of the key it authenticated with the claim byte for byte, hashing it with the algorithm named in the claim when the digest form is used.
 A mismatch <span class="bcp14">MUST</span> be treated as an attestation failure.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
-<p id="section-3.3-7">A Verifier that conveys this claim in an appraisal record <span class="bcp14">MUST NOT</span> also include it in <code>ear_verifier_claims</code>.
-If the claim also appears in <code>ear_verifier_claims</code>, the Relying Party <span class="bcp14">MUST</span> use the claim in the appraisal record and ignore the other occurrence.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-secret-wrapping-keys">
+<section id="section-3.4">
+        <h3 id="name-secret-wrapping-keys">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-secret-wrapping-keys" class="section-name selfRef">Secret Wrapping Keys</a>
+        </h3>
+<p id="section-3.4-1">The <code>eat_secret_wrapping_keys</code> claim carries public keys that an Attester designates for encrypting, or establishing keys for, secrets released to it.
+A Relying Party can release a secret to the Attester by wrapping it with one of the keys.
+Secure key release protocols are an example of this use.
+Like any EAT claim, it can appear in Evidence, where the Attester publishes the keys, and in an Attestation Result, where the Verifier conveys keys it obtained from appraised Evidence.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">The value is a JWK Set (<span><a href="https://rfc-editor.org/rfc/rfc7517#section-5" class="relref">Section 5</a> of [<a href="#RFC7517" class="cite xref">RFC7517</a>]</span>) in JSON, or a COSE_KeySet (<span><a href="https://rfc-editor.org/rfc/rfc9052#section-7" class="relref">Section 7</a> of [<a href="#STD96" class="cite xref">STD96</a>]</span>) in CBOR.
+The set <span class="bcp14">MUST NOT</span> be empty.
+The keys <span class="bcp14">MUST</span> be public keys: private and symmetric key parameters <span class="bcp14">MUST NOT</span> be present.
+The claim defines no labels or roles for individual keys.
+The algorithms, the intended use and any identifier of a key are conveyed by its own parameters (e.g., <code>alg</code>, <code>key_ops</code> and <code>kid</code>), which a Relying Party can use to select the key it needs.
+A Relying Party <span class="bcp14">MUST NOT</span> wrap a secret with a key unless the key's own parameters (<code>alg</code> or <code>key_ops</code>) indicate that it is intended for encryption, key wrapping or key agreement.
+If a set contains keys intended for other purposes, such as signature verification, the Relying Party <span class="bcp14">MUST</span> ignore them.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.4-3">In an Attestation Result, the Verifier <span class="bcp14">MUST</span> include a key only if the appraised Evidence binds that key to the Attester, for example because the claim is in the signed Evidence, or through a digest of the key in a signed Evidence claim that the Verifier has checked.
+The Verifier does not assert that the Attester holds the corresponding private keys, because this claim does not rely on proof of possession.
+A Relying Party gets that assurance by using the key: a secret wrapped with a key whose private part the Attester does not hold cannot be unwrapped by it.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">A Verifier that conveys this claim in an appraisal record <span class="bcp14">MUST NOT</span> also include it in <code>ear_verifier_claims</code>.
+If the claim also appears in <code>ear_verifier_claims</code>, the Relying Party <span class="bcp14">MUST</span> use the claim in the appraisal record and ignore the other occurrence.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-details">
-<section id="section-3.4">
+<section id="section-3.5">
         <h3 id="name-details-claims">
-<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-details-claims" class="section-name selfRef">Details Claims</a>
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-details-claims" class="section-name selfRef">Details Claims</a>
         </h3>
-<p id="section-3.4-1">The <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code> claims let a Verifier tell the Relying Party the reasons for the values of <code>ear_status</code> and of the trustworthiness vector categories.
-They are optional, and are intended for values other than <code>affirming</code>.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.4-2">Each string states one reason, in text meant for people (e.g., logs, diagnostics, support).
+<p id="section-3.5-1">The <code>ear_status_details</code> and <code>ear_trustworthiness_vector_details</code> claims let a Verifier tell the Relying Party the reasons for the values of <code>ear_status</code> and of the trustworthiness vector categories.
+They are optional, and are intended for values other than <code>affirming</code>.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">Each string states one reason, in text meant for people (e.g., logs, diagnostics, support).
 The text is not standardised: it can change between Verifiers, versions of the same Verifier and, if localised, languages.
 A Relying Party <span class="bcp14">MUST NOT</span> base automated decisions on it.
-Those rely entirely on <code>ear_status</code> and <code>ear_trustworthiness_vector</code>, which remain authoritative.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
-<p id="section-3.4-3">The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party <span class="bcp14">MUST</span> treat it as untrusted input (see <a href="#sec-sec-cons" class="auto internal xref">Section 7</a>).
-It can also reveal details of the Attester's state, see <a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+Those rely entirely on <code>ear_status</code> and <code>ear_trustworthiness_vector</code>, which remain authoritative.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">The text can reproduce data controlled by the Attester (e.g., file names found in the Evidence), so a Relying Party <span class="bcp14">MUST</span> treat it as untrusted input (see <a href="#sec-sec-cons" class="auto internal xref">Section 7</a>).
+It can also reveal details of the Attester's state, see <a href="#sec-priv-cons" class="auto internal xref">Section 8</a>.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-nested-submods">
-<section id="section-3.5">
+<section id="section-3.6">
         <h3 id="name-recursive-and-tunnelled-sub">
-<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-recursive-and-tunnelled-sub" class="section-name selfRef">Recursive and Tunnelled Submods</a>
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-recursive-and-tunnelled-sub" class="section-name selfRef">Recursive and Tunnelled Submods</a>
         </h3>
-<p id="section-3.5-1">In addition to a flat <code>EAR-appraisal</code>, a submod <span class="bcp14">MAY</span> instead carry a nested
+<p id="section-3.6-1">In addition to a flat <code>EAR-appraisal</code>, a submod <span class="bcp14">MAY</span> instead carry a nested
 <code>EAR</code> or a <code>Nested-Token</code> (<span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.2.18.3" class="relref">Section 4.2.18.3</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>).
 This gives the EAR a recursive structure that can directly reflect the
 topology of a mesh of cooperating verifiers, e.g., the lead verifier of the
 Hierarchical pattern defined in <span>[<a href="#I-D.ietf-rats-multi-verifier" class="cite xref">I-D.ietf-rats-multi-verifier</a>]</span>, which
 dispatches the appraisal of composite evidence to one or more sub-verifiers
-and then collects their results into its own EAR.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
-<p id="section-3.5-2">The three $submod-value alternatives serve different purposes:<a href="#section-3.5-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlNewline" id="section-3.5-3">
-          <dt id="section-3.5-3.1"><code>EAR-appraisal</code></dt>
-          <dd style="margin-left: 1.5em" id="section-3.5-3.2">
-            <p id="section-3.5-3.2.1">The existing, flat representation.
+and then collects their results into its own EAR.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">The three $submod-value alternatives serve different purposes:<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlNewline" id="section-3.6-3">
+          <dt id="section-3.6-3.1"><code>EAR-appraisal</code></dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-3.2">
+            <p id="section-3.6-3.2.1">The existing, flat representation.
 Used when the verifier itself performs the appraisal of the associated
-attester, or restates a sub-verifier's result as its own appraisal.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
+attester, or restates a sub-verifier's result as its own appraisal.<a href="#section-3.6-3.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-3.5-3.3"><code>EAR</code></dt>
-          <dd style="margin-left: 1.5em" id="section-3.5-3.4">
-            <p id="section-3.5-3.4.1">A complete EAR claims-set produced by a sub-verifier, embedded directly, in
+<dt id="section-3.6-3.3"><code>EAR</code></dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-3.4">
+            <p id="section-3.6-3.4.1">A complete EAR claims-set produced by a sub-verifier, embedded directly, in
 the same serialization (JSON or CBOR) as the enclosing EAR.
 This lets a sub-verifier's full result -- including its own <code>submods</code>,
 potentially several levels deep -- be embedded as plain claims data,
-integrity-protected only by the enclosing EAR's own signature.<a href="#section-3.5-3.4.1" class="pilcrow">¶</a></p>
+integrity-protected only by the enclosing EAR's own signature.<a href="#section-3.6-3.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-3.5-3.5"><code>Nested-Token</code></dt>
-          <dd style="margin-left: 1.5em" id="section-3.5-3.6">
-            <p id="section-3.5-3.6.1">A complete, independently signed EAR produced by a sub-verifier and
+<dt id="section-3.6-3.5"><code>Nested-Token</code></dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-3.6">
+            <p id="section-3.6-3.6.1">A complete, independently signed EAR produced by a sub-verifier and
 tunnelled opaquely, using the nesting mechanics described in <span><a href="https://rfc-editor.org/rfc/rfc9711#section-4.2.18.3" class="relref">Section 4.2.18.3</a> of [<a href="#RFC9711" class="cite xref">RFC9711</a>]</span>.
 This is the only alternative that supports a sub-verifier whose EAR uses a
 different serialization than the enclosing token (e.g., a JWT-serialized
@@ -1917,24 +1955,24 @@ are out of scope for EAR.
 The content of a <code>Nested-Token</code> <span class="bcp14">MUST</span> be an EAR.
 The CDDL cannot enforce this, because the token is opaque to the schema; a
 verifier that finds otherwise treats the submod as <code>incomplete</code> (see <code>ear_status</code>
-in <a href="#sec-ear" class="auto internal xref">Section 3</a>).<a href="#section-3.5-3.6.1" class="pilcrow">¶</a></p>
+in <a href="#sec-ear" class="auto internal xref">Section 3</a>).<a href="#section-3.6-3.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-3.5-4">The existing flat representation of device topology, the
+<p id="section-3.6-4">The existing flat representation of device topology, the
 <code>ear_device_topology</code> claim (<a href="#sec-ear" class="auto internal xref">Section 3</a>), is unaffected by, and can be used
 independently of, the above; it remains the appropriate choice when a single
 verifier appraises a composite attester made up of several evidence sources
-without delegating appraisal to other verifiers.<a href="#section-3.5-4" class="pilcrow">¶</a></p>
-<p id="section-3.5-5">A Relying Party that only consumes the top-level <code>ear_status</code> claim (see
+without delegating appraisal to other verifiers.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-5">A Relying Party that only consumes the top-level <code>ear_status</code> claim (see
 <a href="#sec-ear" class="auto internal xref">Section 3</a>) does not need to understand any of the above: correctness only
 depends on the verifier correctly rolling up the status of every submod,
 regardless of its representation, into that claim.
 A Relying Party that wants a full audit trail, however, needs to be able to
 recurse into nested <code>EAR</code> submods and to decode <code>Nested-Token</code> submods --
 which, per above, may require support for a different serialization or
-signature scheme than the one used by the enclosing token.<a href="#section-3.5-5" class="pilcrow">¶</a></p>
-<p id="section-3.5-6"><a href="#fig-ex-json-3" class="auto internal xref">Figure 3</a> shows a lead verifier's EAR for a confidential computing
+signature scheme than the one used by the enclosing token.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
+<p id="section-3.6-6"><a href="#fig-ex-json-3" class="auto internal xref">Figure 3</a> shows a lead verifier's EAR for a confidential computing
 scenario: a confidential VM ("cvm") running on a confidential platform
 ("cpu") and using a trusted device ("gpu") to offload a specialized ML
 workload.
@@ -1949,10 +1987,10 @@ confidential computing verifier, whose EAR is tunnelled opaquely as a
 <code>Nested-Token</code>, JWT-serialized regardless of the serialization of the
 enclosing token.
 The lead verifier's <code>ear_status</code> reflects the worst status found across all
-three; the one it cannot itself parse is accounted for as <code>incomplete</code>.<a href="#section-3.5-6" class="pilcrow">¶</a></p>
+three; the one it cannot itself parse is accounted for as <code>incomplete</code>.<a href="#section-3.6-6" class="pilcrow">¶</a></p>
 <span id="name-json-claims-set-recursive-a"></span><div id="fig-ex-json-3">
 <figure id="figure-3">
-          <div class="lang-cbor-diag sourcecode" id="section-3.5-7.1">
+          <div class="lang-cbor-diag sourcecode" id="section-3.6-7.1">
 <pre>
 =============== NOTE: '\' line wrapping per RFC 8792 ================
 
@@ -2008,16 +2046,16 @@ IjoxNjY2NTI5MTAwLCJlYXJfc3RhdHVzIjoiYWZmaXJtaW5nIn0.\
 </section>
 </div>
 <div id="json-serialisation">
-<section id="section-3.6">
+<section id="section-3.7">
         <h3 id="name-json-serialisation">
-<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-json-serialisation" class="section-name selfRef">JSON Serialisation</a>
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-json-serialisation" class="section-name selfRef">JSON Serialisation</a>
         </h3>
 <div id="examples">
-<section id="section-3.6.1">
+<section id="section-3.7.1">
           <h4 id="name-examples">
-<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+<a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-3.6.1-1">The example in <a href="#fig-ex-json-1" class="auto internal xref">Figure 4</a> shows an EAR claims-set corresponding to a
+<p id="section-3.7.1-1">The example in <a href="#fig-ex-json-1" class="auto internal xref">Figure 4</a> shows an EAR claims-set corresponding to a
 "contraindicated" appraisal, meaning the verifier has found some problems with
 the attester's state reported in the submitted evidence.
 Specifically, the identified issue is related to unauthorized code or
@@ -2025,10 +2063,10 @@ configuration loaded in runtime memory (i.e., value 96 in the executables
 category).
 The appraisal is for a device with one attester labelled "PSA".  Note that in
 case there is only one attester, the labelling can be freely chosen because
-there is no ambiguity.<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+there is no ambiguity.<a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
 <span id="name-json-claims-set-contraindic"></span><div id="fig-ex-json-1">
 <figure id="figure-4">
-            <div class="lang-cbor-diag sourcecode" id="section-3.6.1-2.1">
+            <div class="lang-cbor-diag sourcecode" id="section-3.7.1-2.1">
 <pre>
 {
   "eat_profile": "tag:ietf.org,2026:rats/ear#05",
@@ -2062,7 +2100,19 @@ there is no ambiguity.<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
       "ear_appraisal_policy_ids":
         [ "https://veraison.example/policy/1/60a0068d" ],
       "eat_transport_identity_key":
-        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw"
+        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw",
+      "eat_secret_wrapping_keys": {
+        "keys": [
+          {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+            "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+            "kid": "wrap-1",
+            "alg": "ECDH-ES+A256KW"
+          }
+        ]
+      }
     }
   }
 }
@@ -2072,34 +2122,34 @@ there is no ambiguity.<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
 <a href="#name-json-claims-set-contraindic" class="selfRef">JSON claims-set: contraindicated appraisal</a>
             </figcaption></figure>
 </div>
-<p id="section-3.6.1-3">The breakdown of the trustworthiness vector is as follows:<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-3">The breakdown of the trustworthiness vector is as follows:<a href="#section-3.7.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.6.1-4.1">
-              <p id="section-3.6.1-4.1.1">Instance Identity (affirming): recognized and not compromised<a href="#section-3.6.1-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.7.1-4.1">
+              <p id="section-3.7.1-4.1.1">Instance Identity (affirming): recognized and not compromised<a href="#section-3.7.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.2">
-              <p id="section-3.6.1-4.2.1">Configuration (warning): known vulnerabilities<a href="#section-3.6.1-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.2">
+              <p id="section-3.7.1-4.2.1">Configuration (warning): known vulnerabilities<a href="#section-3.7.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.3">
-              <p id="section-3.6.1-4.3.1">Executables (contraindicated): contraindicated run-time<a href="#section-3.6.1-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.3">
+              <p id="section-3.7.1-4.3.1">Executables (contraindicated): contraindicated run-time<a href="#section-3.7.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.4">
-              <p id="section-3.6.1-4.4.1">File System (none): no claim being made<a href="#section-3.6.1-4.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.4">
+              <p id="section-3.7.1-4.4.1">File System (none): no claim being made<a href="#section-3.7.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.5">
-              <p id="section-3.6.1-4.5.1">Hardware (affirming): genuine<a href="#section-3.6.1-4.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.5">
+              <p id="section-3.7.1-4.5.1">Hardware (affirming): genuine<a href="#section-3.7.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.6">
-              <p id="section-3.6.1-4.6.1">Runtime Opaque (none): no claim being made<a href="#section-3.6.1-4.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.6">
+              <p id="section-3.7.1-4.6.1">Runtime Opaque (none): no claim being made<a href="#section-3.7.1-4.6.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.7">
-              <p id="section-3.6.1-4.7.1">Storage Opaque (none): no claim being made<a href="#section-3.6.1-4.7.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.7">
+              <p id="section-3.7.1-4.7.1">Storage Opaque (none): no claim being made<a href="#section-3.7.1-4.7.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.1-4.8">
-              <p id="section-3.6.1-4.8.1">Sourced Data (none): no claim being made<a href="#section-3.6.1-4.8.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.1-4.8">
+              <p id="section-3.7.1-4.8.1">Sourced Data (none): no claim being made<a href="#section-3.7.1-4.8.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.6.1-5">The example in <a href="#fig-ex-json-2" class="auto internal xref">Figure 5</a> contains the appraisal for a composite device
+<p id="section-3.7.1-5">The example in <a href="#fig-ex-json-2" class="auto internal xref">Figure 5</a> contains the appraisal for a composite device
 with two attesters named "CCA Platform" and "CCA Realm" respectively.
 Both attesters have either "affirming" or (implicit) "none" values in their
 associated trustworthiness vectors.
@@ -2110,10 +2160,10 @@ at the attester site regarding the specific category.  For example, the
 reference values for the "CCA Realm" executables (i.e., the confidential
 computing workload) may not be known to the CCA platform verifier.
 In such cases, it is up to the downstream entity (typically, the relying party)
-to complete the partial appraisal.<a href="#section-3.6.1-5" class="pilcrow">¶</a></p>
+to complete the partial appraisal.<a href="#section-3.7.1-5" class="pilcrow">¶</a></p>
 <span id="name-json-claims-set-simple-affi"></span><div id="fig-ex-json-2">
 <figure id="figure-5">
-            <div class="lang-cbor-diag sourcecode" id="section-3.6.1-6.1">
+            <div class="lang-cbor-diag sourcecode" id="section-3.7.1-6.1">
 <pre>
 {
   "eat_profile": "tag:ietf.org,2026:rats/ear#05",
@@ -2158,21 +2208,21 @@ to complete the partial appraisal.<a href="#section-3.6.1-5" class="pilcrow">¶<
 </section>
 </div>
 <div id="cbor-serialisation">
-<section id="section-3.7">
+<section id="section-3.8">
         <h3 id="name-cbor-serialisation">
-<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-cbor-serialisation" class="section-name selfRef">CBOR Serialisation</a>
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-cbor-serialisation" class="section-name selfRef">CBOR Serialisation</a>
         </h3>
 <div id="examples-1">
-<section id="section-3.7.1">
+<section id="section-3.8.1">
           <h4 id="name-examples-2">
-<a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
+<a href="#section-3.8.1" class="section-number selfRef">3.8.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-3.7.1-1">The example in <a href="#fig-ex-cbor-1" class="auto internal xref">Figure 6</a> is semantically equivalent to that in
+<p id="section-3.8.1-1">The example in <a href="#fig-ex-cbor-1" class="auto internal xref">Figure 6</a> is semantically equivalent to that in
 <a href="#fig-ex-json-1" class="auto internal xref">Figure 4</a>.  It shows the same "contraindicated" appraisal using the
-more compact CBOR serialization of the EAR claims-set.<a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+more compact CBOR serialization of the EAR claims-set.<a href="#section-3.8.1-1" class="pilcrow">¶</a></p>
 <span id="name-cbor-claims-set-contraindic"></span><div id="fig-ex-cbor-1">
 <figure id="figure-6">
-            <div class="lang-cbor-diag sourcecode" id="section-3.7.1-2.1">
+            <div class="lang-cbor-diag sourcecode" id="section-3.8.1-2.1">
 <pre>
 {
   265: "tag:ietf.org,2026:rats/ear#05",
@@ -2205,6 +2255,16 @@ more compact CBOR serialization of the EAR claims-set.<a href="#section-3.7.1-1"
       1012: [
         1,
         h'51b944cdfa544d4c3273aa6bf350625a7dd53bbb6a71723274f538b19a207760'
+      ],
+      1013: [
+        {
+          1: 2,
+          -1: 1,
+          -2: h'30a0424cd21c2944838a2d75c92b37e76ea20d9f00893a3b4eee8a3c0aafec3e',
+          -3: h'e04b65e92456d9888b52b379bdfbd51ee869ef1f0fc65b6659695b6cce081723',
+          2: h'7772617031',
+          3: -31
+        }
       ]
     }
   }
@@ -2779,15 +2839,24 @@ Further discussion and references on this topic can be found in <span><a href="h
 The attribution is the Verifier's.
 Relying Parties cannot see or check the keys and signatures on which it is based.
 Consequently, they rely on the Verifier's mapping from cryptographic identities to identifiers and on the integrity protection of the EAR.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<div id="binding-ear-to-the-appraisal-request">
+<div id="releasing-secrets-to-published-keys">
 <section id="section-7.1">
-        <h3 id="name-binding-ear-to-the-appraisa">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-binding-ear-to-the-appraisa" class="section-name selfRef">Binding EAR to the Appraisal Request</a>
+        <h3 id="name-releasing-secrets-to-publis">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-releasing-secrets-to-publis" class="section-name selfRef">Releasing Secrets to Published Keys</a>
         </h3>
-<p id="section-7.1-1"><code>eat_nonce</code> alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the evidence (or any other input) that the requester actually sent.
-An on-path attacker able to tamper with the appraisal request without disturbing the nonce -- for example, by substituting the evidence while leaving the nonce intact -- can therefore cause a Relying Party to accept an EAR that has a valid nonce but does not reflect the evidence the Relying Party asked to have appraised.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">The <code>ear_input_digest</code> claim (see <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a>), when applicable, mitigates this class of attack by binding the EAR to the exact wire bytes of the appraisal request the Verifier received.
-Implementers and deployers are strongly encouraged to read <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a> in full before deciding to produce or verify <code>ear_input_digest</code>, since an inappropriate deployment topology can silently negate its security benefit.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">A Relying Party that wraps a secret with a key in <code>eat_secret_wrapping_keys</code> (see <a href="#sec-secret-wrapping-keys" class="auto internal xref">Section 3.4</a>) <span class="bcp14">MUST</span> check that the EAR is fresh for its request, for example by verifying <code>eat_nonce</code>, and that <code>ear_status</code> is acceptable under its Appraisal Policy for Attestation Results.
+Otherwise, a stale EAR could direct a secret to an environment that has since been compromised.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="binding-ear-to-the-appraisal-request">
+<section id="section-7.2">
+        <h3 id="name-binding-ear-to-the-appraisa">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-binding-ear-to-the-appraisa" class="section-name selfRef">Binding EAR to the Appraisal Request</a>
+        </h3>
+<p id="section-7.2-1"><code>eat_nonce</code> alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the evidence (or any other input) that the requester actually sent.
+An on-path attacker able to tamper with the appraisal request without disturbing the nonce -- for example, by substituting the evidence while leaving the nonce intact -- can therefore cause a Relying Party to accept an EAR that has a valid nonce but does not reflect the evidence the Relying Party asked to have appraised.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">The <code>ear_input_digest</code> claim (see <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a>), when applicable, mitigates this class of attack by binding the EAR to the exact wire bytes of the appraisal request the Verifier received.
+Implementers and deployers are strongly encouraged to read <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a> in full before deciding to produce or verify <code>ear_input_digest</code>, since an inappropriate deployment topology can silently negate its security benefit.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3266,12 +3335,42 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
           </ul>
 </section>
 </div>
-<div id="ear-teep-claims">
+<div id="secret-wrapping-keys">
 <section id="section-9.1.15">
-          <h4 id="name-ear-teep-claims">
-<a href="#section-9.1.15" class="section-number selfRef">9.1.15. </a><a href="#name-ear-teep-claims" class="section-name selfRef">EAR TEEP Claims</a>
+          <h4 id="name-secret-wrapping-keys-2">
+<a href="#section-9.1.15" class="section-number selfRef">9.1.15. </a><a href="#name-secret-wrapping-keys-2" class="section-name selfRef">Secret Wrapping Keys</a>
           </h4>
-<p id="section-9.1.15-1">TODO<a href="#section-9.1.15-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.1.15-1.1">
+              <p id="section-9.1.15-1.1.1">Claim Name: eat_secret_wrapping_keys<a href="#section-9.1.15-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.2">
+              <p id="section-9.1.15-1.2.1">Claim Description: Secret Wrapping Keys<a href="#section-9.1.15-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.3">
+              <p id="section-9.1.15-1.3.1">JWT Claim Name: eat_secret_wrapping_keys<a href="#section-9.1.15-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.4">
+              <p id="section-9.1.15-1.4.1">Claim Key: 1013 (suggested)<a href="#section-9.1.15-1.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.5">
+              <p id="section-9.1.15-1.5.1">Claim Value Type(s): map (JWK Set) or array (COSE_KeySet)<a href="#section-9.1.15-1.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.6">
+              <p id="section-9.1.15-1.6.1">Change Controller: IESG<a href="#section-9.1.15-1.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.15-1.7">
+              <p id="section-9.1.15-1.7.1">Specification Document(s): <a href="#sec-secret-wrapping-keys" class="auto internal xref">Section 3.4</a> of RFCthis<a href="#section-9.1.15-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="ear-teep-claims">
+<section id="section-9.1.16">
+          <h4 id="name-ear-teep-claims">
+<a href="#section-9.1.16" class="section-number selfRef">9.1.16. </a><a href="#name-ear-teep-claims" class="section-name selfRef">EAR TEEP Claims</a>
+          </h4>
+<p id="section-9.1.16-1">TODO<a href="#section-9.1.16-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3308,6 +3407,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>
 <span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7517">[RFC7517]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refTitle">"JSON Web Key (JWK)"</span>, <span class="seriesInfo">RFC 7517</span>, <span class="seriesInfo">DOI 10.17487/RFC7517</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7517">https://www.rfc-editor.org/rfc/rfc7517</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7519">[RFC7519]</dt>
         <dd>
@@ -3437,6 +3540,7 @@ EAR-appraisal = {
   ? reference-value-provider-claims-label =&gt; supply-chain-claims-\
                                                                 type,
   ? transport-identity-key-label =&gt; transport-identity-key-type,
+  ? secret-wrapping-keys-label =&gt; secret-wrapping-keys-type,
   * $$ear-appraisal-extension,
 }
 status-label = eat.JC&lt;"ear_status", 1000&gt;
@@ -3464,6 +3568,7 @@ reference-value-provider-claims-label = eat.JC&lt;"\
                           ear_reference_value_provider_claims", 1015&gt;
 transport-identity-key-label = eat.JC&lt;"eat_transport_identity_key", \
                                                                 1012&gt;
+secret-wrapping-keys-label = eat.JC&lt;"eat_secret_wrapping_keys", 1013&gt;
 supply-chain-claims-type = {+ text =&gt; claims-map-type}
 claims-map-type = eat.JC&lt;claims-map-type-json, claims-map-type-cbor&gt;
 claims-map-type-json = {+ text =&gt; any}
@@ -3471,6 +3576,17 @@ claims-map-type-cbor = {+ (text / int) =&gt; any}
 topology-type = {+ text =&gt; [+ text]}
 transport-identity-key-type = spki-type / mc.digest
 spki-type = eat.JC&lt;text .b64u bytes, bytes&gt;
+secret-wrapping-keys-type = eat.JC&lt;jwk-set, cose-key-set&gt;
+jwk-set = {keys: [+ jwk]}
+jwk = {
+  kty: text,
+  * text =&gt; any,
+}
+cose-key-set = [+ cose-key]
+cose-key = {
+  1 =&gt; int / tstr,
+  * (int / tstr) =&gt; any,
+}
 eat.JC&lt;J, C&gt; = eat.JSON-ONLY&lt;J&gt; / eat.CBOR-ONLY&lt;C&gt;
 eat.JSON-ONLY&lt;J&gt; = J .feature "json"
 eat.CBOR-ONLY&lt;C&gt; = C .feature "cbor"

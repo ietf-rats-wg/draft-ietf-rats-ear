@@ -92,12 +92,13 @@ Table of Contents
        3.1.1.  Applicability
      3.2.  EAR Appraisal Claims
      3.3.  Transport Identity Key
-     3.4.  Details Claims
-     3.5.  Recursive and Tunnelled Submods
-     3.6.  JSON Serialisation
-       3.6.1.  Examples
-     3.7.  CBOR Serialisation
+     3.4.  Secret Wrapping Keys
+     3.5.  Details Claims
+     3.6.  Recursive and Tunnelled Submods
+     3.7.  JSON Serialisation
        3.7.1.  Examples
+     3.8.  CBOR Serialisation
+       3.8.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
@@ -116,7 +117,8 @@ Table of Contents
        6.1.2.  github.com/veraison/c-ear
        6.1.3.  github.com/veraison/rust-ear
    7.  Security Considerations
-     7.1.  Binding EAR to the Appraisal Request
+     7.1.  Releasing Secrets to Published Keys
+     7.2.  Binding EAR to the Appraisal Request
    8.  Privacy Considerations
    9.  IANA Considerations
      9.1.  New EAT Claims
@@ -134,7 +136,8 @@ Table of Contents
        9.1.12. Device Topology
        9.1.13. EAR Input Digest
        9.1.14. Transport Identity Key
-       9.1.15. EAR TEEP Claims
+       9.1.15. Secret Wrapping Keys
+       9.1.16. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -243,7 +246,7 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.5).  When a submod is a Nested-Token
+      a Nested-Token (see Section 3.6).  When a submod is a Nested-Token
       whose contents the verifier cannot parse or independently verify
       -- for example, because it uses a serialization or a signature
       scheme the verifier does not support, or because it does not
@@ -261,7 +264,7 @@ Table of Contents
 
    ear_status_details (optional)
       A non-empty array of strings, each giving a reason for the value
-      of ear_status.  See Section 3.4 for the rules that apply to all
+      of ear_status.  See Section 3.5 for the rules that apply to all
       *_details claims.
 
    iat (mandatory)
@@ -303,7 +306,7 @@ Table of Contents
       supported evidence type, unless EAR payloads are produced and
       consumed entirely within a private deployment.  See Section 3.2
       for the details about the contents of an EAR-appraisal, and
-      Section 3.5 for the recursive and tunnelled cases.
+      Section 3.6 for the recursive and tunnelled cases.
 
    eat_nonce (optional)
       A user supplied nonce that is echoed by the verifier to provide
@@ -395,7 +398,6 @@ Table of Contents
 
 3.2.  EAR Appraisal Claims
 
-   ;# import ar4si as ar4si
    ;# import rfc9711 as eat
 
    EAR-appraisal = {
@@ -411,6 +413,7 @@ Table of Contents
      ? endorser-claims-label => supply-chain-claims-type
      ? reference-value-provider-claims-label => supply-chain-claims-type
      ? transport-identity-key-label => transport-identity-key-type
+     ? secret-wrapping-keys-label => secret-wrapping-keys-type
      * $$ear-appraisal-extension
    }
 
@@ -438,6 +441,7 @@ Table of Contents
    endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
    reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1015>
    transport-identity-key-label = eat.JC<"eat_transport_identity_key", 1012>
+   secret-wrapping-keys-label = eat.JC<"eat_secret_wrapping_keys", 1013>
 
    ; supply chain entity name => claims it asserted
    supply-chain-claims-type = { + text => claims-map-type }
@@ -552,8 +556,12 @@ Table of Contents
       and the key that signed the CoRIM.
 
    eat_transport_identity_key (optional)
-      The public key the appraised Attester uses to authenticate itself
-      to its peer in a secure channel.  See Section 3.3.
+      The public key that the appraised Attester uses to authenticate
+      itself to its peer in a secure channel.  See Section 3.3.
+
+   eat_secret_wrapping_keys (optional)
+      The public keys that the appraised Attester publishes so that a
+      Relying Party can wrap a secret to it.  See Section 3.4.
 
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
@@ -600,12 +608,46 @@ Table of Contents
    digest form is used.  A mismatch MUST be treated as an attestation
    failure.
 
+3.4.  Secret Wrapping Keys
+
+   The eat_secret_wrapping_keys claim carries public keys that an
+   Attester designates for encrypting, or establishing keys for, secrets
+   released to it.  A Relying Party can release a secret to the Attester
+   by wrapping it with one of the keys.  Secure key release protocols
+   are an example of this use.  Like any EAT claim, it can appear in
+   Evidence, where the Attester publishes the keys, and in an
+   Attestation Result, where the Verifier conveys keys it obtained from
+   appraised Evidence.
+
+   The value is a JWK Set (Section 5 of [RFC7517]) in JSON, or a
+   COSE_KeySet (Section 7 of [STD96]) in CBOR.  The set MUST NOT be
+   empty.  The keys MUST be public keys: private and symmetric key
+   parameters MUST NOT be present.  The claim defines no labels or roles
+   for individual keys.  The algorithms, the intended use and any
+   identifier of a key are conveyed by its own parameters (e.g., alg,
+   key_ops and kid), which a Relying Party can use to select the key it
+   needs.  A Relying Party MUST NOT wrap a secret with a key unless the
+   key's own parameters (alg or key_ops) indicate that it is intended
+   for encryption, key wrapping or key agreement.  If a set contains
+   keys intended for other purposes, such as signature verification, the
+   Relying Party MUST ignore them.
+
+   In an Attestation Result, the Verifier MUST include a key only if the
+   appraised Evidence binds that key to the Attester, for example
+   because the claim is in the signed Evidence, or through a digest of
+   the key in a signed Evidence claim that the Verifier has checked.
+   The Verifier does not assert that the Attester holds the
+   corresponding private keys, because this claim does not rely on proof
+   of possession.  A Relying Party gets that assurance by using the key:
+   a secret wrapped with a key whose private part the Attester does not
+   hold cannot be unwrapped by it.
+
    A Verifier that conveys this claim in an appraisal record MUST NOT
    also include it in ear_verifier_claims.  If the claim also appears in
    ear_verifier_claims, the Relying Party MUST use the claim in the
    appraisal record and ignore the other occurrence.
 
-3.4.  Details Claims
+3.5.  Details Claims
 
    The ear_status_details and ear_trustworthiness_vector_details claims
    let a Verifier tell the Relying Party the reasons for the values of
@@ -624,7 +666,7 @@ Table of Contents
    untrusted input (see Section 7).  It can also reveal details of the
    Attester's state, see Section 8.
 
-3.5.  Recursive and Tunnelled Submods
+3.6.  Recursive and Tunnelled Submods
 
    In addition to a flat EAR-appraisal, a submod MAY instead carry a
    nested EAR or a Nested-Token (Section 4.2.18.3 of [RFC9711]).  This
@@ -750,9 +792,9 @@ Table of Contents
 
          Figure 3: JSON claims-set: recursive and tunnelled submods
 
-3.6.  JSON Serialisation
+3.7.  JSON Serialisation
 
-3.6.1.  Examples
+3.7.1.  Examples
 
    The example in Figure 4 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
@@ -796,7 +838,19 @@ Table of Contents
          "ear_appraisal_policy_ids":
            [ "https://veraison.example/policy/1/60a0068d" ],
          "eat_transport_identity_key":
-           "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw"
+           "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw",
+         "eat_secret_wrapping_keys": {
+           "keys": [
+             {
+               "kty": "EC",
+               "crv": "P-256",
+               "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+               "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+               "kid": "wrap-1",
+               "alg": "ECDH-ES+A256KW"
+             }
+           ]
+         }
        }
      }
    }
@@ -869,9 +923,9 @@ Table of Contents
 
            Figure 5: JSON claims-set: simple affirming appraisal
 
-3.7.  CBOR Serialisation
+3.8.  CBOR Serialisation
 
-3.7.1.  Examples
+3.8.1.  Examples
 
    The example in Figure 6 is semantically equivalent to that in
    Figure 4.  It shows the same "contraindicated" appraisal using the
@@ -908,6 +962,16 @@ Table of Contents
          1012: [
            1,
            h'51b944cdfa544d4c3273aa6bf350625a7dd53bbb6a71723274f538b19a207760'
+         ],
+         1013: [
+           {
+             1: 2,
+             -1: 1,
+             -2: h'30a0424cd21c2944838a2d75c92b37e76ea20d9f00893a3b4eee8a3c0aafec3e',
+             -3: h'e04b65e92456d9888b52b379bdfbd51ee869ef1f0fc65b6659695b6cce081723',
+             2: h'7772617031',
+             3: -31
+           }
          ]
        }
      }
@@ -1412,7 +1476,16 @@ Table of Contents
    Verifier's mapping from cryptographic identities to identifiers and
    on the integrity protection of the EAR.
 
-7.1.  Binding EAR to the Appraisal Request
+7.1.  Releasing Secrets to Published Keys
+
+   A Relying Party that wraps a secret with a key in
+   eat_secret_wrapping_keys (see Section 3.4) MUST check that the EAR is
+   fresh for its request, for example by verifying eat_nonce, and that
+   ear_status is acceptable under its Appraisal Policy for Attestation
+   Results.  Otherwise, a stale EAR could direct a secret to an
+   environment that has since been compromised.
+
+7.2.  Binding EAR to the Appraisal Request
 
    eat_nonce alone only proves that the Verifier processed a request
    carrying a given nonce; it does not prove that the request contained
@@ -1700,7 +1773,23 @@ Table of Contents
 
    *  Specification Document(s): Section 3.3 of RFCthis
 
-9.1.15.  EAR TEEP Claims
+9.1.15.  Secret Wrapping Keys
+
+   *  Claim Name: eat_secret_wrapping_keys
+
+   *  Claim Description: Secret Wrapping Keys
+
+   *  JWT Claim Name: eat_secret_wrapping_keys
+
+   *  Claim Key: 1013 (suggested)
+
+   *  Claim Value Type(s): map (JWK Set) or array (COSE_KeySet)
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.4 of RFCthis
+
+9.1.16.  EAR TEEP Claims
 
    TODO
 
@@ -1742,6 +1831,10 @@ Table of Contents
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/rfc/rfc5280>.
+
+   [RFC7517]  Jones, M., "JSON Web Key (JWK)", RFC 7517,
+              DOI 10.17487/RFC7517, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7517>.
 
    [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
@@ -1868,6 +1961,7 @@ Appendix A.  Collated CDDL
      ? reference-value-provider-claims-label => supply-chain-claims-\
                                                                    type,
      ? transport-identity-key-label => transport-identity-key-type,
+     ? secret-wrapping-keys-label => secret-wrapping-keys-type,
      * $$ear-appraisal-extension,
    }
    status-label = eat.JC<"ear_status", 1000>
@@ -1895,6 +1989,7 @@ Appendix A.  Collated CDDL
                              ear_reference_value_provider_claims", 1015>
    transport-identity-key-label = eat.JC<"eat_transport_identity_key", \
                                                                    1012>
+   secret-wrapping-keys-label = eat.JC<"eat_secret_wrapping_keys", 1013>
    supply-chain-claims-type = {+ text => claims-map-type}
    claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
    claims-map-type-json = {+ text => any}
@@ -1902,6 +1997,17 @@ Appendix A.  Collated CDDL
    topology-type = {+ text => [+ text]}
    transport-identity-key-type = spki-type / mc.digest
    spki-type = eat.JC<text .b64u bytes, bytes>
+   secret-wrapping-keys-type = eat.JC<jwk-set, cose-key-set>
+   jwk-set = {keys: [+ jwk]}
+   jwk = {
+     kty: text,
+     * text => any,
+   }
+   cose-key-set = [+ cose-key]
+   cose-key = {
+     1 => int / tstr,
+     * (int / tstr) => any,
+   }
    eat.JC<J, C> = eat.JSON-ONLY<J> / eat.CBOR-ONLY<C>
    eat.JSON-ONLY<J> = J .feature "json"
    eat.CBOR-ONLY<C> = C .feature "cbor"
