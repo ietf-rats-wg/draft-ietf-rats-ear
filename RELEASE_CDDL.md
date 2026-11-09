@@ -32,10 +32,9 @@ Pushing the tag to origin will trigger the associate GitHub action.
 
 ## Inspect the release files
 
-If everyhing goes as planned, the 3 "autogen" CDDL files will be available for download from the following locations:
+If everyhing goes as planned, the 2 "autogen" CDDL files will be available for download from the following locations:
 
 ```
 https://github.com/ietf-rats-wg/draft-ietf-rats-ear/releases/download/cddl-.../ear-base-autogen.cddl
 https://github.com/ietf-rats-wg/draft-ietf-rats-ear/releases/download/cddl-.../ear-ext-teep-autogen.cddl
-https://github.com/ietf-rats-wg/draft-ietf-rats-ear/releases/download/cddl-.../ear-ext-veraison-autogen.cddl
 ```
