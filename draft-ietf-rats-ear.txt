@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 10 May 2027                                               Cisco
+Expires: 13 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         6 November 2026
+                                                         9 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 May 2027.
+   This Internet-Draft will expire on 13 May 2027.
 
 Copyright Notice
 
@@ -91,12 +91,13 @@ Table of Contents
      3.1.  Input Digest
        3.1.1.  Applicability
      3.2.  EAR Appraisal Claims
-     3.3.  Details Claims
-     3.4.  Recursive and Tunnelled Submods
-     3.5.  JSON Serialisation
-       3.5.1.  Examples
-     3.6.  CBOR Serialisation
+     3.3.  Transport Identity Key
+     3.4.  Details Claims
+     3.5.  Recursive and Tunnelled Submods
+     3.6.  JSON Serialisation
        3.6.1.  Examples
+     3.7.  CBOR Serialisation
+       3.7.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
@@ -132,7 +133,8 @@ Table of Contents
        9.1.11. Reference Value Provider Claims
        9.1.12. Device Topology
        9.1.13. EAR Input Digest
-       9.1.14. EAR TEEP Claims
+       9.1.14. Transport Identity Key
+       9.1.15. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -241,7 +243,7 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.4).  When a submod is a Nested-Token
+      a Nested-Token (see Section 3.5).  When a submod is a Nested-Token
       whose contents the verifier cannot parse or independently verify
       -- for example, because it uses a serialization or a signature
       scheme the verifier does not support, or because it does not
@@ -259,7 +261,7 @@ Table of Contents
 
    ear_status_details (optional)
       A non-empty array of strings, each giving a reason for the value
-      of ear_status.  See Section 3.3 for the rules that apply to all
+      of ear_status.  See Section 3.4 for the rules that apply to all
       *_details claims.
 
    iat (mandatory)
@@ -301,7 +303,7 @@ Table of Contents
       supported evidence type, unless EAR payloads are produced and
       consumed entirely within a private deployment.  See Section 3.2
       for the details about the contents of an EAR-appraisal, and
-      Section 3.4 for the recursive and tunnelled cases.
+      Section 3.5 for the recursive and tunnelled cases.
 
    eat_nonce (optional)
       A user supplied nonce that is echoed by the verifier to provide
@@ -408,6 +410,7 @@ Table of Contents
      ? verifier-claims-label => claims-map-type
      ? endorser-claims-label => supply-chain-claims-type
      ? reference-value-provider-claims-label => supply-chain-claims-type
+     ? transport-identity-key-label => transport-identity-key-type
      * $$ear-appraisal-extension
    }
 
@@ -434,6 +437,7 @@ Table of Contents
    verifier-claims-label = eat.JC<"ear_verifier_claims", 1006>
    endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
    reference-value-provider-claims-label = eat.JC<"ear_reference_value_provider_claims", 1015>
+   transport-identity-key-label = eat.JC<"eat_transport_identity_key", 1012>
 
    ; supply chain entity name => claims it asserted
    supply-chain-claims-type = { + text => claims-map-type }
@@ -547,11 +551,61 @@ Table of Contents
       use them unless it has authenticated the binding between the name
       and the key that signed the CoRIM.
 
+   eat_transport_identity_key (optional)
+      The public key the appraised Attester uses to authenticate itself
+      to its peer in a secure channel.  See Section 3.3.
+
    $$ear-appraisal-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
       further details.
 
-3.3.  Details Claims
+3.3.  Transport Identity Key
+
+   The eat_transport_identity_key claim identifies the key an Attester
+   uses to authenticate itself in a secure channel, for example the end-
+   entity key of a TLS certificate.  It lets a Relying Party tie an
+   attestation to the entity it is talking to.  Like any EAT claim, it
+   can also appear in Evidence, where the Attester asserts it, and in an
+   Attestation Result, where it is present only if the Verifier
+   appraised it in Evidence.
+
+   The value is one of:
+
+   *  the DER encoding of the key's SubjectPublicKeyInfo
+      (Section 4.1.2.7 of [RFC5280]), as a byte string, or as a
+      base64url-encoded string in JSON;
+
+   *  a digest of that encoding, in the digest format of Section 4.2 of
+      [I-D.ietf-rats-eat-measured-component].
+
+   The SubjectPublicKeyInfo MUST be encoded exactly as the Attester
+   presents it to its peer: the subjectPublicKeyInfo field of the end-
+   entity certificate, or the raw public key itself when no certificate
+   is used.  This lets the Relying Party compare encodings byte for
+   byte, and makes the digest form reproducible.
+
+   The digest form identifies the hash algorithm, so that it can be used
+   before the channel's algorithms are negotiated.  It suits Attesters
+   whose Evidence carries only a digest of the key, and keeps Evidence
+   and Attestation Results small when keys are large, as post-quantum
+   keys are.
+
+   The claim only says that the key is resident in the Attester's Target
+   Environment.  It does not prove that the peer holds the corresponding
+   private key: the Relying Party obtains that proof from the channel's
+   authentication step (e.g., CertificateVerify in TLS).  To tie the
+   attestation to the peer, the Relying Party MUST compare the
+   SubjectPublicKeyInfo of the key it authenticated with the claim byte
+   for byte, hashing it with the algorithm named in the claim when the
+   digest form is used.  A mismatch MUST be treated as an attestation
+   failure.
+
+   A Verifier that conveys this claim in an appraisal record MUST NOT
+   also include it in ear_verifier_claims.  If the claim also appears in
+   ear_verifier_claims, the Relying Party MUST use the claim in the
+   appraisal record and ignore the other occurrence.
+
+3.4.  Details Claims
 
    The ear_status_details and ear_trustworthiness_vector_details claims
    let a Verifier tell the Relying Party the reasons for the values of
@@ -570,7 +624,7 @@ Table of Contents
    untrusted input (see Section 7).  It can also reveal details of the
    Attester's state, see Section 8.
 
-3.4.  Recursive and Tunnelled Submods
+3.5.  Recursive and Tunnelled Submods
 
    In addition to a flat EAR-appraisal, a submod MAY instead carry a
    nested EAR or a Nested-Token (Section 4.2.18.3 of [RFC9711]).  This
@@ -696,9 +750,9 @@ Table of Contents
 
          Figure 3: JSON claims-set: recursive and tunnelled submods
 
-3.5.  JSON Serialisation
+3.6.  JSON Serialisation
 
-3.5.1.  Examples
+3.6.1.  Examples
 
    The example in Figure 4 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
@@ -740,7 +794,9 @@ Table of Contents
            "executables": [ "unauthorized code found in runtime memory" ]
          },
          "ear_appraisal_policy_ids":
-           [ "https://veraison.example/policy/1/60a0068d" ]
+           [ "https://veraison.example/policy/1/60a0068d" ],
+         "eat_transport_identity_key":
+           "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9-9Ue6GnvHw_GW2ZZaVtszggXIw"
        }
      }
    }
@@ -813,9 +869,9 @@ Table of Contents
 
            Figure 5: JSON claims-set: simple affirming appraisal
 
-3.6.  CBOR Serialisation
+3.7.  CBOR Serialisation
 
-3.6.1.  Examples
+3.7.1.  Examples
 
    The example in Figure 6 is semantically equivalent to that in
    Figure 4.  It shows the same "contraindicated" appraisal using the
@@ -848,7 +904,11 @@ Table of Contents
          1011: {
            2: [ "unauthorized code found in runtime memory" ]
          },
-         1003: [ "https://veraison.example/policy/1/60a0068d" ]
+         1003: [ "https://veraison.example/policy/1/60a0068d" ],
+         1012: [
+           1,
+           h'51b944cdfa544d4c3273aa6bf350625a7dd53bbb6a71723274f538b19a207760'
+         ]
        }
      }
    }
@@ -1623,7 +1683,24 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.14.  EAR TEEP Claims
+9.1.14.  Transport Identity Key
+
+   *  Claim Name: eat_transport_identity_key
+
+   *  Claim Description: Transport Identity Key
+
+   *  JWT Claim Name: eat_transport_identity_key
+
+   *  Claim Key: 1012 (suggested)
+
+   *  Claim Value Type(s): byte string or text string
+      (SubjectPublicKeyInfo), or array (digest)
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.3 of RFCthis
+
+9.1.15.  EAR TEEP Claims
 
    TODO
 
@@ -1790,6 +1867,7 @@ Appendix A.  Collated CDDL
      ? endorser-claims-label => supply-chain-claims-type,
      ? reference-value-provider-claims-label => supply-chain-claims-\
                                                                    type,
+     ? transport-identity-key-label => transport-identity-key-type,
      * $$ear-appraisal-extension,
    }
    status-label = eat.JC<"ear_status", 1000>
@@ -1815,11 +1893,15 @@ Appendix A.  Collated CDDL
    endorser-claims-label = eat.JC<"ear_endorser_claims", 1014>
    reference-value-provider-claims-label = eat.JC<"\
                              ear_reference_value_provider_claims", 1015>
+   transport-identity-key-label = eat.JC<"eat_transport_identity_key", \
+                                                                   1012>
    supply-chain-claims-type = {+ text => claims-map-type}
    claims-map-type = eat.JC<claims-map-type-json, claims-map-type-cbor>
    claims-map-type-json = {+ text => any}
    claims-map-type-cbor = {+ (text / int) => any}
    topology-type = {+ text => [+ text]}
+   transport-identity-key-type = spki-type / mc.digest
+   spki-type = eat.JC<text .b64u bytes, bytes>
    eat.JC<J, C> = eat.JSON-ONLY<J> / eat.CBOR-ONLY<C>
    eat.JSON-ONLY<J> = J .feature "json"
    eat.CBOR-ONLY<C> = C .feature "cbor"
