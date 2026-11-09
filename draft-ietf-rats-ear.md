@@ -588,8 +588,7 @@ An up-to-date view of the registered claims can be obtained via the
 
 ## Choosing between registered and unregistered claims
 
-If an extension supports functionality of a specific application (e.g.
-Project Veraison Services), its claims MAY be registered.
+If an extension supports functionality of a specific application, its claims MAY be registered.
 
 If an extension supports a protocol that may be applicable across multiple
 applications or environments (e.g., TEEP), its claims SHOULD be registered.
@@ -640,38 +639,6 @@ EAR defines a TEEP application extension for the purpose of conveying such claim
 
 ~~~cddl
 {::include cddl/examples/ext-teep-cbor-1.diag}
-~~~
-
-## Project Veraison Extensions {#sec-extensions-veraison}
-
-The Project Veraison verifier defines a private, application-specific
-extension:
-
-{:vspace}
-`ear_veraison_key_attestation`
-: contains the public key part of a successfully verified attested key.
-The key is a DER encoded ASN.1 SubjectPublicKeyInfo structure ({{Section
-4.1.2.7 of -pkix}}).
-
-~~~cddl
-{::include cddl/ext-veraison.cddl}
-~~~
-{: #fig-cddl-veraison title="Project Veraison Extension (CDDL Definition)" }
-
-### JSON Serialization Examples
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-json-1.diag}
-~~~
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-json-2.diag}
-~~~
-
-### CBOR Serialization Example
-
-~~~cbor-diag
-{::include cddl/examples/ext-veraison-cbor-1.diag}
 ~~~
 
 # Media Types
