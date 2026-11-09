@@ -107,9 +107,6 @@ Table of Contents
      4.5.  TEEP Extension
        4.5.1.  JSON Serialization Example
        4.5.2.  CBOR Serialization Example
-     4.6.  Project Veraison Extensions
-       4.6.1.  JSON Serialization Examples
-       4.6.2.  CBOR Serialization Example
    5.  Media Types
    6.  Implementation Status
      6.1.  Project Veraison
@@ -1041,8 +1038,8 @@ Table of Contents
 
 4.3.  Choosing between registered and unregistered claims
 
-   If an extension supports functionality of a specific application
-   (e.g. Project Veraison Services), its claims MAY be registered.
+   If an extension supports functionality of a specific application, its
+   claims MAY be registered.
 
    If an extension supports a protocol that may be applicable across
    multiple applications or environments (e.g., TEEP), its claims SHOULD
@@ -1173,207 +1170,6 @@ Table of Contents
            258: 64242,
            259: h'ee80f5a66c1fb9742999a8fdab930893',
            260: ["1.2.5", 16384]
-         }
-       }
-     }
-   }
-
-4.6.  Project Veraison Extensions
-
-   The Project Veraison verifier defines a private, application-specific
-   extension:
-
-   ear_veraison_key_attestation
-      contains the public key part of a successfully verified attested
-      key.  The key is a DER encoded ASN.1 SubjectPublicKeyInfo
-      structure (Section 4.1.2.7 of [RFC5280]).
-
-   ;# import rfc9711 as eat
-
-   $$ear-appraisal-extension //= (
-     ear.veraison.key-attestation-label => ear-veraison-key-attestation
-   )
-
-   ear-veraison-key-attestation = {
-     "akpub" => eat.binary-data
-   }
-
-   ear.veraison.key-attestation-label = eat.JC<"ear_veraison_key_attestation", -70002>
-
-           Figure 8: Project Veraison Extension (CDDL Definition)
-
-4.6.1.  JSON Serialization Examples
-
-   {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
-     "iat": 1666529184,
-     "ear_verifier_id": {
-       "developer": "https://veraison-project.org",
-       "build": "vts 0.0.1"
-     },
-     "ear_raw_evidence": [
-       "application/vnd.evidence",
-       "NzQ3MjY5NzM2NTYzNzQK"
-     ],
-     "submods": {
-       "PSA_IOT": {
-         "ear_status": "contraindicated",
-         "ear_trustworthiness_vector": {
-           "instance-identity": 2,
-           "executables": 96,
-           "hardware": 2
-         },
-         "ear_appraisal_policy_ids":
-           [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear_attester_claims": {
-           "eat-profile": "http://arm.com/psa/2.0.0",
-           "psa-client-id": 1,
-           "psa-security-lifecycle": 12288,
-           "psa-implementation-id":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-           "psa-software-components": [
-             {
-               "measurement-value":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-               "signer-id":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-             },
-             {
-               "measurement-value":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-               "signer-id":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-             }
-           ],
-           "psa-nonce":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-           "psa-instance-id":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
-           "psa-certification-reference": "1234567890123-12345"
-         },
-         "ear_endorser_claims": {
-           "ACME Security Lab": {
-             "psa-certified": {
-               "certificate-number": "1234567890123-12345",
-               "date-of-issue": "23/06/2022",
-               "test-lab": "Riscure",
-               "certification-holder": "ACME Inc.",
-               "certified-product": "RoadRunner",
-               "hardware-version": "Gizmo v1.0.2",
-               "software-version": "TrustedFirmware-M v1.0.6",
-               "certification-type": "PSA Certified Level 1 v2.1",
-               "developer-type": "PSA Certified – Device"
-             }
-           }
-         },
-         "ear_reference_value_provider_claims": {
-           "Arm": {
-             "psa-implementation-id":
-               "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-           }
-         }
-       }
-     }
-   }
-
-   {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
-     "iat": 1666529184,
-     "ear_verifier_id": {
-       "developer": "https://veraison-project.org",
-       "build": "vts 0.0.1"
-     },
-     "ear_raw_evidence": [
-       "application/vnd.evidence",
-       "NzQ3MjY5NzM2NTYzNzQK"
-     ],
-     "submods": {
-       "PARSEC_TPM": {
-         "ear_status": "affirming",
-         "ear_trustworthiness_vector": {
-           "instance-identity": 2,
-           "executables": 2,
-           "hardware": 2
-         },
-         "ear_appraisal_policy_ids":
-           [ "https://veraison.example/policy/1/60a0068d" ],
-         "ear_veraison_key_attestation": {
-           "akpub":
-             "MFkwEwYHKoZIzj0CAQYIKoZIz___"
-         }
-       }
-     }
-   }
-
-4.6.2.  CBOR Serialization Example
-
-   {
-     265: "tag:ietf.org,2026:rats/ear#05",
-     6: 1666529184,
-     1004: {
-       0: "https://veraison-project.org",
-       1: "vts 0.0.1"
-     },
-     1002: [
-       "application/vnd.evidence",
-       h'6C696665626F61746D616E'
-     ],
-     266: {
-       "PSA_IOT": {
-         1000: 0,
-         1001: {
-           0: 2,
-           1: 2,
-           2: 2,
-           4: 2
-         },
-         1003: [ "https://veraison.example/policy/1/60a0068d" ],
-         1005: {
-           "eat-profile": "http://arm.com/psa/2.0.0",
-           "psa-client-id": 1,
-           "psa-security-lifecycle": 12288,
-           "psa-implementation-id":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-           "psa-software-components": [
-             {
-               "measurement-value":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-               "signer-id":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-             },
-             {
-               "measurement-value":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-               "signer-id":
-                 "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-             }
-           ],
-           "psa-nonce":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
-           "psa-instance-id":
-             "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
-           "psa-certification-reference": "1234567890123-12345"
-         },
-         1014: {
-           "ACME Security Lab": {
-             "psa-certified": {
-               "certificate-number": "1234567890123-12345",
-               "date-of-issue": "23/06/2022",
-               "test-lab": "Riscure",
-               "certification-holder": "ACME Inc.",
-               "certified-product": "RoadRunner",
-               "hardware-version": "Gizmo v1.0.2",
-               "software-version": "TrustedFirmware-M v1.0.6",
-               "certification-type": "PSA Certified Level 1 v2.1",
-               "developer-type": "PSA Certified – Device"
-             }
-           }
-         },
-         1015: {
-           "Arm": {
-             "psa-implementation-id":
-               "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
-           }
          }
        }
      }
