@@ -120,6 +120,8 @@ It can be serialized and protected using either CWT {{-cwt}} or JWT {{-jwt}}.
 This document uses terms and concepts defined by the RATS architecture.
 For a complete glossary see {{Section 4 of -rats-arch}}.
 
+This document uses the terms Composite Attester, Component Attester, Partial Evidence, Lead Verifier and Component Verifier defined in {{-multi-verifier}}.
+
 The terminology from CBOR {{-cbor}}, CDDL {{-cddl}} and COSE {{-cose}} applies;
 in particular, CBOR diagnostic notation is defined in {{Section 8 of -cbor}}
 and {{Section G of -cddl}}.
@@ -184,11 +186,11 @@ There are privacy considerations associated with this claim.  See
 
 `submods` (mandatory)
 : A submodule map ({{Section 4.2.18 of -eat}}) holding, for each separately
-appraised attester or sub-verifier, one of: an `EAR-appraisal`; a nested `EAR`
+appraised attester or Component Verifier, one of: an `EAR-appraisal`; a nested `EAR`
 claims-set; or a `Nested-Token` carrying a complete, independently signed EAR
-produced by a sub-verifier.
+produced by a Component Verifier.
 The map MUST contain at least one entry.
-For each appraised attester or sub-verifier the verifier chooses a unique
+For each appraised attester or Component Verifier the verifier chooses a unique
 label.
 For example, when evidence is in EAT format, the label could be constructed
 from the associated EAT profile.
@@ -216,6 +218,11 @@ If the claim is present, the map MUST contain at least one element.
 : A cryptographic digest of the appraisal request input that produced this EAR, used to bind the EAR to the exact input the Verifier received.
 Its value is the `digest` type defined in {{Section 4.2 of -eat-mc}}.
 See {{sec-ear-input-digest}} for the details.
+
+`ear_components_bound` (optional)
+: Whether the Evidence for all the Component Attesters of a Composite Attester is bound together, i.e., the Component Attesters are part of the same Composite Attester and, where applicable, their Partial Evidence was collected within the same challenge-response session.
+The value is one of `bound`, `not-bound` or `unknown`.
+See {{sec-components-bound}} for the details.
 
 `$$ear-extension` (optional)
 : Any registered or unregistered extension.
@@ -382,6 +389,42 @@ A Relying Party gets that assurance by using the key: a secret wrapped with a ke
 A Verifier that conveys this claim in an appraisal record MUST NOT also include it in `ear_verifier_claims`.
 If the claim also appears in `ear_verifier_claims`, the Relying Party MUST use the claim in the appraisal record and ignore the other occurrence.
 
+## Components Binding {#sec-components-bound}
+
+The per-component results in `submods` say that each Component Attester was individually appraised, but they do not say that the appraised Component Attesters belong together.
+The `ear_components_bound` claim allows a Relying Party to determine whether the appraised Component Attesters are part of the same Composite Attester and, where applicable, whether the Partial Evidence of each was collected within the same challenge-response session.
+
+The `ear_components_bound` claim is only meaningful in the appraisal of a Composite Attester, and MUST NOT be present otherwise.
+
+The value is one of the following, serialized as a string in JSON and as an unsigned integer in CBOR:
+
+{:vspace}
+`bound` (1)
+: The Evidence for all the Component Attesters is bound together.
+
+`not-bound` (2)
+: The Evidence for at least one Component Attester is not bound to the others.
+
+`unknown` (0)
+: The Verifier cannot tell, for example because the Evidence, or the result of a Component Verifier, carries no binding information.
+
+A receiver that encounters a value it does not recognise MUST treat it as `unknown`.
+
+Omitting the claim is not equivalent to `unknown`: it means that the Verifier makes no statement about binding, for example because it does not implement the logic needed to verify the binding.
+
+A binding scheme is defined by how the Composite Attester arranges the collection of Evidence from its Component Attesters, and by the Evidence collection protocol it exposes or is used with.
+The Verifier can report `bound` or `not-bound` only if it understands the binding scheme, and can verify the binding mechanics as they appear in the Evidence.
+Examples of binding schemes are a shared nonce, a common session key, a certificate chain or another form of key delegation, and cross-signing between Component Attesters.
+
+When the EAR has nested `EAR` or `Nested-Token` submods ({{sec-nested-submods}}), the Lead Verifier computes the value as follows:
+
+* `bound` only if every nested value is `bound` and the Lead Verifier has also established binding across the Component Verifiers;
+* `not-bound` if any nested value is `not-bound`;
+* `unknown` otherwise.
+
+The claim is in general orthogonal to the `incomplete` tier of `ear_status`.
+For example, the Realm token of a CCA attester can be proven to be bound to the Platform token while the appraisal is still `incomplete` because the Realm Initial Measurement has not been corroborated.
+
 ## Details Claims {#sec-details}
 
 The `ear_status_details` and `ear_trustworthiness_vector_details` claims let a Verifier tell the Relying Party the reasons for the values of `ear_status` and of the trustworthiness vector categories.
@@ -400,9 +443,9 @@ It can also reveal details of the Attester's state, see {{sec-priv-cons}}.
 In addition to a flat `EAR-appraisal`, a submod MAY instead carry a nested
 `EAR` or a `Nested-Token` ({{Section 4.2.18.3 of -eat}}).
 This gives the EAR a recursive structure that can directly reflect the
-topology of a mesh of cooperating verifiers, e.g., the lead verifier of the
+topology of a mesh of cooperating verifiers, e.g., the Lead Verifier of the
 Hierarchical pattern defined in {{-multi-verifier}}, which
-dispatches the appraisal of composite evidence to one or more sub-verifiers
+dispatches the appraisal of composite evidence to one or more Component Verifiers
 and then collects their results into its own EAR.
 
 The three $submod-value alternatives serve different purposes:
@@ -411,19 +454,19 @@ The three $submod-value alternatives serve different purposes:
 `EAR-appraisal`
 : The existing, flat representation.
 Used when the verifier itself performs the appraisal of the associated
-attester, or restates a sub-verifier's result as its own appraisal.
+attester, or restates a Component Verifier's result as its own appraisal.
 
 `EAR`
-: A complete EAR claims-set produced by a sub-verifier, embedded directly, in
+: A complete EAR claims-set produced by a Component Verifier, embedded directly, in
 the same serialization (JSON or CBOR) as the enclosing EAR.
-This lets a sub-verifier's full result -- including its own `submods`,
+This lets a Component Verifier's full result -- including its own `submods`,
 potentially several levels deep -- be embedded as plain claims data,
 integrity-protected only by the enclosing EAR's own signature.
 
 `Nested-Token`
-: A complete, independently signed EAR produced by a sub-verifier and
+: A complete, independently signed EAR produced by a Component Verifier and
 tunnelled opaquely, using the nesting mechanics described in {{Section 4.2.18.3 of -eat}}.
-This is the only alternative that supports a sub-verifier whose EAR uses a
+This is the only alternative that supports a Component Verifier whose EAR uses a
 different serialization than the enclosing token (e.g., a JWT-serialized
 sub-EAR nested inside a CWT-serialized top-level EAR, or vice versa).
 The nested token's encoding is self-describing, so the consumer needs no
@@ -453,13 +496,13 @@ recurse into nested `EAR` submods and to decode `Nested-Token` submods --
 which, per above, may require support for a different serialization or
 signature scheme than the one used by the enclosing token.
 
-{{fig-ex-json-3}} shows a lead verifier's EAR for a confidential computing
+{{fig-ex-json-3}} shows a Lead Verifier's EAR for a confidential computing
 scenario: a confidential VM ("cvm") running on a confidential platform
 ("cpu") and using a trusted device ("gpu") to offload a specialized ML
 workload.
 Each submod uses a different $submod-value kind, reflecting a realistic split
 of appraisal responsibilities across independent, vendor-specific verifiers:
-"cvm" is appraised directly by the lead verifier and carries a flat
+"cvm" is appraised directly by the Lead Verifier and carries a flat
 `EAR-appraisal`; "cpu" is appraised by Vendor-A's confidential computing
 verifier, whose full EAR claims-set, including its own "platform" submod, is
 embedded in-band as a nested `EAR`, because it happens to use the same
@@ -467,7 +510,7 @@ embedded in-band as a nested `EAR`, because it happens to use the same
 confidential computing verifier, whose EAR is tunnelled opaquely as a
 `Nested-Token`, JWT-serialized regardless of the serialization of the
 enclosing token.
-The lead verifier's `ear_status` reflects the worst status found across all
+The Lead Verifier's `ear_status` reflects the worst status found across all
 three; the one it cannot itself parse is accounted for as `incomplete`.
 
 ~~~cbor-diag
@@ -917,6 +960,16 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Value Type(s): array
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-input-digest}} of {{&SELF}}
+
+### EAR Components Bound
+
+* Claim Name: ear_components_bound
+* Claim Description: Evidence for All Component Attesters is Bound Together
+* JWT Claim Name: ear_components_bound
+* Claim Key: 1009 (suggested)
+* Claim Value Type(s): text (JSON) or unsigned integer (CBOR)
+* Change Controller: IESG
+* Specification Document(s): {{sec-components-bound}} of {{&SELF}}
 
 ### Transport Identity Key
 
