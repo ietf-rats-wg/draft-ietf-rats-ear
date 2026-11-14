@@ -2,6 +2,7 @@
   "eat_profile": "tag:ietf.org,2026:rats/ear#05",
   "iat": 1666529184,
   "ear_status": "warning",
+  "ear_components_bound": "bound",
   "ear_verifier_id": {
     "developer": "https://veraison-project.org",
     "build": "vts 0.0.1"
