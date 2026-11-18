@@ -220,7 +220,7 @@ Its value is the `digest` type defined in {{Section 4.2 of -eat-mc}}.
 See {{sec-ear-input-digest}} for the details.
 
 `ear_components_bound` (optional)
-: Whether the Evidence for all the Component Attesters of a Composite Attester is bound together, i.e., the Component Attesters are part of the same Composite Attester and, where applicable, their Partial Evidence was collected within the same challenge-response session.
+: Whether the bindings between the Component Attesters of a Composite Attester, where used, were verified.
 The value is one of `bound`, `not-bound` or `unknown`.
 See {{sec-components-bound}} for the details.
 
@@ -392,35 +392,44 @@ If the claim also appears in `ear_verifier_claims`, the Relying Party MUST use t
 ## Components Binding {#sec-components-bound}
 
 The per-component results in `submods` say that each Component Attester was individually appraised, but they do not say that the appraised Component Attesters belong together.
-The `ear_components_bound` claim allows a Relying Party to determine whether the appraised Component Attesters are part of the same Composite Attester and, where applicable, whether the Partial Evidence of each was collected within the same challenge-response session.
+A Composite Attester may tie the Partial Evidence of its Component Attesters to each other, for example by collecting it within the same challenge-response session, or by chaining the keys that sign it.
+The `ear_components_bound` claim tells the Relying Party whether the Verifier verified these bindings.
 
-The `ear_components_bound` claim is only meaningful in the appraisal of a Composite Attester, and MUST NOT be present otherwise.
+The claim is only meaningful in the appraisal of a Composite Attester, and MUST NOT be present otherwise.
+It is present if and only if the Composite Attester uses at least one binding between its Component Attesters.
+Absence of the claim means that no binding is used, or that the Verifier makes no statement about it, for example because it does not implement the logic needed to verify the bindings.
 
 The value is one of the following, serialized as a string in JSON and as an unsigned integer in CBOR:
 
 {:vspace}
 `bound` (1)
-: The Evidence for all the Component Attesters is bound together.
+: All the bindings in use were verified.
 
 `not-bound` (2)
-: The Evidence for at least one Component Attester is not bound to the others.
+: At least one binding in use failed verification.
 
 `unknown` (0)
-: The Verifier cannot tell, for example because the Evidence, or the result of a Component Verifier, carries no binding information.
+: At least one binding is in use, but the Verifier could not evaluate it, for example because it does not support the binding scheme, or because a Component Verifier reported nothing about it.
 
 A receiver that encounters a value it does not recognise MUST treat it as `unknown`.
 
-Omitting the claim is not equivalent to `unknown`: it means that the Verifier makes no statement about binding, for example because it does not implement the logic needed to verify the binding.
+A `not-bound` value is not benign: the Evidence is not what the Composite Attester's own arrangement says it should be.
+The Verifier SHOULD reflect it in the `ear_status` of the affected appraisals.
 
 A binding scheme is defined by how the Composite Attester arranges the collection of Evidence from its Component Attesters, and by the Evidence collection protocol it exposes or is used with.
 The Verifier can report `bound` or `not-bound` only if it understands the binding scheme, and can verify the binding mechanics as they appear in the Evidence.
 Examples of binding schemes are a shared nonce, a common session key, a certificate chain or another form of key delegation, and cross-signing between Component Attesters.
 
-When the EAR has nested `EAR` or `Nested-Token` submods ({{sec-nested-submods}}), the Lead Verifier computes the value as follows:
+The claim is not a statement about which Component Attesters are bound to which.
+A Composite Attester that consists of several independent groups of bound Component Attesters, for example several CCA Platform and Realm pairs, is represented using nested `EAR` submods ({{sec-nested-submods}}), one per group, each with its own claim.
 
-* `bound` only if every nested value is `bound` and the Lead Verifier has also established binding across the Component Verifiers;
-* `not-bound` if any nested value is `not-bound`;
-* `unknown` otherwise.
+When the EAR has nested `EAR` or `Nested-Token` submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values as follows:
+
+* `not-bound` if any value is `not-bound`;
+* `unknown` if no value is `not-bound` and any value is `unknown`;
+* `bound` otherwise.
+
+A nested submod that carries no claim does not contribute a value.
 
 The claim is in general orthogonal to the `incomplete` tier of `ear_status`.
 For example, the Realm token of a CCA attester can be proven to be bound to the Platform token while the appraisal is still `incomplete` because the Realm Initial Measurement has not been corroborated.
@@ -964,7 +973,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 ### EAR Components Bound
 
 * Claim Name: ear_components_bound
-* Claim Description: Evidence for All Component Attesters is Bound Together
+* Claim Description: Verification Outcome of the Bindings Between Component Attesters
 * JWT Claim Name: ear_components_bound
 * Claim Key: 1009 (suggested)
 * Claim Value Type(s): text (JSON) or unsigned integer (CBOR)
