@@ -35,13 +35,13 @@ It can be serialized and protected using either CWT or JWT.
 <!-- Generator version information:
   xml2rfc 3.35.0
     Python 3.14.10
-    ConfigArgParse 1.9.0
+    ConfigArgParse 1.10.1
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.14.3
+    platformdirs 4.14.7
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1065,7 +1065,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 18 May 2027</td>
+<td class="center">Expires 23 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1078,12 +1078,12 @@ svg {
 <dd class="internet-draft">draft-ietf-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-11-14" class="published">14 November 2026</time>
+<time datetime="2026-11-19" class="published">19 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-18">18 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-23">23 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1159,7 +1159,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1487,14 +1487,15 @@ topology-label = eat.JC&lt;"ear_device_topology", 1007&gt;
 input-digest-label = eat.JC&lt;"ear_input_digest", 1008&gt;
 components-bound-label = eat.JC&lt;"ear_components_bound", 1009&gt;
 
-; The Verifier's finding on whether the Evidence for all the components of a
-; composite attester is bound together
-components-bound-type = components-bound-unknown-label /
-                        components-bound-true-label /
-                        components-bound-false-label
-components-bound-unknown-label = eat.JC&lt;"unknown", 0&gt;
-components-bound-true-label = eat.JC&lt;"bound", 1&gt;
-components-bound-false-label = eat.JC&lt;"not-bound", 2&gt;
+; The Verifier's assessment on the bindings between the Component Attesters of
+; a Composite Attester.  The codes are AR4SI enumeration values in the
+; affirming (2), contraindicated (96) and incomplete (1) tiers.
+components-bound-type = components-bound-true-label /
+                        components-bound-false-label /
+                        components-bound-undetermined-label
+components-bound-true-label = eat.JC&lt;"bound", 2&gt;
+components-bound-false-label = eat.JC&lt;"not-bound", 96&gt;
+components-bound-undetermined-label = eat.JC&lt;"could-not-determine", 1&gt;
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
@@ -1517,7 +1518,7 @@ It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RF
         <dd style="margin-left: 1.5em" id="section-3-5.4">
           <p id="section-3-5.4.1">The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-11#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
 The <code>none</code> tier is the neutral element of this computation: it does not affect the result and <span class="bcp14">MUST NOT</span> be used as the value of this claim.
-The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an <code>EAR-appraisal</code>, a nested <code>EAR</code>, or a <code>Nested-Token</code> (see <a href="#sec-nested-submods" class="auto internal xref">Section 3.7</a>).
+The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an <code>EAR-appraisal</code>, a nested <code>EAR</code>, or a <code>Nested-Token</code> (see <a href="#sec-nested-submods" class="auto internal xref">Section 3.7</a>), and of no higher trust than the tier of <code>ear_components_bound</code> if present (see <a href="#sec-components-bound" class="auto internal xref">Section 3.5</a>).
 When a submod is a <code>Nested-Token</code> whose contents the verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the verifier does not support, or because it does not contain an EAR -- the verifier <span class="bcp14">MUST</span> treat that submod as having the <code>incomplete</code> tier (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-11#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>) for the purposes of computing this claim.
 That is, the verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
 The verifier <span class="bcp14">MUST NOT</span> infer from the opaque submod any tier it has not itself established.
@@ -1616,8 +1617,8 @@ See <a href="#sec-ear-input-digest" class="auto internal xref">Section 3.1</a> f
 <dt id="section-3-5.23">
 <code>ear_components_bound</code> (optional)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.24">
-          <p id="section-3-5.24.1">Whether the Evidence for all the Component Attesters of a Composite Attester is bound together, i.e., the Component Attesters are part of the same Composite Attester and, where applicable, their Partial Evidence was collected within the same challenge-response session.
-The value is one of <code>bound</code>, <code>not-bound</code> or <code>unknown</code>.
+          <p id="section-3-5.24.1">Whether the bindings between the Component Attesters of a Composite Attester, where used, were verified.
+The value is one of <code>bound</code>, <code>not-bound</code> or <code>could-not-determine</code>.
 See <a href="#sec-components-bound" class="auto internal xref">Section 3.5</a> for the details.<a href="#section-3-5.24.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -1914,48 +1915,46 @@ If the claim also appears in <code>ear_verifier_claims</code>, the Relying Party
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-components-binding" class="section-name selfRef">Components Binding</a>
         </h3>
 <p id="section-3.5-1">The per-component results in <code>submods</code> say that each Component Attester was individually appraised, but they do not say that the appraised Component Attesters belong together.
-The <code>ear_components_bound</code> claim allows a Relying Party to determine whether the appraised Component Attesters are part of the same Composite Attester and, where applicable, whether the Partial Evidence of each was collected within the same challenge-response session.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
-<p id="section-3.5-2">The <code>ear_components_bound</code> claim is only meaningful in the appraisal of a Composite Attester, and <span class="bcp14">MUST NOT</span> be present otherwise.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
-<p id="section-3.5-3">The value is one of the following, serialized as a string in JSON and as an unsigned integer in CBOR:<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+A Composite Attester may tie the Partial Evidence of its Component Attesters to each other, for example by collecting it within the same challenge-response session, or by chaining the keys that sign it.
+The <code>ear_components_bound</code> claim tells the Relying Party whether the Verifier verified these bindings.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">The claim is only meaningful in the appraisal of a Composite Attester, and <span class="bcp14">MUST NOT</span> be present otherwise.
+It is present if and only if the Composite Attester uses at least one binding between its Component Attesters.
+Absence of the claim means that no binding is used, or that the Verifier makes no statement about it, for example because it does not implement the logic needed to verify the bindings.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">The value is one of the following, serialized as a string in JSON and as an integer in CBOR.
+The integers are AR4SI enumeration values (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-11#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>), and each value maps to a trustworthiness tier:<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlNewline" id="section-3.5-4">
           <dt id="section-3.5-4.1">
-<code>bound</code> (1)</dt>
+<code>bound</code> (2)</dt>
           <dd style="margin-left: 1.5em" id="section-3.5-4.2">
-            <p id="section-3.5-4.2.1">The Evidence for all the Component Attesters is bound together.<a href="#section-3.5-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-4.2.1">All the bindings in use were verified.
+The tier is <code>affirming</code>.<a href="#section-3.5-4.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.5-4.3">
-<code>not-bound</code> (2)</dt>
+<code>not-bound</code> (96)</dt>
           <dd style="margin-left: 1.5em" id="section-3.5-4.4">
-            <p id="section-3.5-4.4.1">The Evidence for at least one Component Attester is not bound to the others.<a href="#section-3.5-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-4.4.1">At least one binding in use failed verification.
+The tier is <code>contraindicated</code>.<a href="#section-3.5-4.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.5-4.5">
-<code>unknown</code> (0)</dt>
+<code>could-not-determine</code> (1)</dt>
           <dd style="margin-left: 1.5em" id="section-3.5-4.6">
-            <p id="section-3.5-4.6.1">The Verifier cannot tell, for example because the Evidence, or the result of a Component Verifier, carries no binding information.<a href="#section-3.5-4.6.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-4.6.1">At least one binding is in use, but the Verifier could not evaluate it, for example because it does not support the binding scheme, or because a Component Verifier reported nothing about it.
+The tier is <code>incomplete</code>.<a href="#section-3.5-4.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-3.5-5">A receiver that encounters a value it does not recognise <span class="bcp14">MUST</span> treat it as <code>unknown</code>.<a href="#section-3.5-5" class="pilcrow">¶</a></p>
-<p id="section-3.5-6">Omitting the claim is not equivalent to <code>unknown</code>: it means that the Verifier makes no statement about binding, for example because it does not implement the logic needed to verify the binding.<a href="#section-3.5-6" class="pilcrow">¶</a></p>
+<p id="section-3.5-5">A receiver that encounters a value it does not recognise <span class="bcp14">MUST</span> treat it as <code>could-not-determine</code>.<a href="#section-3.5-5" class="pilcrow">¶</a></p>
+<p id="section-3.5-6">The tier of <code>ear_components_bound</code> is taken into account when computing <code>ear_status</code> like any other trustworthiness claim: <code>ear_status</code> <span class="bcp14">MUST</span> be of no higher trust than this tier.
+A <code>not-bound</code> value is never benign.<a href="#section-3.5-6" class="pilcrow">¶</a></p>
 <p id="section-3.5-7">A binding scheme is defined by how the Composite Attester arranges the collection of Evidence from its Component Attesters, and by the Evidence collection protocol it exposes or is used with.
 The Verifier can report <code>bound</code> or <code>not-bound</code> only if it understands the binding scheme, and can verify the binding mechanics as they appear in the Evidence.
 Examples of binding schemes are a shared nonce, a common session key, a certificate chain or another form of key delegation, and cross-signing between Component Attesters.<a href="#section-3.5-7" class="pilcrow">¶</a></p>
-<p id="section-3.5-8">When the EAR has nested <code>EAR</code> or <code>Nested-Token</code> submods (<a href="#sec-nested-submods" class="auto internal xref">Section 3.7</a>), the Lead Verifier computes the value as follows:<a href="#section-3.5-8" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.5-9.1">
-            <p id="section-3.5-9.1.1"><code>bound</code> only if every nested value is <code>bound</code> and the Lead Verifier has also established binding across the Component Verifiers;<a href="#section-3.5-9.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.5-9.2">
-            <p id="section-3.5-9.2.1"><code>not-bound</code> if any nested value is <code>not-bound</code>;<a href="#section-3.5-9.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.5-9.3">
-            <p id="section-3.5-9.3.1"><code>unknown</code> otherwise.<a href="#section-3.5-9.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-3.5-10">The claim is in general orthogonal to the <code>incomplete</code> tier of <code>ear_status</code>.
-For example, the Realm token of a CCA attester can be proven to be bound to the Platform token while the appraisal is still <code>incomplete</code> because the Realm Initial Measurement has not been corroborated.<a href="#section-3.5-10" class="pilcrow">¶</a></p>
+<p id="section-3.5-8">hen the EAR has nested <code>EAR</code> or <code>Nested-Token</code> submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values by taking the one of lowest trust, in the same way as for <code>ear_status</code>.<a href="#section-3.5-8" class="pilcrow">¶</a></p>
+<p id="section-3.5-9">A nested submod that carries no claim does not contribute a value.<a href="#section-3.5-9" class="pilcrow">¶</a></p>
+<p id="section-3.5-10">A <code>bound</code> value does not imply that the individual components are trustworthy.
+For example, the Realm token of a CCA Attester <span>[<a href="#I-D.ffm-rats-cca-token" class="cite xref">I-D.ffm-rats-cca-token</a>]</span> can be bound to the Platform token while <code>ear_status</code> is <code>incomplete</code> because the Realm measurements have not been corroborated.<a href="#section-3.5-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-details">
@@ -3147,7 +3146,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.14-1.1.1">Claim Name: ear_components_bound<a href="#section-9.1.14-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.14-1.2">
-              <p id="section-9.1.14-1.2.1">Claim Description: Evidence for All Component Attesters is Bound Together<a href="#section-9.1.14-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.14-1.2.1">Claim Description: Verification Outcome of the Bindings Between Component Attesters<a href="#section-9.1.14-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.14-1.3">
               <p id="section-9.1.14-1.3.1">JWT Claim Name: ear_components_bound<a href="#section-9.1.14-1.3.1" class="pilcrow">¶</a></p>
@@ -3156,7 +3155,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
               <p id="section-9.1.14-1.4.1">Claim Key: 1009 (suggested)<a href="#section-9.1.14-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.14-1.5">
-              <p id="section-9.1.14-1.5.1">Claim Value Type(s): text (JSON) or unsigned integer (CBOR)<a href="#section-9.1.14-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.14-1.5.1">Claim Value Type(s): text (JSON) or integer (CBOR)<a href="#section-9.1.14-1.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.14-1.6">
               <p id="section-9.1.14-1.6.1">Change Controller: IESG<a href="#section-9.1.14-1.6.1" class="pilcrow">¶</a></p>
@@ -3319,6 +3318,10 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="I-D.ffm-rats-cca-token">[I-D.ffm-rats-cca-token]</dt>
+        <dd>
+<span class="refAuthor">Frost, S.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">G. Mandyam</span>, <span class="refTitle">"Arm's Confidential Compute Architecture Reference Attestation Token"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ffm-rats-cca-token-04</span>, <time datetime="2026-09-07" class="refDate">7 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-token-04">https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-token-04</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.ietf-rats-corim">[I-D.ietf-rats-corim]</dt>
         <dd>
 <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Fossati, T.</span>, <span class="refAuthor">Deshpande, Y.</span>, <span class="refAuthor">Smith, N.</span>, and <span class="refAuthor">W. Pan</span>, <span class="refTitle">"Concise Reference Integrity Manifest"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-corim-12</span>, <time datetime="2026-11-01" class="refDate">1 November 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-12">https://datatracker.ietf.org/doc/html/draft-ietf-rats-corim-12</a>&gt;</span>. </dd>
@@ -3389,11 +3392,12 @@ verifier-id-label = eat.JC&lt;"ear_verifier_id", 1004&gt;
 topology-label = eat.JC&lt;"ear_device_topology", 1007&gt;
 input-digest-label = eat.JC&lt;"ear_input_digest", 1008&gt;
 components-bound-label = eat.JC&lt;"ear_components_bound", 1009&gt;
-components-bound-type = components-bound-unknown-label / components-\
-                      bound-true-label / components-bound-false-label
-components-bound-unknown-label = eat.JC&lt;"unknown", 0&gt;
-components-bound-true-label = eat.JC&lt;"bound", 1&gt;
-components-bound-false-label = eat.JC&lt;"not-bound", 2&gt;
+components-bound-type = components-bound-true-label / components-\
+              bound-false-label / components-bound-undetermined-label
+components-bound-true-label = eat.JC&lt;"bound", 2&gt;
+components-bound-false-label = eat.JC&lt;"not-bound", 96&gt;
+components-bound-undetermined-label = eat.JC&lt;"could-not-determine", \
+                                                                   1&gt;
 EAR-appraisal = {
   ? eat.profile-label =&gt; eat.general-uri / eat.general-oid,
   status-label =&gt; ar4si.trustworthiness-tier,

@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 18 May 2027                                               Cisco
+Expires: 23 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                        14 November 2026
+                                                        19 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2027.
+   This Internet-Draft will expire on 23 May 2027.
 
 Copyright Notice
 
@@ -233,14 +233,15 @@ Table of Contents
    input-digest-label = eat.JC<"ear_input_digest", 1008>
    components-bound-label = eat.JC<"ear_components_bound", 1009>
 
-   ; The Verifier's finding on whether the Evidence for all the components of a
-   ; composite attester is bound together
-   components-bound-type = components-bound-unknown-label /
-                           components-bound-true-label /
-                           components-bound-false-label
-   components-bound-unknown-label = eat.JC<"unknown", 0>
-   components-bound-true-label = eat.JC<"bound", 1>
-   components-bound-false-label = eat.JC<"not-bound", 2>
+   ; The Verifier's assessment on the bindings between the Component Attesters of
+   ; a Composite Attester.  The codes are AR4SI enumeration values in the
+   ; affirming (2), contraindicated (96) and incomplete (1) tiers.
+   components-bound-type = components-bound-true-label /
+                           components-bound-false-label /
+                           components-bound-undetermined-label
+   components-bound-true-label = eat.JC<"bound", 2>
+   components-bound-false-label = eat.JC<"not-bound", 96>
+   components-bound-undetermined-label = eat.JC<"could-not-determine", 1>
 
                       Figure 1: EAR (CDDL Definition)
 
@@ -260,21 +261,23 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.7).  When a submod is a Nested-Token
-      whose contents the verifier cannot parse or independently verify
-      -- for example, because it uses a serialization or a signature
-      scheme the verifier does not support, or because it does not
-      contain an EAR -- the verifier MUST treat that submod as having
-      the incomplete tier (Section 3.2 of [I-D.ietf-rats-ar4si]) for the
-      purposes of computing this claim.  That is, the verifier was
-      unable to complete the appraisal of that submod, and therefore
-      cannot vouch for the trustworthiness of the attester it
-      represents.  The verifier MUST NOT infer from the opaque submod
-      any tier it has not itself established.  Relying Parties that need
-      to know whether the whole tree has been appraised have to inspect
-      the Nested-Token submods individually.  This claim exists to help
-      Relying Parties easily determine the overall status of the
-      appraisal without having to inspect each submod.
+      a Nested-Token (see Section 3.7), and of no higher trust than the
+      tier of ear_components_bound if present (see Section 3.5).  When a
+      submod is a Nested-Token whose contents the verifier cannot parse
+      or independently verify -- for example, because it uses a
+      serialization or a signature scheme the verifier does not support,
+      or because it does not contain an EAR -- the verifier MUST treat
+      that submod as having the incomplete tier (Section 3.2 of
+      [I-D.ietf-rats-ar4si]) for the purposes of computing this claim.
+      That is, the verifier was unable to complete the appraisal of that
+      submod, and therefore cannot vouch for the trustworthiness of the
+      attester it represents.  The verifier MUST NOT infer from the
+      opaque submod any tier it has not itself established.  Relying
+      Parties that need to know whether the whole tree has been
+      appraised have to inspect the Nested-Token submods individually.
+      This claim exists to help Relying Parties easily determine the
+      overall status of the appraisal without having to inspect each
+      submod.
 
    ear_status_details (optional)
       A non-empty array of strings, each giving a reason for the value
@@ -345,12 +348,10 @@ Table of Contents
       Section 3.1 for the details.
 
    ear_components_bound (optional)
-      Whether the Evidence for all the Component Attesters of a
-      Composite Attester is bound together, i.e., the Component
-      Attesters are part of the same Composite Attester and, where
-      applicable, their Partial Evidence was collected within the same
-      challenge-response session.  The value is one of bound, not-bound
-      or unknown.  See Section 3.5 for the details.
+      Whether the bindings between the Component Attesters of a
+      Composite Attester, where used, were verified.  The value is one
+      of bound, not-bound or could-not-determine.  See Section 3.5 for
+      the details.
 
    $$ear-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
@@ -673,35 +674,45 @@ Table of Contents
 
    The per-component results in submods say that each Component Attester
    was individually appraised, but they do not say that the appraised
-   Component Attesters belong together.  The ear_components_bound claim
-   allows a Relying Party to determine whether the appraised Component
-   Attesters are part of the same Composite Attester and, where
-   applicable, whether the Partial Evidence of each was collected within
-   the same challenge-response session.
+   Component Attesters belong together.  A Composite Attester may tie
+   the Partial Evidence of its Component Attesters to each other, for
+   example by collecting it within the same challenge-response session,
+   or by chaining the keys that sign it.  The ear_components_bound claim
+   tells the Relying Party whether the Verifier verified these bindings.
 
-   The ear_components_bound claim is only meaningful in the appraisal of
-   a Composite Attester, and MUST NOT be present otherwise.
+   The claim is only meaningful in the appraisal of a Composite
+   Attester, and MUST NOT be present otherwise.  It is present if and
+   only if the Composite Attester uses at least one binding between its
+   Component Attesters.  Absence of the claim means that no binding is
+   used, or that the Verifier makes no statement about it, for example
+   because it does not implement the logic needed to verify the
+   bindings.
 
    The value is one of the following, serialized as a string in JSON and
-   as an unsigned integer in CBOR:
+   as an integer in CBOR.  The integers are AR4SI enumeration values
+   (Section 3.2 of [I-D.ietf-rats-ar4si]), and each value maps to a
+   trustworthiness tier:
 
-   bound (1)
-      The Evidence for all the Component Attesters is bound together.
+   bound (2)
+      All the bindings in use were verified.  The tier is affirming.
 
-   not-bound (2)
-      The Evidence for at least one Component Attester is not bound to
-      the others.
+   not-bound (96)
+      At least one binding in use failed verification.  The tier is
+      contraindicated.
 
-   unknown (0)
-      The Verifier cannot tell, for example because the Evidence, or the
-      result of a Component Verifier, carries no binding information.
+   could-not-determine (1)
+      At least one binding is in use, but the Verifier could not
+      evaluate it, for example because it does not support the binding
+      scheme, or because a Component Verifier reported nothing about it.
+      The tier is incomplete.
 
    A receiver that encounters a value it does not recognise MUST treat
-   it as unknown.
+   it as could-not-determine.
 
-   Omitting the claim is not equivalent to unknown: it means that the
-   Verifier makes no statement about binding, for example because it
-   does not implement the logic needed to verify the binding.
+   The tier of ear_components_bound is taken into account when computing
+   ear_status like any other trustworthiness claim: ear_status MUST be
+   of no higher trust than this tier.  A not-bound value is never
+   benign.
 
    A binding scheme is defined by how the Composite Attester arranges
    the collection of Evidence from its Component Attesters, and by the
@@ -712,20 +723,17 @@ Table of Contents
    common session key, a certificate chain or another form of key
    delegation, and cross-signing between Component Attesters.
 
-   When the EAR has nested EAR or Nested-Token submods (Section 3.7),
-   the Lead Verifier computes the value as follows:
+   hen the EAR has nested EAR or Nested-Token submods, the Lead Verifier
+   computes its own value over the bindings it is in a position to
+   verify, and combines it with the nested values by taking the one of
+   lowest trust, in the same way as for ear_status.
 
-   *  bound only if every nested value is bound and the Lead Verifier
-      has also established binding across the Component Verifiers;
+   A nested submod that carries no claim does not contribute a value.
 
-   *  not-bound if any nested value is not-bound;
-
-   *  unknown otherwise.
-
-   The claim is in general orthogonal to the incomplete tier of
-   ear_status.  For example, the Realm token of a CCA attester can be
-   proven to be bound to the Platform token while the appraisal is still
-   incomplete because the Realm Initial Measurement has not been
+   A bound value does not imply that the individual components are
+   trustworthy.  For example, the Realm token of a CCA Attester
+   [I-D.ffm-rats-cca-token] can be bound to the Platform token while
+   ear_status is incomplete because the Realm measurements have not been
    corroborated.
 
 3.6.  Details Claims
@@ -1643,14 +1651,14 @@ Table of Contents
 
    *  Claim Name: ear_components_bound
 
-   *  Claim Description: Evidence for All Component Attesters is Bound
-      Together
+   *  Claim Description: Verification Outcome of the Bindings Between
+      Component Attesters
 
    *  JWT Claim Name: ear_components_bound
 
    *  Claim Key: 1009 (suggested)
 
-   *  Claim Value Type(s): text (JSON) or unsigned integer (CBOR)
+   *  Claim Value Type(s): text (JSON) or integer (CBOR)
 
    *  Change Controller: IESG
 
@@ -1781,6 +1789,14 @@ Table of Contents
 
 10.2.  Informative References
 
+   [I-D.ffm-rats-cca-token]
+              Frost, S., Fossati, T., and G. Mandyam, "Arm's
+              Confidential Compute Architecture Reference Attestation
+              Token", Work in Progress, Internet-Draft, draft-ffm-rats-
+              cca-token-04, 7 September 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-
+              token-04>.
+
    [I-D.ietf-rats-corim]
               Birkholz, H., Fossati, T., Deshpande, Y., Smith, N., and
               W. Pan, "Concise Reference Integrity Manifest", Work in
@@ -1848,11 +1864,12 @@ Appendix A.  Collated CDDL
    topology-label = eat.JC<"ear_device_topology", 1007>
    input-digest-label = eat.JC<"ear_input_digest", 1008>
    components-bound-label = eat.JC<"ear_components_bound", 1009>
-   components-bound-type = components-bound-unknown-label / components-\
-                         bound-true-label / components-bound-false-label
-   components-bound-unknown-label = eat.JC<"unknown", 0>
-   components-bound-true-label = eat.JC<"bound", 1>
-   components-bound-false-label = eat.JC<"not-bound", 2>
+   components-bound-type = components-bound-true-label / components-\
+                 bound-false-label / components-bound-undetermined-label
+   components-bound-true-label = eat.JC<"bound", 2>
+   components-bound-false-label = eat.JC<"not-bound", 96>
+   components-bound-undetermined-label = eat.JC<"could-not-determine", \
+                                                                      1>
    EAR-appraisal = {
      ? eat.profile-label => eat.general-uri / eat.general-oid,
      status-label => ar4si.trustworthiness-tier,
