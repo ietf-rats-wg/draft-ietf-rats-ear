@@ -425,7 +425,7 @@ A binding scheme is defined by how the Composite Attester arranges the collectio
 The Verifier can report `bound` or `not-bound` only if it understands the binding scheme, and can verify the binding mechanics as they appear in the Evidence.
 Examples of binding schemes are a shared nonce, a common session key, a certificate chain or another form of key delegation, and cross-signing between Component Attesters.
 
-hen the EAR has nested `EAR` or `Nested-Token` submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values by taking the one of lowest trust, in the same way as for `ear_status`.
+When the EAR has nested `EAR` or `Nested-Token` submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values by taking the one of lowest trust, in the same way as for `ear_status`.
 
 A nested submod that carries no claim does not contribute a value.
 
