@@ -39,11 +39,12 @@ topology-label = eat.JC<"ear_device_topology", 1007>
 input-digest-label = eat.JC<"ear_input_digest", 1008>
 components-bound-label = eat.JC<"ear_components_bound", 1009>
 
-; The Verifier's finding on whether the Evidence for all the components of a
-; composite attester is bound together
-components-bound-type = components-bound-unknown-label /
-                        components-bound-true-label /
-                        components-bound-false-label
-components-bound-unknown-label = eat.JC<"unknown", 0>
-components-bound-true-label = eat.JC<"bound", 1>
-components-bound-false-label = eat.JC<"not-bound", 2>
+; The Verifier's assessment on the bindings between the Component Attesters of
+; a Composite Attester.  The codes are AR4SI enumeration values in the
+; affirming (2), contraindicated (96) and incomplete (1) tiers.
+components-bound-type = components-bound-true-label /
+                        components-bound-false-label /
+                        components-bound-undetermined-label
+components-bound-true-label = eat.JC<"bound", 2>
+components-bound-false-label = eat.JC<"not-bound", 96>
+components-bound-undetermined-label = eat.JC<"could-not-determine", 1>

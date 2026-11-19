@@ -67,6 +67,7 @@ informative:
   RFC9334: rats-arch
   I-D.ietf-rats-multi-verifier: multi-verifier
   I-D.ietf-rats-corim: corim
+  I-D.ffm-rats-cca-token: cca-token
   RFC7942: impl-status
   RFC4151: tag-uri
   IANA.cwt:
@@ -151,7 +152,7 @@ It MUST be the following tag URI ({{-tag-uri}})
 `ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The `none` tier is the neutral element of this computation: it does not affect the result and MUST NOT be used as the value of this claim.
-The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an `EAR-appraisal`, a nested `EAR`, or a `Nested-Token` (see {{sec-nested-submods}}).
+The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an `EAR-appraisal`, a nested `EAR`, or a `Nested-Token` (see {{sec-nested-submods}}), and of no higher trust than the tier of `ear_components_bound` if present (see {{sec-components-bound}}).
 When a submod is a `Nested-Token` whose contents the verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the verifier does not support, or because it does not contain an EAR -- the verifier MUST treat that submod as having the `incomplete` tier ({{Section 3.2 of -ar4si}}) for the purposes of computing this claim.
 That is, the verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
 The verifier MUST NOT infer from the opaque submod any tier it has not itself established.
@@ -221,7 +222,7 @@ See {{sec-ear-input-digest}} for the details.
 
 `ear_components_bound` (optional)
 : Whether the bindings between the Component Attesters of a Composite Attester, where used, were verified.
-The value is one of `bound`, `not-bound` or `unknown`.
+The value is one of `bound`, `not-bound` or `could-not-determine`.
 See {{sec-components-bound}} for the details.
 
 `$$ear-extension` (optional)
@@ -399,40 +400,37 @@ The claim is only meaningful in the appraisal of a Composite Attester, and MUST 
 It is present if and only if the Composite Attester uses at least one binding between its Component Attesters.
 Absence of the claim means that no binding is used, or that the Verifier makes no statement about it, for example because it does not implement the logic needed to verify the bindings.
 
-The value is one of the following, serialized as a string in JSON and as an unsigned integer in CBOR:
+The value is one of the following, serialized as a string in JSON and as an integer in CBOR.
+The integers are AR4SI enumeration values ({{Section 3.2 of -ar4si}}), and each value maps to a trustworthiness tier:
 
 {:vspace}
-`bound` (1)
+`bound` (2)
 : All the bindings in use were verified.
+The tier is `affirming`.
 
-`not-bound` (2)
+`not-bound` (96)
 : At least one binding in use failed verification.
+The tier is `contraindicated`.
 
-`unknown` (0)
+`could-not-determine` (1)
 : At least one binding is in use, but the Verifier could not evaluate it, for example because it does not support the binding scheme, or because a Component Verifier reported nothing about it.
+The tier is `incomplete`.
 
-A receiver that encounters a value it does not recognise MUST treat it as `unknown`.
+A receiver that encounters a value it does not recognise MUST treat it as `could-not-determine`.
 
-A `not-bound` value is not benign: the Evidence is not what the Composite Attester's own arrangement says it should be.
-The Verifier SHOULD reflect it in the `ear_status` of the affected appraisals.
+The tier of `ear_components_bound` is taken into account when computing `ear_status` like any other trustworthiness claim: `ear_status` MUST be of no higher trust than this tier.
+A `not-bound` value is never benign.
 
 A binding scheme is defined by how the Composite Attester arranges the collection of Evidence from its Component Attesters, and by the Evidence collection protocol it exposes or is used with.
 The Verifier can report `bound` or `not-bound` only if it understands the binding scheme, and can verify the binding mechanics as they appear in the Evidence.
 Examples of binding schemes are a shared nonce, a common session key, a certificate chain or another form of key delegation, and cross-signing between Component Attesters.
 
-The claim is not a statement about which Component Attesters are bound to which.
-A Composite Attester that consists of several independent groups of bound Component Attesters, for example several CCA Platform and Realm pairs, is represented using nested `EAR` submods ({{sec-nested-submods}}), one per group, each with its own claim.
-
-When the EAR has nested `EAR` or `Nested-Token` submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values as follows:
-
-* `not-bound` if any value is `not-bound`;
-* `unknown` if no value is `not-bound` and any value is `unknown`;
-* `bound` otherwise.
+hen the EAR has nested `EAR` or `Nested-Token` submods, the Lead Verifier computes its own value over the bindings it is in a position to verify, and combines it with the nested values by taking the one of lowest trust, in the same way as for `ear_status`.
 
 A nested submod that carries no claim does not contribute a value.
 
-The claim is in general orthogonal to the `incomplete` tier of `ear_status`.
-For example, the Realm token of a CCA attester can be proven to be bound to the Platform token while the appraisal is still `incomplete` because the Realm Initial Measurement has not been corroborated.
+A `bound` value does not imply that the individual components are trustworthy.
+For example, the Realm token of a CCA Attester {{-cca-token}} can be bound to the Platform token while `ear_status` is `incomplete` because the Realm measurements have not been corroborated.
 
 ## Details Claims {#sec-details}
 
@@ -976,7 +974,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Claim Description: Verification Outcome of the Bindings Between Component Attesters
 * JWT Claim Name: ear_components_bound
 * Claim Key: 1009 (suggested)
-* Claim Value Type(s): text (JSON) or unsigned integer (CBOR)
+* Claim Value Type(s): text (JSON) or integer (CBOR)
 * Change Controller: IESG
 * Specification Document(s): {{sec-components-bound}} of {{&SELF}}
 
