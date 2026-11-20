@@ -147,7 +147,7 @@ Where:
 : The EAT profile ({{Section 6 of -eat}}) associated with the EAR claims-set
 and encodings defined by this document.
 It MUST be the following tag URI ({{-tag-uri}})
-`tag:ietf.org,2026:rats/ear#05`.
+`tag:ietf.org,2026:rats/ear#07`.
 
 `ear_status` (optional)
 : The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers ({{Section 3.2 of -ar4si}}).
@@ -699,13 +699,13 @@ Media types for EAR are automatically derived from the base EAT media type
 For example, a JWT serialization would use:
 
 ~~~
-application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
+application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#07"
 ~~~
 
 A CWT serialization would instead use:
 
 ~~~
-application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
+application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#07"
 ~~~
 
 # Implementation Status
@@ -858,26 +858,6 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
-### Status Details
-
-* Claim Name: ear_status_details
-* Claim Description: EAR Status Details
-* JWT Claim Name: ear_status_details
-* Claim Key: 1010 (suggested)
-* Claim Value Type(s): array
-* Change Controller: IESG
-* Specification Document(s): {{sec-ear}} and {{sec-ear-appraisal}} of {{&SELF}}
-
-### Trustworthiness Vector Details
-
-* Claim Name: ear_trustworthiness_vector_details
-* Claim Description: EAR Trustworthiness Vector Details
-* JWT Claim Name: ear_trustworthiness_vector_details
-* Claim Key: 1011 (suggested)
-* Claim Value Type(s): map
-* Change Controller: IESG
-* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
-
 ### EAR Raw Evidence
 
 * Claim Name: ear_raw_evidence
@@ -928,26 +908,6 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
-### Endorser Claims
-
-* Claim Name: ear_endorser_claims
-* Claim Description: Endorser Claims
-* JWT Claim Name: ear_endorser_claims
-* Claim Key: 1014 (suggested)
-* Claim Value Type(s): map
-* Change Controller: IESG
-* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
-
-### Reference Value Provider Claims
-
-* Claim Name: ear_reference_value_provider_claims
-* Claim Description: Reference Value Provider Claims
-* JWT Claim Name: ear_reference_value_provider_claims
-* Claim Key: 1015 (suggested)
-* Claim Value Type(s): map
-* Change Controller: IESG
-* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
-
 ### Device Topology
 
 * Claim Name: ear_device_topology
@@ -978,6 +938,26 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-components-bound}} of {{&SELF}}
 
+### Status Details
+
+* Claim Name: ear_status_details
+* Claim Description: EAR Status Details
+* JWT Claim Name: ear_status_details
+* Claim Key: 1010 (suggested)
+* Claim Value Type(s): array
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear}} and {{sec-ear-appraisal}} of {{&SELF}}
+
+### Trustworthiness Vector Details
+
+* Claim Name: ear_trustworthiness_vector_details
+* Claim Description: EAR Trustworthiness Vector Details
+* JWT Claim Name: ear_trustworthiness_vector_details
+* Claim Key: 1011 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
 ### Transport Identity Key
 
 * Claim Name: eat_transport_identity_key
@@ -998,9 +978,25 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.
 * Change Controller: IESG
 * Specification Document(s): {{sec-secret-wrapping-keys}} of {{&SELF}}
 
-### EAR TEEP Claims
+### Endorser Claims
 
-TODO
+* Claim Name: ear_endorser_claims
+* Claim Description: Endorser Claims
+* JWT Claim Name: ear_endorser_claims
+* Claim Key: 1014 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
+
+### Reference Value Provider Claims
+
+* Claim Name: ear_reference_value_provider_claims
+* Claim Description: Reference Value Provider Claims
+* JWT Claim Name: ear_reference_value_provider_claims
+* Claim Key: 1015 (suggested)
+* Claim Value Type(s): map
+* Change Controller: IESG
+* Specification Document(s): {{sec-ear-appraisal}} of {{&SELF}}
 
 --- back
 
