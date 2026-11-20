@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 13 May 2027                                               Cisco
+Expires: 24 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                         9 November 2026
+                                                        20 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 May 2027.
+   This Internet-Draft will expire on 24 May 2027.
 
 Copyright Notice
 
@@ -93,12 +93,13 @@ Table of Contents
      3.2.  EAR Appraisal Claims
      3.3.  Transport Identity Key
      3.4.  Secret Wrapping Keys
-     3.5.  Details Claims
-     3.6.  Recursive and Tunnelled Submods
-     3.7.  JSON Serialisation
-       3.7.1.  Examples
-     3.8.  CBOR Serialisation
+     3.5.  Components Binding
+     3.6.  Details Claims
+     3.7.  Recursive and Tunnelled Submods
+     3.8.  JSON Serialisation
        3.8.1.  Examples
+     3.9.  CBOR Serialisation
+       3.9.1.  Examples
    4.  EAR Extensions
      4.1.  Unregistered claims
      4.2.  Registered claims
@@ -132,9 +133,10 @@ Table of Contents
        9.1.11. Reference Value Provider Claims
        9.1.12. Device Topology
        9.1.13. EAR Input Digest
-       9.1.14. Transport Identity Key
-       9.1.15. Secret Wrapping Keys
-       9.1.16. EAR TEEP Claims
+       9.1.14. EAR Components Bound
+       9.1.15. Transport Identity Key
+       9.1.16. Secret Wrapping Keys
+       9.1.17. EAR TEEP Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -168,6 +170,10 @@ Table of Contents
 
    This document uses terms and concepts defined by the RATS
    architecture.  For a complete glossary see Section 4 of [RFC9334].
+
+   This document uses the terms Composite Attester, Component Attester,
+   Partial Evidence, Lead Verifier and Component Verifier defined in
+   [I-D.ietf-rats-multi-verifier].
 
    The terminology from CBOR [STD94], CDDL [RFC8610] and COSE [STD96]
    applies; in particular, CBOR diagnostic notation is defined in
@@ -203,6 +209,7 @@ Table of Contents
      ? eat.nonce-label => eat.nonce-type
      ? topology-label => topology-type
      ? input-digest-label => mc.digest
+     ? components-bound-label => components-bound-type
      * $$ear-extension
    }
 
@@ -210,9 +217,9 @@ Table of Contents
 
    ; A submod carries one of:
    ;  - EAR-appraisal: the appraisal of a single attester;
-   ;  - EAR: an unsigned EAR claims-set from a sub-verifier, in the same
+   ;  - EAR: an unsigned EAR claims-set from a Component Verifier, in the same
    ;    serialization as the enclosing token;
-   ;  - eat.Nested-Token: a complete, signed EAR from a sub-verifier, possibly
+   ;  - eat.Nested-Token: a complete, signed EAR from a Component Verifier, possibly
    ;    in a different serialization than the enclosing token (see
    ;    Section 4.2.18.3 of RFC 9711 for how the nested token is identified).
    $submod-value /= EAR-appraisal
@@ -224,6 +231,17 @@ Table of Contents
    verifier-id-label = eat.JC<"ear_verifier_id", 1004>
    topology-label = eat.JC<"ear_device_topology", 1007>
    input-digest-label = eat.JC<"ear_input_digest", 1008>
+   components-bound-label = eat.JC<"ear_components_bound", 1009>
+
+   ; The Verifier's assessment on the bindings between the Component Attesters of
+   ; a Composite Attester.  The codes are AR4SI enumeration values in the
+   ; affirming (2), contraindicated (96) and incomplete (1) tiers.
+   components-bound-type = components-bound-true-label /
+                           components-bound-false-label /
+                           components-bound-undetermined-label
+   components-bound-true-label = eat.JC<"bound", 2>
+   components-bound-false-label = eat.JC<"not-bound", 96>
+   components-bound-undetermined-label = eat.JC<"could-not-determine", 1>
 
                       Figure 1: EAR (CDDL Definition)
 
@@ -243,25 +261,27 @@ Table of Contents
       set to a tier of no higher trust than the tier corresponding to
       the worst status found across all submods, regardless of whether a
       given submod is represented as an EAR-appraisal, a nested EAR, or
-      a Nested-Token (see Section 3.6).  When a submod is a Nested-Token
-      whose contents the verifier cannot parse or independently verify
-      -- for example, because it uses a serialization or a signature
-      scheme the verifier does not support, or because it does not
-      contain an EAR -- the verifier MUST treat that submod as having
-      the incomplete tier (Section 3.2 of [I-D.ietf-rats-ar4si]) for the
-      purposes of computing this claim.  That is, the verifier was
-      unable to complete the appraisal of that submod, and therefore
-      cannot vouch for the trustworthiness of the attester it
-      represents.  The verifier MUST NOT infer from the opaque submod
-      any tier it has not itself established.  Relying Parties that need
-      to know whether the whole tree has been appraised have to inspect
-      the Nested-Token submods individually.  This claim exists to help
-      Relying Parties easily determine the overall status of the
-      appraisal without having to inspect each submod.
+      a Nested-Token (see Section 3.7), and of no higher trust than the
+      tier of ear_components_bound if present (see Section 3.5).  When a
+      submod is a Nested-Token whose contents the verifier cannot parse
+      or independently verify -- for example, because it uses a
+      serialization or a signature scheme the verifier does not support,
+      or because it does not contain an EAR -- the verifier MUST treat
+      that submod as having the incomplete tier (Section 3.2 of
+      [I-D.ietf-rats-ar4si]) for the purposes of computing this claim.
+      That is, the verifier was unable to complete the appraisal of that
+      submod, and therefore cannot vouch for the trustworthiness of the
+      attester it represents.  The verifier MUST NOT infer from the
+      opaque submod any tier it has not itself established.  Relying
+      Parties that need to know whether the whole tree has been
+      appraised have to inspect the Nested-Token submods individually.
+      This claim exists to help Relying Parties easily determine the
+      overall status of the appraisal without having to inspect each
+      submod.
 
    ear_status_details (optional)
       A non-empty array of strings, each giving a reason for the value
-      of ear_status.  See Section 3.5 for the rules that apply to all
+      of ear_status.  See Section 3.6 for the rules that apply to all
       *_details claims.
 
    iat (mandatory)
@@ -292,18 +312,18 @@ Table of Contents
 
    submods (mandatory)
       A submodule map (Section 4.2.18 of [RFC9711]) holding, for each
-      separately appraised attester or sub-verifier, one of: an EAR-
-      appraisal; a nested EAR claims-set; or a Nested-Token carrying a
-      complete, independently signed EAR produced by a sub-verifier.
-      The map MUST contain at least one entry.  For each appraised
-      attester or sub-verifier the verifier chooses a unique label.  For
-      example, when evidence is in EAT format, the label could be
-      constructed from the associated EAT profile.  A verifier SHOULD
-      publicly and permanently document its labelling scheme for each
-      supported evidence type, unless EAR payloads are produced and
-      consumed entirely within a private deployment.  See Section 3.2
-      for the details about the contents of an EAR-appraisal, and
-      Section 3.6 for the recursive and tunnelled cases.
+      separately appraised attester or Component Verifier, one of: an
+      EAR-appraisal; a nested EAR claims-set; or a Nested-Token carrying
+      a complete, independently signed EAR produced by a Component
+      Verifier.  The map MUST contain at least one entry.  For each
+      appraised attester or Component Verifier the verifier chooses a
+      unique label.  For example, when evidence is in EAT format, the
+      label could be constructed from the associated EAT profile.  A
+      verifier SHOULD publicly and permanently document its labelling
+      scheme for each supported evidence type, unless EAR payloads are
+      produced and consumed entirely within a private deployment.  See
+      Section 3.2 for the details about the contents of an EAR-
+      appraisal, and Section 3.7 for the recursive and tunnelled cases.
 
    eat_nonce (optional)
       A user supplied nonce that is echoed by the verifier to provide
@@ -326,6 +346,12 @@ Table of Contents
       Verifier received.  Its value is the digest type defined in
       Section 4.2 of [I-D.ietf-rats-eat-measured-component].  See
       Section 3.1 for the details.
+
+   ear_components_bound (optional)
+      Whether the bindings between the Component Attesters of a
+      Composite Attester, where used, were verified.  The value is one
+      of bound, not-bound or could-not-determine.  See Section 3.5 for
+      the details.
 
    $$ear-extension (optional)
       Any registered or unregistered extension.  See Section 4 for
@@ -644,7 +670,73 @@ Table of Contents
    ear_verifier_claims, the Relying Party MUST use the claim in the
    appraisal record and ignore the other occurrence.
 
-3.5.  Details Claims
+3.5.  Components Binding
+
+   The per-component results in submods say that each Component Attester
+   was individually appraised, but they do not say that the appraised
+   Component Attesters belong together.  A Composite Attester may tie
+   the Partial Evidence of its Component Attesters to each other, for
+   example by collecting it within the same challenge-response session,
+   or by chaining the keys that sign it.  The ear_components_bound claim
+   tells the Relying Party whether the Verifier verified these bindings.
+
+   The claim is only meaningful in the appraisal of a Composite
+   Attester, and MUST NOT be present otherwise.  It is present if and
+   only if the Composite Attester uses at least one binding between its
+   Component Attesters.  Absence of the claim means that no binding is
+   used, or that the Verifier makes no statement about it, for example
+   because it does not implement the logic needed to verify the
+   bindings.
+
+   The value is one of the following, serialized as a string in JSON and
+   as an integer in CBOR.  The integers are AR4SI enumeration values
+   (Section 3.2 of [I-D.ietf-rats-ar4si]), and each value maps to a
+   trustworthiness tier:
+
+   bound (2)
+      All the bindings in use were verified.  The tier is affirming.
+
+   not-bound (96)
+      At least one binding in use failed verification.  The tier is
+      contraindicated.
+
+   could-not-determine (1)
+      At least one binding is in use, but the Verifier could not
+      evaluate it, for example because it does not support the binding
+      scheme, or because a Component Verifier reported nothing about it.
+      The tier is incomplete.
+
+   A receiver that encounters a value it does not recognise MUST treat
+   it as could-not-determine.
+
+   The tier of ear_components_bound is taken into account when computing
+   ear_status like any other trustworthiness claim: ear_status MUST be
+   of no higher trust than this tier.  A not-bound value is never
+   benign.
+
+   A binding scheme is defined by how the Composite Attester arranges
+   the collection of Evidence from its Component Attesters, and by the
+   Evidence collection protocol it exposes or is used with.  The
+   Verifier can report bound or not-bound only if it understands the
+   binding scheme, and can verify the binding mechanics as they appear
+   in the Evidence.  Examples of binding schemes are a shared nonce, a
+   common session key, a certificate chain or another form of key
+   delegation, and cross-signing between Component Attesters.
+
+   When the EAR has nested EAR or Nested-Token submods, the Lead
+   Verifier computes its own value over the bindings it is in a position
+   to verify, and combines it with the nested values by taking the one
+   of lowest trust, in the same way as for ear_status.
+
+   A nested submod that carries no claim does not contribute a value.
+
+   A bound value does not imply that the individual components are
+   trustworthy.  For example, the Realm token of a CCA Attester
+   [I-D.ffm-rats-cca-token] can be bound to the Platform token while
+   ear_status is incomplete because the Realm measurements have not been
+   corroborated.
+
+3.6.  Details Claims
 
    The ear_status_details and ear_trustworthiness_vector_details claims
    let a Verifier tell the Relying Party the reasons for the values of
@@ -663,49 +755,50 @@ Table of Contents
    untrusted input (see Section 7).  It can also reveal details of the
    Attester's state, see Section 8.
 
-3.6.  Recursive and Tunnelled Submods
+3.7.  Recursive and Tunnelled Submods
 
    In addition to a flat EAR-appraisal, a submod MAY instead carry a
    nested EAR or a Nested-Token (Section 4.2.18.3 of [RFC9711]).  This
    gives the EAR a recursive structure that can directly reflect the
-   topology of a mesh of cooperating verifiers, e.g., the lead verifier
+   topology of a mesh of cooperating verifiers, e.g., the Lead Verifier
    of the Hierarchical pattern defined in
    [I-D.ietf-rats-multi-verifier], which dispatches the appraisal of
-   composite evidence to one or more sub-verifiers and then collects
-   their results into its own EAR.
+   composite evidence to one or more Component Verifiers and then
+   collects their results into its own EAR.
 
    The three $submod-value alternatives serve different purposes:
 
    EAR-appraisal
       The existing, flat representation.  Used when the verifier itself
       performs the appraisal of the associated attester, or restates a
-      sub-verifier's result as its own appraisal.
+      Component Verifier's result as its own appraisal.
 
    EAR
-      A complete EAR claims-set produced by a sub-verifier, embedded
-      directly, in the same serialization (JSON or CBOR) as the
-      enclosing EAR.  This lets a sub-verifier's full result --
+      A complete EAR claims-set produced by a Component Verifier,
+      embedded directly, in the same serialization (JSON or CBOR) as the
+      enclosing EAR.  This lets a Component Verifier's full result --
       including its own submods, potentially several levels deep -- be
       embedded as plain claims data, integrity-protected only by the
       enclosing EAR's own signature.
 
    Nested-Token
-      A complete, independently signed EAR produced by a sub-verifier
-      and tunnelled opaquely, using the nesting mechanics described in
-      Section 4.2.18.3 of [RFC9711].  This is the only alternative that
-      supports a sub-verifier whose EAR uses a different serialization
-      than the enclosing token (e.g., a JWT-serialized sub-EAR nested
-      inside a CWT-serialized top-level EAR, or vice versa).  The nested
-      token's encoding is self-describing, so the consumer needs no out-
-      of-band knowledge of it: for CBOR it is given by the CBOR tag
-      found after removing the byte string wrapping, for JSON by the
-      JSON-Selector name (Section 4.2.18 of [RFC9711]).  EAR restricts
-      Nested-Token to its "JWT" and "CBOR" forms; the "BUNDLE" and
-      "DIGEST" forms defined by [RFC9711] for detached claims-sets are
-      out of scope for EAR.  The content of a Nested-Token MUST be an
-      EAR.  The CDDL cannot enforce this, because the token is opaque to
-      the schema; a verifier that finds otherwise treats the submod as
-      incomplete (see ear_status in Section 3).
+      A complete, independently signed EAR produced by a Component
+      Verifier and tunnelled opaquely, using the nesting mechanics
+      described in Section 4.2.18.3 of [RFC9711].  This is the only
+      alternative that supports a Component Verifier whose EAR uses a
+      different serialization than the enclosing token (e.g., a JWT-
+      serialized sub-EAR nested inside a CWT-serialized top-level EAR,
+      or vice versa).  The nested token's encoding is self-describing,
+      so the consumer needs no out-of-band knowledge of it: for CBOR it
+      is given by the CBOR tag found after removing the byte string
+      wrapping, for JSON by the JSON-Selector name (Section 4.2.18 of
+      [RFC9711]).  EAR restricts Nested-Token to its "JWT" and "CBOR"
+      forms; the "BUNDLE" and "DIGEST" forms defined by [RFC9711] for
+      detached claims-sets are out of scope for EAR.  The content of a
+      Nested-Token MUST be an EAR.  The CDDL cannot enforce this,
+      because the token is opaque to the schema; a verifier that finds
+      otherwise treats the submod as incomplete (see ear_status in
+      Section 3).
 
    The existing flat representation of device topology, the
    ear_device_topology claim (Section 3), is unaffected by, and can be
@@ -724,20 +817,20 @@ Table of Contents
    different serialization or signature scheme than the one used by the
    enclosing token.
 
-   Figure 3 shows a lead verifier's EAR for a confidential computing
+   Figure 3 shows a Lead Verifier's EAR for a confidential computing
    scenario: a confidential VM ("cvm") running on a confidential
    platform ("cpu") and using a trusted device ("gpu") to offload a
    specialized ML workload.  Each submod uses a different $submod-value
    kind, reflecting a realistic split of appraisal responsibilities
    across independent, vendor-specific verifiers: "cvm" is appraised
-   directly by the lead verifier and carries a flat EAR-appraisal; "cpu"
+   directly by the Lead Verifier and carries a flat EAR-appraisal; "cpu"
    is appraised by Vendor-A's confidential computing verifier, whose
    full EAR claims-set, including its own "platform" submod, is embedded
    in-band as a nested EAR, because it happens to use the same (JSON)
    serialization as the enclosing token; "gpu" is appraised by Vendor-
    B's confidential computing verifier, whose EAR is tunnelled opaquely
    as a Nested-Token, JWT-serialized regardless of the serialization of
-   the enclosing token.  The lead verifier's ear_status reflects the
+   the enclosing token.  The Lead Verifier's ear_status reflects the
    worst status found across all three; the one it cannot itself parse
    is accounted for as incomplete.
 
@@ -747,6 +840,7 @@ Table of Contents
      "eat_profile": "tag:ietf.org,2026:rats/ear#05",
      "iat": 1666529184,
      "ear_status": "warning",
+     "ear_components_bound": "bound",
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
        "build": "vts 0.0.1"
@@ -789,9 +883,9 @@ Table of Contents
 
          Figure 3: JSON claims-set: recursive and tunnelled submods
 
-3.7.  JSON Serialisation
+3.8.  JSON Serialisation
 
-3.7.1.  Examples
+3.8.1.  Examples
 
    The example in Figure 4 shows an EAR claims-set corresponding to a
    "contraindicated" appraisal, meaning the verifier has found some
@@ -920,9 +1014,9 @@ Table of Contents
 
            Figure 5: JSON claims-set: simple affirming appraisal
 
-3.8.  CBOR Serialisation
+3.9.  CBOR Serialisation
 
-3.8.1.  Examples
+3.9.1.  Examples
 
    The example in Figure 6 is semantically equivalent to that in
    Figure 4.  It shows the same "contraindicated" appraisal using the
@@ -939,6 +1033,7 @@ Table of Contents
        "application/vnd.evidence",
        h'6C696665626F61746D616E'
      ],
+     1009: 2,
      1008: [
        1,
        h'4c89eb4a5cec6b3f637cbeda6e0bc9daba28d8ff77268cecb77c77394fda7cd8'
@@ -1552,7 +1647,24 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.14.  Transport Identity Key
+9.1.14.  EAR Components Bound
+
+   *  Claim Name: ear_components_bound
+
+   *  Claim Description: Verification Outcome of the Bindings Between
+      Component Attesters
+
+   *  JWT Claim Name: ear_components_bound
+
+   *  Claim Key: 1009 (suggested)
+
+   *  Claim Value Type(s): text (JSON) or integer (CBOR)
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.5 of RFCthis
+
+9.1.15.  Transport Identity Key
 
    *  Claim Name: eat_transport_identity_key
 
@@ -1569,7 +1681,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.3 of RFCthis
 
-9.1.15.  Secret Wrapping Keys
+9.1.16.  Secret Wrapping Keys
 
    *  Claim Name: eat_secret_wrapping_keys
 
@@ -1585,7 +1697,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.4 of RFCthis
 
-9.1.16.  EAR TEEP Claims
+9.1.17.  EAR TEEP Claims
 
    TODO
 
@@ -1677,6 +1789,14 @@ Table of Contents
 
 10.2.  Informative References
 
+   [I-D.ffm-rats-cca-token]
+              Frost, S., Fossati, T., and G. Mandyam, "Arm's
+              Confidential Compute Architecture Reference Attestation
+              Token", Work in Progress, Internet-Draft, draft-ffm-rats-
+              cca-token-04, 7 September 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-
+              token-04>.
+
    [I-D.ietf-rats-corim]
               Birkholz, H., Fossati, T., Deshpande, Y., Smith, N., and
               W. Pan, "Concise Reference Integrity Manifest", Work in
@@ -1734,6 +1854,7 @@ Appendix A.  Collated CDDL
      ? eat.nonce-label => eat.nonce-type,
      ? topology-label => topology-type,
      ? input-digest-label => mc.digest,
+     ? components-bound-label => components-bound-type,
      * $$ear-extension,
    }
    cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
@@ -1742,6 +1863,13 @@ Appendix A.  Collated CDDL
    verifier-id-label = eat.JC<"ear_verifier_id", 1004>
    topology-label = eat.JC<"ear_device_topology", 1007>
    input-digest-label = eat.JC<"ear_input_digest", 1008>
+   components-bound-label = eat.JC<"ear_components_bound", 1009>
+   components-bound-type = components-bound-true-label / components-\
+                 bound-false-label / components-bound-undetermined-label
+   components-bound-true-label = eat.JC<"bound", 2>
+   components-bound-false-label = eat.JC<"not-bound", 96>
+   components-bound-undetermined-label = eat.JC<"could-not-determine", \
+                                                                      1>
    EAR-appraisal = {
      ? eat.profile-label => eat.general-uri / eat.general-oid,
      status-label => ar4si.trustworthiness-tier,
