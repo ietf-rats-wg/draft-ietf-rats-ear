@@ -4,7 +4,7 @@
 ;# import eat-measured-component as mc
 
 EAR = {
-  eat.profile-label => "tag:ietf.org,2026:rats/ear#05"
+  eat.profile-label => "tag:ietf.org,2026:rats/ear#07"
   ? status-label => ar4si.trustworthiness-tier
   ? status-details-label => details-type
   eat.iat-claim-label => ~eat.time-int

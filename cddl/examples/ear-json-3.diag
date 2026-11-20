@@ -1,5 +1,5 @@
 {
-  "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+  "eat_profile": "tag:ietf.org,2026:rats/ear#07",
   "iat": 1666529184,
   "ear_status": "warning",
   "ear_components_bound": "bound",
@@ -17,7 +17,7 @@
       }
     },
     "cpu": {
-      "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+      "eat_profile": "tag:ietf.org,2026:rats/ear#07",
       "iat": 1666529150,
       "ear_verifier_id": {
         "developer": "https://vendor-a.example/cc-verifier",
