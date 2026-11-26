@@ -60,7 +60,7 @@ normative:
   I-D.ietf-teep-protocol: teep
   RFC9782: eat-media-type
   RFC9999: cmw
-  I-D.ietf-rats-eat-measured-component: eat-mc
+  RFC10013: eat-mc
 
 informative:
   RFC9839: unicode-subsets
