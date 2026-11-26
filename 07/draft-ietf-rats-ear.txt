@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 24 May 2027                                               Cisco
+Expires: 30 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                        20 November 2026
+                                                        26 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 May 2027.
+   This Internet-Draft will expire on 30 May 2027.
 
 Copyright Notice
 
@@ -343,8 +343,7 @@ Table of Contents
       A cryptographic digest of the appraisal request input that
       produced this EAR, used to bind the EAR to the exact input the
       Verifier received.  Its value is the digest type defined in
-      Section 4.2 of [I-D.ietf-rats-eat-measured-component].  See
-      Section 3.1 for the details.
+      Section 4.2 of [RFC10013].  See Section 3.1 for the details.
 
    ear_components_bound (optional)
       Whether the bindings between the Component Attesters of a
@@ -606,7 +605,7 @@ Table of Contents
       base64url-encoded string in JSON;
 
    *  a digest of that encoding, in the digest format of Section 4.2 of
-      [I-D.ietf-rats-eat-measured-component].
+      [RFC10013].
 
    The SubjectPublicKeyInfo MUST be encoded exactly as the Attester
    presents it to its peer: the subjectPublicKeyInfo field of the end-
@@ -1708,14 +1707,6 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
               ar4si-11>.
 
-   [I-D.ietf-rats-eat-measured-component]
-              Frost, S., Fossati, T., Tschofenig, H., and H. Birkholz,
-              "Entity Attestation Token (EAT) Measured Component", Work
-              in Progress, Internet-Draft, draft-ietf-rats-eat-measured-
-              component-12, 20 February 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-measured-component-12>.
-
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
               A. Tsukamoto, "Trusted Execution Environment Provisioning
@@ -1771,6 +1762,11 @@ Table of Contents
               "Remote ATtestation procedureS (RATS) Conceptual Message
               Wrapper (CMW)", RFC 9999, DOI 10.17487/RFC9999, July 2026,
               <https://www.rfc-editor.org/rfc/rfc9999>.
+
+   [RFC10013] Frost, S., Fossati, T., Tschofenig, H., and H. Birkholz,
+              "Entity Attestation Token (EAT) Measured Component",
+              RFC 10013, DOI 10.17487/RFC10013, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc10013>.
 
    [STD94]    Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
