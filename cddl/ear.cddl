@@ -22,7 +22,7 @@ EAR = {
 cmw-record = eat.JC<cmw.json-record, cmw.cbor-record>
 
 ; A submod carries one of:
-;  - EAR-appraisal: the appraisal of a single attester;
+;  - EAR-appraisal: the appraisal of a single Attester;
 ;  - EAR: an unsigned EAR claims-set from a Component Verifier, in the same
 ;    serialization as the enclosing token;
 ;  - eat.Nested-Token: a complete, signed EAR from a Component Verifier, possibly
