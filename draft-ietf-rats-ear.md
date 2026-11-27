@@ -80,17 +80,17 @@ entity:
 
 This document defines the EAT Attestation Result (EAR) message format.
 
-EAR is used by a verifier to encode the result of the appraisal over an
-attester's evidence.
+EAR is used by a Verifier to encode the result of the appraisal over an
+Attester's Evidence.
 It embeds an AR4SI's "trustworthiness vector" to present a normalized view of
 the evaluation results, thus easing the task of defining and computing
-authorization policies by relying parties.
+authorization policies by Relying Parties.
 Alongside the trustworthiness vector, EAR provides contextual information bound
 to the appraisal process.
-This allows a relying party (or an auditor) to reconstruct the frame of
+This allows a Relying Party (or an auditor) to reconstruct the frame of
 reference in which the trustworthiness vector was originally computed.
-EAR supports simple devices with one attester as well as composite devices that
-are made of multiple attesters, allowing the state of each attester to be
+EAR supports simple devices with one Attester as well as composite devices that
+are made of multiple Attesters, allowing the state of each Attester to be
 separately examined.
 EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT or JWT.
@@ -101,18 +101,18 @@ It can be serialized and protected using either CWT or JWT.
 
 This document defines the EAT {{-eat}} Attestation Result (EAR) message format.
 
-EAR is used by a verifier to encode the result of the appraisal over an
-attester's evidence.
+EAR is used by a Verifier to encode the result of the appraisal over an
+Attester's Evidence.
 It embeds an AR4SI's "trustworthiness vector" {{-ar4si}} to present a
 normalized view of the evaluation results, thus easing the task of defining and
-computing authorization policies by relying parties.
+computing authorization policies by Relying Parties.
 Alongside the trustworthiness vector, EAR provides contextual information bound
 to the appraisal process.
-This allows a relying party (or an auditor) to reconstruct the frame of
+This allows a Relying Party (or an auditor) to reconstruct the frame of
 reference in which the trustworthiness vector was originally computed.
-EAR supports simple devices with one attester as well as composite devices that
-are made of multiple attesters (see {{Section 3.3 of -rats-arch}}) allowing the
-state of each attester to be separately examined.
+EAR supports simple devices with one Attester as well as composite devices that
+are made of multiple Attesters (see {{Section 3.3 of -rats-arch}}) allowing the
+state of each Attester to be separately examined.
 EAR can also accommodate registered and unregistered extensions.
 It can be serialized and protected using either CWT {{-cwt}} or JWT {{-jwt}}.
 
@@ -121,7 +121,7 @@ It can be serialized and protected using either CWT {{-cwt}} or JWT {{-jwt}}.
 This document uses terms and concepts defined by the RATS architecture.
 For a complete glossary see {{Section 4 of -rats-arch}}.
 
-This document uses the terms Composite Attester, Component Attester, Partial Evidence, Lead Verifier and Component Verifier defined in {{-multi-verifier}}.
+This document uses the terms Composite Attester, Component Attester, Composite Evidence, Partial Evidence, Lead Verifier and Component Verifier defined in {{-multi-verifier}}.
 
 The terminology from CBOR {{-cbor}}, CDDL {{-cddl}} and COSE {{-cose}} applies;
 in particular, CBOR diagnostic notation is defined in {{Section 8 of -cbor}}
@@ -150,12 +150,12 @@ It MUST be the following tag URI ({{-tag-uri}})
 `tag:ietf.org,2026:rats/ear#07`.
 
 `ear_status` (optional)
-: The overall appraisal status for the (composite) attester represented as one of the five trustworthiness tiers ({{Section 3.2 of -ar4si}}).
+: The overall appraisal status for the Attester, or the Composite Attester, represented as one of the five trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The `none` tier is the neutral element of this computation: it does not affect the result and MUST NOT be used as the value of this claim.
 The value of this claim MUST be set to a tier of no higher trust than the tier corresponding to the worst status found across all submods, regardless of whether a given submod is represented as an `EAR-appraisal`, a nested `EAR`, or a `Nested-Token` (see {{sec-nested-submods}}), and of no higher trust than the tier of `ear_components_bound` if present (see {{sec-components-bound}}).
-When a submod is a `Nested-Token` whose contents the verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the verifier does not support, or because it does not contain an EAR -- the verifier MUST treat that submod as having the `incomplete` tier ({{Section 3.2 of -ar4si}}) for the purposes of computing this claim.
-That is, the verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the attester it represents.
-The verifier MUST NOT infer from the opaque submod any tier it has not itself established.
+When a submod is a `Nested-Token` whose contents the Verifier cannot parse or independently verify -- for example, because it uses a serialization or a signature scheme the Verifier does not support, or because it does not contain an EAR -- the Verifier MUST treat that submod as having the `incomplete` tier ({{Section 3.2 of -ar4si}}) for the purposes of computing this claim.
+That is, the Verifier was unable to complete the appraisal of that submod, and therefore cannot vouch for the trustworthiness of the Attester it represents.
+The Verifier MUST NOT infer from the opaque submod any tier it has not itself established.
 Relying Parties that need to know whether the whole tree has been appraised have to inspect the `Nested-Token` submods individually.
 This claim exists to help Relying Parties easily determine the overall status of the appraisal without having to inspect each submod.
 
@@ -174,11 +174,11 @@ Similar to `iat`, an EAR token MUST NOT contain an `exp` claim in floating-point
 Any recipient of a token with a floating-point format `exp` claim MUST consider it an error.
 
 `ear_verifier_id` (mandatory)
-: Identifying information about the appraising verifier.
+: Identifying information about the appraising Verifier.
 See {{Section 3.3 of -ar4si}} for further details on its structure and serialization.
 
 `ear_raw_evidence` (optional)
-: The unabridged evidence submitted for appraisal, including any signed
+: The unabridged Evidence submitted for appraisal, including any signed
 container/envelope, wrapped in a Record CMW (see {{Section 3.1 of -cmw}}).
 This field may be consumed by other Verifiers in multi-stage verification
 scenarios or by auditors.
@@ -187,32 +187,32 @@ There are privacy considerations associated with this claim.  See
 
 `submods` (mandatory)
 : A submodule map ({{Section 4.2.18 of -eat}}) holding, for each separately
-appraised attester or Component Verifier, one of: an `EAR-appraisal`; a nested `EAR`
+appraised Attester or Component Verifier, one of: an `EAR-appraisal`; a nested `EAR`
 claims-set; or a `Nested-Token` carrying a complete, independently signed EAR
 produced by a Component Verifier.
 The map MUST contain at least one entry.
-For each appraised attester or Component Verifier the verifier chooses a unique
+For each appraised Attester or Component Verifier the Verifier chooses a unique
 label.
-For example, when evidence is in EAT format, the label could be constructed
+For example, when Evidence is in EAT format, the label could be constructed
 from the associated EAT profile.
-A verifier SHOULD publicly and permanently document its labelling scheme for
-each supported evidence type, unless EAR payloads are produced and consumed
+A Verifier SHOULD publicly and permanently document its labelling scheme for
+each supported Evidence type, unless EAR payloads are produced and consumed
 entirely within a private deployment.
 See {{sec-ear-appraisal}} for the details about the contents of an
 `EAR-appraisal`, and {{sec-nested-submods}} for the recursive and tunnelled
 cases.
 
 `eat_nonce` (optional)
-: A user supplied nonce that is echoed by the verifier to provide freshness.
+: A user supplied nonce that is echoed by the Verifier to provide freshness.
 The nonce is a sequence of bytes between 8 and 64 bytes long. When serialized
 as JWT, the nonce MUST be base64url encoded without padding, resulting in a
 string between 12 and 86 bytes long.
 See {{Section 4.1 of -eat}}.
 
 `ear_device_topology` (optional)
-: A map that describes the device attester graph using adjacency lists.
-Attesters are represented by their corresponding labels in the `submods` claim.
-Each map key represents an attester in the graph, and the associated map value is an array of labels representing the list of sub-attesters for that attester.
+: A map that describes the graph of the Component Attesters of a Composite Attester using adjacency lists.
+Component Attesters are represented by their corresponding labels in the `submods` claim.
+Each map key represents a Component Attester in the graph, and the associated map value is an array of labels representing the list of sub-Attesters for that Component Attester.
 If the claim is present, the map MUST contain at least one element.
 
 `ear_input_digest` (optional)
@@ -234,8 +234,8 @@ See {{sec-extensions}} for further details.
 The `ear_input_digest` claim cryptographically binds an EAR to the exact appraisal request input received by the Verifier, providing a protection that `eat_nonce` alone does not provide.
 While `eat_nonce` establishes freshness and confirms that the Verifier processed the requester's nonce, it does not bind the remainder of the request.
 
-For example, an adversary positioned between the TLS terminator and the Verifier's trust boundary could substitute the evidence carried in the request while leaving the nonce intact.
-The Relying Party would then receive an EAR with a valid nonce, but for attacker-chosen evidence.
+For example, an adversary positioned between the TLS terminator and the Verifier's trust boundary could substitute the Evidence carried in the request while leaving the nonce intact.
+The Relying Party would then receive an EAR with a valid nonce, but for attacker-chosen Evidence.
 `ear_input_digest` closes this attack by allowing the Relying Party to check that the digest matches the appraisal request input it originally sent (or caused to be sent), exposing any substitution.
 Other, similar, attacks that rely on tampering with the appraisal request input without affecting the nonce are also expected to be closed by the same mechanism.
 
@@ -275,7 +275,7 @@ Note that if multiple `EAR-appraisal` submods exist within the same `EAR` token,
 If the `EAR-appraisal` contains extensions, this claim SHOULD be present unless the profile can be implied by other means (e.g., via the application context or outer protocol elements).
 
 `ear_status` (mandatory)
-: The overall appraisal status for this attester represented as one of the five
+: The overall appraisal status for this Attester represented as one of the five
 trustworthiness tiers ({{Section 3.2 of -ar4si}}).
 The `none` tier is the neutral element of this computation: it does not affect the result and MUST NOT be used as the value of this claim.
 The value of this claim MUST be set to a tier of no higher trust than the tier
@@ -287,7 +287,7 @@ trustworthiness vector.
 
 `ear_trustworthiness_vector` (optional)
 : The AR4SI trustworthiness vector providing the breakdown of the appraisal for
-this attester.
+this Attester.
 See {{Section 3.1 of -ar4si}} for the details.
 This claim MUST be present unless the party requesting Evidence appraisal
 explicitly asks for it to be dropped, e.g., via an API parameter or similar
@@ -300,16 +300,16 @@ resulting loss of quality of the appraisal result.
 Each key MUST be a category that is present in `ear_trustworthiness_vector`.
 
 `ear_appraisal_policy_ids` (optional)
-: A list of one or more unique identifiers for appraisal policies used to evaluate the attestation results.
+: A list of one or more unique identifiers for the Appraisal Policies for Evidence used to produce the appraisal.
 The order of the identifiers in the list represents the order in which the policies are applied, with those appearing earlier being applied first.
 The list MUST NOT be empty.
 
 `eat_nonce` (optional)
 : The nonce extracted from Evidence corresponding to this appraisal record.
 Note that this is entirely distinct from the nonce in {{sec-ear}}.
-It reflects evidence freshness rather than attestation results freshness.
-Specifically, it reflects the freshness of the evidence whose attestation results are contained in this appraisal record.
-This is useful when the relying party is the challenger in the remote attestation protocol and needs to verify that the nonce in the supplied evidence matches, without having to parse the evidence format.
+It reflects Evidence freshness rather than Attestation Results freshness.
+Specifically, it reflects the freshness of the Evidence whose Attestation Results are contained in this appraisal record.
+This is useful when the Relying Party is the challenger in the remote attestation protocol and needs to verify that the nonce in the supplied Evidence matches, without having to parse the Evidence format.
 See also {{Section 4.1 of -eat}}.
 
 `ear_attester_claims` (optional)
@@ -450,9 +450,9 @@ It can also reveal details of the Attester's state, see {{sec-priv-cons}}.
 In addition to a flat `EAR-appraisal`, a submod MAY instead carry a nested
 `EAR` or a `Nested-Token` ({{Section 4.2.18.3 of -eat}}).
 This gives the EAR a recursive structure that can directly reflect the
-topology of a mesh of cooperating verifiers, e.g., the Lead Verifier of the
+topology of a mesh of cooperating Verifiers, e.g., the Lead Verifier of the
 Hierarchical pattern defined in {{-multi-verifier}}, which
-dispatches the appraisal of composite evidence to one or more Component Verifiers
+dispatches the appraisal of Composite Evidence to one or more Component Verifiers
 and then collects their results into its own EAR.
 
 The three $submod-value alternatives serve different purposes:
@@ -460,8 +460,8 @@ The three $submod-value alternatives serve different purposes:
 {:vspace}
 `EAR-appraisal`
 : The existing, flat representation.
-Used when the verifier itself performs the appraisal of the associated
-attester, or restates a Component Verifier's result as its own appraisal.
+Used when the Verifier itself performs the appraisal of the associated
+Attester, or restates a Component Verifier's result as its own appraisal.
 
 `EAR`
 : A complete EAR claims-set produced by a Component Verifier, embedded directly, in
@@ -485,18 +485,18 @@ EAR restricts `Nested-Token` to its `"JWT"` and `"CBOR"` forms; the
 are out of scope for EAR.
 The content of a `Nested-Token` MUST be an EAR.
 The CDDL cannot enforce this, because the token is opaque to the schema; a
-verifier that finds otherwise treats the submod as `incomplete` (see `ear_status`
+Verifier that finds otherwise treats the submod as `incomplete` (see `ear_status`
 in {{sec-ear}}).
 
 The existing flat representation of device topology, the
 `ear_device_topology` claim ({{sec-ear}}), is unaffected by, and can be used
 independently of, the above; it remains the appropriate choice when a single
-verifier appraises a composite attester made up of several evidence sources
-without delegating appraisal to other verifiers.
+Verifier appraises a Composite Attester made up of several Component Attesters
+without delegating appraisal to other Verifiers.
 
 A Relying Party that only consumes the top-level `ear_status` claim (see
 {{sec-ear}}) does not need to understand any of the above: correctness only
-depends on the verifier correctly rolling up the status of every submod,
+depends on the Verifier correctly rolling up the status of every submod,
 regardless of its representation, into that claim.
 A Relying Party that wants a full audit trail, however, needs to be able to
 recurse into nested `EAR` submods and to decode `Nested-Token` submods --
@@ -508,13 +508,13 @@ scenario: a confidential VM ("cvm") running on a confidential platform
 ("cpu") and using a trusted device ("gpu") to offload a specialized ML
 workload.
 Each submod uses a different $submod-value kind, reflecting a realistic split
-of appraisal responsibilities across independent, vendor-specific verifiers:
+of appraisal responsibilities across independent, vendor-specific Verifiers:
 "cvm" is appraised directly by the Lead Verifier and carries a flat
 `EAR-appraisal`; "cpu" is appraised by Vendor-A's confidential computing
-verifier, whose full EAR claims-set, including its own "platform" submod, is
+Verifier, whose full EAR claims-set, including its own "platform" submod, is
 embedded in-band as a nested `EAR`, because it happens to use the same
 (JSON) serialization as the enclosing token; "gpu" is appraised by Vendor-B's
-confidential computing verifier, whose EAR is tunnelled opaquely as a
+confidential computing Verifier, whose EAR is tunnelled opaquely as a
 `Nested-Token`, JWT-serialized regardless of the serialization of the
 enclosing token.
 The Lead Verifier's `ear_status` reflects the worst status found across all
@@ -530,13 +530,13 @@ three; the one it cannot itself parse is accounted for as `incomplete`.
 ### Examples
 
 The example in {{fig-ex-json-1}} shows an EAR claims-set corresponding to a
-"contraindicated" appraisal, meaning the verifier has found some problems with
-the attester's state reported in the submitted evidence.
+"contraindicated" appraisal, meaning the Verifier has found some problems with
+the Attester's state reported in the submitted Evidence.
 Specifically, the identified issue is related to unauthorized code or
 configuration loaded in runtime memory (i.e., value 96 in the executables
 category).
-The appraisal is for a device with one attester labelled "PSA".  Note that in
-case there is only one attester, the labelling can be freely chosen because
+The appraisal is for a device with one Attester labelled "PSA".  Note that in
+case there is only one Attester, the labelling can be freely chosen because
 there is no ambiguity.
 
 ~~~cbor-diag
@@ -556,16 +556,16 @@ The breakdown of the trustworthiness vector is as follows:
 * Sourced Data (none): no claim being made
 
 The example in {{fig-ex-json-2}} contains the appraisal for a composite device
-with two attesters named "CCA Platform" and "CCA Realm" respectively.
-Both attesters have either "affirming" or (implicit) "none" values in their
+with two Attesters named "CCA Platform" and "CCA Realm" respectively.
+Both Attesters have either "affirming" or (implicit) "none" values in their
 associated trustworthiness vectors.
 Note that the "none" values can refer to either an AR4SI category that is
-unapplicable for the specific attester (ideally, the applicability should be
-specified by the evidence format itself), or to the genuine lack of information
-at the attester site regarding the specific category.  For example, the
+unapplicable for the specific Attester (ideally, the applicability should be
+specified by the Evidence format itself), or to the genuine lack of information
+at the Attester site regarding the specific category.  For example, the
 reference values for the "CCA Realm" executables (i.e., the confidential
-computing workload) may not be known to the CCA platform verifier.
-In such cases, it is up to the downstream entity (typically, the relying party)
+computing workload) may not be known to the CCA platform Verifier.
+In such cases, it is up to the downstream entity (typically, the Relying Party)
 to complete the partial appraisal.
 
 ~~~cbor-diag
@@ -589,10 +589,10 @@ more compact CBOR serialization of the EAR claims-set.
 
 # EAR Extensions {#sec-extensions}
 
-EAR provides core semantics for describing the result of appraising attestation
-evidence.
-However, a given application may offer extra functionality to its relying
-parties, or tailor the attestation result to the needs of the application (e.g.,
+EAR provides core semantics for describing the result of appraising
+Evidence.
+However, a given application may offer extra functionality to its Relying
+Parties, or tailor the Attestation Result to the needs of the application (e.g.,
 TEEP {{-teep}}).
 To accommodate such cases, both `EAR` and `EAR-appraisal` claims-sets can be
 extended by plugging new claims into the `$$ear-extension` (or
@@ -665,8 +665,8 @@ This recommendation does not apply to claims minted from the private space (inte
 
 ## TEEP Extension {#sec-extensions-teep}
 
-The TEEP protocol {{-teep}} specifies the required claims that an attestation
-result must carry for a TAM (Trusted Application Manager) to make decisions on
+The TEEP protocol {{-teep}} specifies the required claims that an Attestation
+Result must carry for a TAM (Trusted Application Manager) to make decisions on
 how to remediate a TEE (Trusted Execution Environment) that is out of
 compliance, or update a TEE that is requesting an authorized change.
 
@@ -750,8 +750,8 @@ the command line.
 The maturity level is currently alpha, and only the JWT serialization is
 implemented.
 The license is Apache 2.0.
-The package is used by the Project Veraison verifier to produce attestation
-results.
+The package is used by the Project Veraison Verifier to produce Attestation
+Results.
 
 ### `github.com/veraison/c-ear`
 
@@ -760,8 +760,8 @@ library that allows verification and partial decoding of EAR payloads.
 The maturity level is currently pre-alpha, and only the JWT serialization is
 implemented.
 The license is Apache 2.0.
-The library targets relying party applications that need to verify attestation
-results.
+The library targets Relying Party applications that need to verify Attestation
+Results.
 
 ### `github.com/veraison/rust-ear`
 
@@ -769,9 +769,9 @@ The software, hosted at [](https://github.com/veraison/rust-ear), provides a
 Rust (2021 edition) library that allows verification and partial decoding of
 EAR payloads. The maturity level is currently pre-alpha, with limitted
 algorithm support.  Both JWT and COSE serializations are implemented.  The
-license is Apache 2.0.  The library targets verifiers that need to produce
-attestation results as well as relying party applications that need to verify
-and consume attestation results.
+license is Apache 2.0.  The library targets Verifiers that need to produce
+Attestation Results as well as Relying Party applications that need to verify
+and consume Attestation Results.
 
 # Security Considerations {#sec-sec-cons}
 
@@ -793,8 +793,8 @@ Otherwise, a stale EAR could direct a secret to an environment that has since be
 
 ## Binding EAR to the Appraisal Request
 
-`eat_nonce` alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the evidence (or any other input) that the requester actually sent.
-An on-path attacker able to tamper with the appraisal request without disturbing the nonce -- for example, by substituting the evidence while leaving the nonce intact -- can therefore cause a Relying Party to accept an EAR that has a valid nonce but does not reflect the evidence the Relying Party asked to have appraised.
+`eat_nonce` alone only proves that the Verifier processed a request carrying a given nonce; it does not prove that the request contained the Evidence (or any other input) that the requester actually sent.
+An on-path attacker able to tamper with the appraisal request without disturbing the nonce -- for example, by substituting the Evidence while leaving the nonce intact -- can therefore cause a Relying Party to accept an EAR that has a valid nonce but does not reflect the Evidence the Relying Party asked to have appraised.
 
 The `ear_input_digest` claim (see {{sec-ear-input-digest}}), when applicable, mitigates this class of attack by binding the EAR to the exact wire bytes of the appraisal request the Verifier received.
 Implementers and deployers are strongly encouraged to read {{sec-ear-input-digest}} in full before deciding to produce or verify `ear_input_digest`, since an inappropriate deployment topology can silently negate its security benefit.
@@ -802,7 +802,7 @@ Implementers and deployers are strongly encouraged to read {{sec-ear-input-diges
 # Privacy Considerations {#sec-priv-cons}
 
 EAR is designed to expose as little identifying information as possible about
-the attester.
+the Attester.
 However, certain EAR claims have direct privacy implications.
 Implementations should therefore allow applying privacy-preserving techniques
 to those claims, for example allowing their redaction, anonymisation or
@@ -1017,7 +1017,7 @@ been designed to handle JSON claim-sets and their JWT envelopes as first class
 objects, which makes it an excellent fit for dealing with JWT EARs.
 
 The following example illustrates an OPA policy that a Relying Party would use
-to make decisions based on a JWT EAR received from a trusted verifier.
+to make decisions based on a JWT EAR received from a trusted Verifier.
 
 ~~~ rego
 package ear
@@ -1065,7 +1065,7 @@ The result of the policy appraisal is the following JSON object:
 }
 ~~~
 
-For completeness, the trusted verifier public key and the EAR JWT used in the
+For completeness, the trusted Verifier public key and the EAR JWT used in the
 example are provided below.
 
 ~~~
