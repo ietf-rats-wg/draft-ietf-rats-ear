@@ -5,12 +5,12 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                                    NVIDIA
 Intended status: Standards Track                                 E. Voit
-Expires: 24 May 2027                                               Cisco
+Expires: 31 May 2027                                               Cisco
                                                              S. Trofimov
                                                              Arm Limited
                                                              H. Birkholz
                                                           Fraunhofer SIT
-                                                        20 November 2026
+                                                        27 November 2026
 
 
                         EAT Attestation Results
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 May 2027.
+   This Internet-Draft will expire on 31 May 2027.
 
 Copyright Notice
 
@@ -122,21 +122,20 @@ Table of Contents
      9.1.  New EAT Claims
        9.1.1.  EAR Status
        9.1.2.  Trustworthiness Vector
-       9.1.3.  Status Details
-       9.1.4.  Trustworthiness Vector Details
-       9.1.5.  EAR Raw Evidence
-       9.1.6.  EAR Appraisal Policy Identifier
-       9.1.7.  Verifier Software Identifier
-       9.1.8.  Attester Claims
-       9.1.9.  Verifier Claims
-       9.1.10. Endorser Claims
-       9.1.11. Reference Value Provider Claims
-       9.1.12. Device Topology
-       9.1.13. EAR Input Digest
-       9.1.14. EAR Components Bound
-       9.1.15. Transport Identity Key
-       9.1.16. Secret Wrapping Keys
-       9.1.17. EAR TEEP Claims
+       9.1.3.  EAR Raw Evidence
+       9.1.4.  EAR Appraisal Policy Identifier
+       9.1.5.  Verifier Software Identifier
+       9.1.6.  Attester Claims
+       9.1.7.  Verifier Claims
+       9.1.8.  Device Topology
+       9.1.9.  EAR Input Digest
+       9.1.10. EAR Components Bound
+       9.1.11. Status Details
+       9.1.12. Trustworthiness Vector Details
+       9.1.13. Transport Identity Key
+       9.1.14. Secret Wrapping Keys
+       9.1.15. Endorser Claims
+       9.1.16. Reference Value Provider Claims
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -198,7 +197,7 @@ Table of Contents
    ;# import eat-measured-component as mc
 
    EAR = {
-     eat.profile-label => "tag:ietf.org,2026:rats/ear#05"
+     eat.profile-label => "tag:ietf.org,2026:rats/ear#07"
      ? status-label => ar4si.trustworthiness-tier
      ? status-details-label => details-type
      eat.iat-claim-label => ~eat.time-int
@@ -250,7 +249,7 @@ Table of Contents
    eat_profile (mandatory)
       The EAT profile (Section 6 of [RFC9711]) associated with the EAR
       claims-set and encodings defined by this document.  It MUST be the
-      following tag URI ([RFC4151]) tag:ietf.org,2026:rats/ear#05.
+      following tag URI ([RFC4151]) tag:ietf.org,2026:rats/ear#07.
 
    ear_status (optional)
       The overall appraisal status for the (composite) attester
@@ -344,8 +343,7 @@ Table of Contents
       A cryptographic digest of the appraisal request input that
       produced this EAR, used to bind the EAR to the exact input the
       Verifier received.  Its value is the digest type defined in
-      Section 4.2 of [I-D.ietf-rats-eat-measured-component].  See
-      Section 3.1 for the details.
+      Section 4.2 of [RFC10013].  See Section 3.1 for the details.
 
    ear_components_bound (optional)
       Whether the bindings between the Component Attesters of a
@@ -607,7 +605,7 @@ Table of Contents
       base64url-encoded string in JSON;
 
    *  a digest of that encoding, in the digest format of Section 4.2 of
-      [I-D.ietf-rats-eat-measured-component].
+      [RFC10013].
 
    The SubjectPublicKeyInfo MUST be encoded exactly as the Attester
    presents it to its peer: the subjectPublicKeyInfo field of the end-
@@ -837,7 +835,7 @@ Table of Contents
    =============== NOTE: '\' line wrapping per RFC 8792 ================
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#07",
      "iat": 1666529184,
      "ear_status": "warning",
      "ear_components_bound": "bound",
@@ -855,7 +853,7 @@ Table of Contents
          }
        },
        "cpu": {
-         "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+         "eat_profile": "tag:ietf.org,2026:rats/ear#07",
          "iat": 1666529150,
          "ear_verifier_id": {
            "developer": "https://vendor-a.example/cc-verifier",
@@ -898,7 +896,7 @@ Table of Contents
    ambiguity.
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#07",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -980,7 +978,7 @@ Table of Contents
    (typically, the relying party) to complete the partial appraisal.
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#07",
      "iat": 1666529300,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -1023,7 +1021,7 @@ Table of Contents
    more compact CBOR serialization of the EAR claims-set.
 
    {
-     265: "tag:ietf.org,2026:rats/ear#05",
+     265: "tag:ietf.org,2026:rats/ear#07",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -1205,7 +1203,7 @@ Table of Contents
 4.5.1.  JSON Serialization Example
 
    {
-     "eat_profile": "tag:ietf.org,2026:rats/ear#05",
+     "eat_profile": "tag:ietf.org,2026:rats/ear#07",
      "iat": 1666529184,
      "ear_verifier_id": {
        "developer": "https://veraison-project.org",
@@ -1239,7 +1237,7 @@ Table of Contents
 4.5.2.  CBOR Serialization Example
 
    {
-     265: "tag:ietf.org,2026:rats/ear#05",
+     265: "tag:ietf.org,2026:rats/ear#07",
      6: 1666529184,
      1004: {
        0: "https://veraison-project.org",
@@ -1277,11 +1275,11 @@ Table of Contents
 
    For example, a JWT serialization would use:
 
-   application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
+   application/eat-jwt; eat_profile="tag:ietf.org,2026:rats/ear#07"
 
    A CWT serialization would instead use:
 
-   application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#05"
+   application/eat-cwt; eat_profile="tag:ietf.org,2026:rats/ear#07"
 
 6.  Implementation Status
 
@@ -1471,39 +1469,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.3.  Status Details
-
-   *  Claim Name: ear_status_details
-
-   *  Claim Description: EAR Status Details
-
-   *  JWT Claim Name: ear_status_details
-
-   *  Claim Key: 1010 (suggested)
-
-   *  Claim Value Type(s): array
-
-   *  Change Controller: IESG
-
-   *  Specification Document(s): Section 3 and Section 3.2 of RFCthis
-
-9.1.4.  Trustworthiness Vector Details
-
-   *  Claim Name: ear_trustworthiness_vector_details
-
-   *  Claim Description: EAR Trustworthiness Vector Details
-
-   *  JWT Claim Name: ear_trustworthiness_vector_details
-
-   *  Claim Key: 1011 (suggested)
-
-   *  Claim Value Type(s): map
-
-   *  Change Controller: IESG
-
-   *  Specification Document(s): Section 3.2 of RFCthis
-
-9.1.5.  EAR Raw Evidence
+9.1.3.  EAR Raw Evidence
 
    *  Claim Name: ear_raw_evidence
 
@@ -1519,7 +1485,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.6.  EAR Appraisal Policy Identifier
+9.1.4.  EAR Appraisal Policy Identifier
 
    *  Claim Name: ear_appraisal_policy_ids
 
@@ -1535,7 +1501,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.7.  Verifier Software Identifier
+9.1.5.  Verifier Software Identifier
 
    *  Claim Name: ear_verifier_id
 
@@ -1551,7 +1517,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.8.  Attester Claims
+9.1.6.  Attester Claims
 
    *  Claim Name: ear_attester_claims
 
@@ -1567,7 +1533,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.9.  Verifier Claims
+9.1.7.  Verifier Claims
 
    *  Claim Name: ear_verifier_claims
 
@@ -1583,39 +1549,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-9.1.10.  Endorser Claims
-
-   *  Claim Name: ear_endorser_claims
-
-   *  Claim Description: Endorser Claims
-
-   *  JWT Claim Name: ear_endorser_claims
-
-   *  Claim Key: 1014 (suggested)
-
-   *  Claim Value Type(s): map
-
-   *  Change Controller: IESG
-
-   *  Specification Document(s): Section 3.2 of RFCthis
-
-9.1.11.  Reference Value Provider Claims
-
-   *  Claim Name: ear_reference_value_provider_claims
-
-   *  Claim Description: Reference Value Provider Claims
-
-   *  JWT Claim Name: ear_reference_value_provider_claims
-
-   *  Claim Key: 1015 (suggested)
-
-   *  Claim Value Type(s): map
-
-   *  Change Controller: IESG
-
-   *  Specification Document(s): Section 3.2 of RFCthis
-
-9.1.12.  Device Topology
+9.1.8.  Device Topology
 
    *  Claim Name: ear_device_topology
 
@@ -1631,7 +1565,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-9.1.13.  EAR Input Digest
+9.1.9.  EAR Input Digest
 
    *  Claim Name: ear_input_digest
 
@@ -1647,7 +1581,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-9.1.14.  EAR Components Bound
+9.1.10.  EAR Components Bound
 
    *  Claim Name: ear_components_bound
 
@@ -1664,7 +1598,39 @@ Table of Contents
 
    *  Specification Document(s): Section 3.5 of RFCthis
 
-9.1.15.  Transport Identity Key
+9.1.11.  Status Details
+
+   *  Claim Name: ear_status_details
+
+   *  Claim Description: EAR Status Details
+
+   *  JWT Claim Name: ear_status_details
+
+   *  Claim Key: 1010 (suggested)
+
+   *  Claim Value Type(s): array
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 and Section 3.2 of RFCthis
+
+9.1.12.  Trustworthiness Vector Details
+
+   *  Claim Name: ear_trustworthiness_vector_details
+
+   *  Claim Description: EAR Trustworthiness Vector Details
+
+   *  JWT Claim Name: ear_trustworthiness_vector_details
+
+   *  Claim Key: 1011 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
+
+9.1.13.  Transport Identity Key
 
    *  Claim Name: eat_transport_identity_key
 
@@ -1681,7 +1647,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.3 of RFCthis
 
-9.1.16.  Secret Wrapping Keys
+9.1.14.  Secret Wrapping Keys
 
    *  Claim Name: eat_secret_wrapping_keys
 
@@ -1697,9 +1663,37 @@ Table of Contents
 
    *  Specification Document(s): Section 3.4 of RFCthis
 
-9.1.17.  EAR TEEP Claims
+9.1.15.  Endorser Claims
 
-   TODO
+   *  Claim Name: ear_endorser_claims
+
+   *  Claim Description: Endorser Claims
+
+   *  JWT Claim Name: ear_endorser_claims
+
+   *  Claim Key: 1014 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
+
+9.1.16.  Reference Value Provider Claims
+
+   *  Claim Name: ear_reference_value_provider_claims
+
+   *  Claim Description: Reference Value Provider Claims
+
+   *  JWT Claim Name: ear_reference_value_provider_claims
+
+   *  Claim Key: 1015 (suggested)
+
+   *  Claim Value Type(s): map
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3.2 of RFCthis
 
 10.  References
 
@@ -1712,14 +1706,6 @@ Table of Contents
               11, 30 October 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
               ar4si-11>.
-
-   [I-D.ietf-rats-eat-measured-component]
-              Frost, S., Fossati, T., Tschofenig, H., and H. Birkholz,
-              "Entity Attestation Token (EAT) Measured Component", Work
-              in Progress, Internet-Draft, draft-ietf-rats-eat-measured-
-              component-12, 20 February 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-measured-component-12>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
@@ -1777,6 +1763,11 @@ Table of Contents
               Wrapper (CMW)", RFC 9999, DOI 10.17487/RFC9999, July 2026,
               <https://www.rfc-editor.org/rfc/rfc9999>.
 
+   [RFC10013] Frost, S., Fossati, T., Tschofenig, H., and H. Birkholz,
+              "Entity Attestation Token (EAT) Measured Component",
+              RFC 10013, DOI 10.17487/RFC10013, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc10013>.
+
    [STD94]    Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
               DOI 10.17487/RFC8949, December 2020,
@@ -1790,12 +1781,12 @@ Table of Contents
 10.2.  Informative References
 
    [I-D.ffm-rats-cca-token]
-              Frost, S., Fossati, T., and G. Mandyam, "Arm's
-              Confidential Compute Architecture Reference Attestation
-              Token", Work in Progress, Internet-Draft, draft-ffm-rats-
-              cca-token-04, 7 September 2026,
+              Frost, S., Fossati, T., Deshpande, Y., and G. Mandyam,
+              "Arm's Confidential Compute Architecture Reference
+              Attestation Token", Work in Progress, Internet-Draft,
+              draft-ffm-rats-cca-token-05, 26 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-
-              token-04>.
+              token-05>.
 
    [I-D.ietf-rats-corim]
               Birkholz, H., Fossati, T., Deshpande, Y., Smith, N., and
@@ -1843,7 +1834,7 @@ Appendix A.  Collated CDDL
    ;;; *** undefined: $$ear-extension
    ;;; *** undefined: $$ear-appraisal-extension
    EAR = {
-     eat.profile-label => "tag:ietf.org,2026:rats/ear#05",
+     eat.profile-label => "tag:ietf.org,2026:rats/ear#07",
      ? status-label => ar4si.trustworthiness-tier,
      ? status-details-label => details-type,
      eat.iat-claim-label => ~eat.time-int,
